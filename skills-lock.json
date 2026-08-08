@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "skills": {
+    "mobile-design": {
+      "source": "vudovn/antigravity-kit",
+      "sourceType": "github",
+      "skillPath": ".agents/skills/mobile-design/SKILL.md",
+      "computedHash": "fa81c2c9f375b276100c3fd05744e2cad91aac7c317de26932f9bb2c73d033d1"
+    },
+    "tailwind-patterns": {
+      "source": "vudovn/antigravity-kit",
+      "sourceType": "github",
+      "skillPath": ".agents/skills/tailwind-patterns/SKILL.md",
+      "computedHash": "475b0a5667fbaf82beec778effaa58759f1b710d80583439f04cb15d27c39a90"
+    }
+  }
+}

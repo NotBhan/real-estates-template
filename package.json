@@ -1,0 +1,28 @@
+{
+  "name": "maa-laxmi-property",
+  "type": "module",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/node": "^11.1.0",
+    "@astrojs/sitemap": "^3.7.3",
+    "@lucide/astro": "^1.30.0",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.2.0",
+    "gsap": "^3.15.0",
+    "tailwindcss": "^4.3.3"
+  },
+  "allowScripts": {
+    "esbuild@0.28.1": true
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^6.0.3"
+  }
+}

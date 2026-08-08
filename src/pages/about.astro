@@ -1,0 +1,19 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { config } from '@/lib/config';
+---
+
+<BaseLayout title="About" description="Learn about Maa Laxmi Property Consultant.">
+  <div class="pt-28 pb-12 bg-bg-primary">
+    <div class="container-site">
+      <p class="kicker mb-3">About Us</p>
+      <h1 class="heading-section--light heading-section">About {config.brand.name}</h1>
+    </div>
+  </div>
+  <div class="container-site section-padding">
+    <p class="text-body max-w-2xl">
+      Company information will be populated with actual client content once supplied.
+      This page will include the company description, team, and trust-building sections.
+    </p>
+  </div>
+</BaseLayout>

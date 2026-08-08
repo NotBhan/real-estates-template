@@ -86,7 +86,7 @@ const currentPath = Astro.url.pathname;
   <!-- Mobile menu overlay -->
   <div
     id="mobile-menu"
-    class="lg:hidden fixed inset-0 top-20 bg-bg-primary/98 backdrop-blur-md transform translate-x-full transition-transform duration-300 ease-out"
+    class="lg:hidden absolute top-full left-0 right-0 h-[calc(100dvh-5rem)] bg-bg-primary backdrop-blur-md transform translate-x-full transition-transform duration-300 ease-out overflow-y-auto"
     aria-hidden="true"
     role="dialog"
     aria-label="Mobile navigation"
@@ -163,3 +163,9 @@ const currentPath = Astro.url.pathname;
     onScroll(); // run on load
   }
 </script>
+
+<style>
+  #site-navbar:has(#mobile-menu.translate-x-0) {
+    background-color: var(--color-bg-primary);
+  }
+</style>

@@ -1,0 +1,195 @@
+---
+/**
+ * PropertyCard — Reusable property card for listings and featured sections.
+ *
+ * Renders property-type-appropriate metadata:
+ * - Residential / Flat / Villa → bedrooms, bathrooms, area
+ * - Commercial → commercial type, area
+ * - Land / Plot → area, facing
+ *
+ * Links to /properties/[slug] (page created in Phase 2B).
+ */
+import {
+  type Property,
+  hasRoomInfo,
+  isCommercial,
+  isLandLike,
+} from '@/types/property';
+import { formatPrice, formatArea } from '@/lib/format';
+import { MapPin, BedDouble, Bath, Maximize, Building2, Compass, ArrowRight } from '@lucide/astro';
+
+interface Props {
+  property: Property;
+}
+
+const { property } = Astro.props;
+
+const displayPrice = formatPrice(property.price, property.priceInterval);
+const displayArea = formatArea(property.area.value, property.area.unit);
+const primaryImage = property.images[0];
+const href = `/properties/${property.slug}`;
+
+// Status badge styling
+const statusColors: Record<string, string> = {
+  Available: 'bg-success/90 text-white',
+  Sold: 'bg-error/90 text-white',
+  Rented: 'bg-warning/90 text-bg-primary',
+};
+
+const isSold = property.status === 'Sold' || property.status === 'Rented';
+---
+
+<article
+  class="group relative flex flex-col rounded-xl overflow-hidden border border-border bg-bg-secondary transition-all duration-300 hover:border-accent/30 hover:shadow-lg hover:shadow-accent/5"
+  id={`property-card-${property.id}`}
+>
+  {/* ---- Image area ---- */}
+  <a
+    href={href}
+    class="relative block aspect-[16/10] overflow-hidden"
+    aria-label={`View ${property.title}`}
+    tabindex="-1"
+  >
+    {primaryImage ? (
+      <img
+        src={primaryImage.url}
+        alt={primaryImage.alt}
+        class:list={[
+          'h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105',
+          isSold && 'opacity-70',
+        ]}
+        loading="lazy"
+        decoding="async"
+      />
+    ) : (
+      <div
+        class="h-full w-full bg-bg-dark flex items-center justify-center"
+        role="img"
+        aria-label="No image available"
+      >
+        <span class="text-text-light text-sm">No Image</span>
+      </div>
+    )}
+
+    {/* Gradient overlay at bottom for text readability */}
+    <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/50 to-transparent pointer-events-none" aria-hidden="true"></div>
+
+    {/* Top badge strip */}
+    <div class="absolute top-3 left-3 right-3 flex items-start justify-between pointer-events-none">
+      {/* Property type badge */}
+      <span class="inline-flex items-center gap-1 rounded-md bg-bg-primary/80 backdrop-blur-sm px-2.5 py-1 text-xs font-semibold text-white">
+        {property.propertyType}
+      </span>
+
+      {/* Status badge */}
+      <span
+        class:list={[
+          'inline-flex items-center rounded-md px-2.5 py-1 text-xs font-semibold backdrop-blur-sm',
+          statusColors[property.status] ?? 'bg-bg-primary/80 text-white',
+        ]}
+      >
+        {property.listingType === 'Rent' && property.status === 'Available'
+          ? 'For Rent'
+          : property.status === 'Available'
+            ? 'For Sale'
+            : property.status}
+      </span>
+    </div>
+
+    {/* Featured indicator */}
+    {property.featured && (
+      <span
+        class="absolute bottom-3 left-3 inline-flex items-center gap-1 rounded-md bg-accent/90 backdrop-blur-sm px-2.5 py-1 text-xs font-bold text-bg-primary pointer-events-none"
+        aria-label="Featured property"
+      >
+        ★ Featured
+      </span>
+    )}
+  </a>
+
+  {/* ---- Content area ---- */}
+  <div class="flex flex-1 flex-col p-4 sm:p-5">
+    {/* Price */}
+    <p class="text-accent font-bold text-xl mb-1.5 tracking-tight">
+      {displayPrice}
+    </p>
+
+    {/* Title */}
+    <h3 class="text-white font-semibold text-base leading-snug mb-2 line-clamp-1">
+      <a
+        href={href}
+        class="no-underline text-white hover:text-accent transition-colors duration-200 focus-visible:outline-accent"
+      >
+        {property.title}
+      </a>
+    </h3>
+
+    {/* Location */}
+    <p class="flex items-center gap-1.5 text-text-light text-sm mb-4">
+      <MapPin size={14} class="text-accent shrink-0" />
+      <span class="truncate">{property.location.locality}, {property.location.city}</span>
+    </p>
+
+    {/* Metadata divider */}
+    <div class="mt-auto border-t border-border pt-3">
+      <div class="flex items-center gap-4 text-text-light text-sm">
+        {/* ---- Residential / Flat / Villa metadata ---- */}
+        {hasRoomInfo(property) && (
+          <>
+            <span class="inline-flex items-center gap-1.5" title="Bedrooms">
+              <BedDouble size={14} class="text-accent/70" />
+              {property.bedrooms} Bed
+            </span>
+            <span class="inline-flex items-center gap-1.5" title="Bathrooms">
+              <Bath size={14} class="text-accent/70" />
+              {property.bathrooms} Bath
+            </span>
+            <span class="inline-flex items-center gap-1.5" title="Area">
+              <Maximize size={14} class="text-accent/70" />
+              {displayArea}
+            </span>
+          </>
+        )}
+
+        {/* ---- Commercial metadata ---- */}
+        {isCommercial(property) && (
+          <>
+            <span class="inline-flex items-center gap-1.5" title="Commercial type">
+              <Building2 size={14} class="text-accent/70" />
+              {property.commercialType}
+            </span>
+            <span class="inline-flex items-center gap-1.5" title="Area">
+              <Maximize size={14} class="text-accent/70" />
+              {displayArea}
+            </span>
+          </>
+        )}
+
+        {/* ---- Land / Plot metadata ---- */}
+        {isLandLike(property) && (
+          <>
+            <span class="inline-flex items-center gap-1.5" title="Area">
+              <Maximize size={14} class="text-accent/70" />
+              {displayArea}
+            </span>
+            {property.facing && (
+              <span class="inline-flex items-center gap-1.5" title="Facing direction">
+                <Compass size={14} class="text-accent/70" />
+                {property.facing}
+              </span>
+            )}
+          </>
+        )}
+      </div>
+    </div>
+  </div>
+
+  {/* ---- View Property link (whole card clickable via stretched link) ---- */}
+  <a
+    href={href}
+    class="flex items-center justify-center gap-2 border-t border-border px-5 py-3 text-sm font-medium text-text-light no-underline transition-colors duration-200 hover:text-accent hover:bg-white/[0.02] focus-visible:outline-accent"
+  >
+    View Property
+    <ArrowRight size={14} />
+  </a>
+</article>

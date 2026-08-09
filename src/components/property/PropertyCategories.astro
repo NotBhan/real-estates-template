@@ -1,0 +1,93 @@
+---
+/**
+ * PropertyCategories — Reusable category navigation.
+ * 
+ * Used on the homepage as a visually polished section,
+ * and on the catalogue page as a filter navigation.
+ */
+import { PROPERTY_TYPES } from '@/types/property';
+import { House, Building2, Map, Maximize, Key, Building } from '@lucide/astro';
+
+interface Props {
+  variant?: 'homepage' | 'filter';
+}
+
+const { variant = 'filter' } = Astro.props;
+
+// Determine active category from URL
+const activeCategory = Astro.url.searchParams.get('type');
+
+// Optional: Map categories to icons for a more polished look
+const categoryIcons: Record<string, any> = {
+  Residential: House,
+  Commercial: Building2,
+  Land: Map,
+  Plot: Maximize,
+  Flat: Key,
+  Villa: Building,
+};
+---
+
+{variant === 'homepage' ? (
+  <section class="bg-bg-secondary section-padding" aria-labelledby="categories-heading">
+    <div class="container-site">
+      <div class="text-center mb-12">
+        <h2 class="heading-section heading-section--light mb-4" id="categories-heading">
+          Explore by Category
+        </h2>
+        <p class="text-text-light text-base md:text-lg max-w-2xl mx-auto">
+          Find exactly what you're looking for by browsing our specialized property collections.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
+        {PROPERTY_TYPES.map((type) => {
+          const Icon = categoryIcons[type];
+          return (
+            <a
+              href={`/properties?type=${type}`}
+              class="flex flex-col items-center justify-center p-6 rounded-xl bg-bg-dark border border-border transition-all duration-300 hover:border-accent hover:shadow-lg hover:shadow-accent/5 group text-center no-underline focus-visible:outline-accent"
+            >
+              {Icon && <Icon size={32} class="text-accent/80 mb-4 transition-transform duration-300 group-hover:scale-110" />}
+              <span class="text-white font-medium text-lg">{type}</span>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+) : (
+  <div class="w-full border-b border-border mb-8 overflow-x-auto snap-x hide-scrollbar">
+    <div class="flex items-center gap-2 pb-px min-w-max">
+      <a
+        href="/properties"
+        class:list={[
+          'px-4 py-2 text-sm font-medium transition-colors border-b-2 whitespace-nowrap snap-start focus-visible:outline-none focus-visible:bg-white/[0.02]',
+          !activeCategory
+            ? 'border-accent text-accent'
+            : 'border-transparent text-text-light hover:text-white hover:border-border',
+        ]}
+        aria-current={!activeCategory ? 'page' : undefined}
+      >
+        All Properties
+      </a>
+      {PROPERTY_TYPES.map((type) => {
+        const isActive = activeCategory === type;
+        return (
+          <a
+            href={`/properties?type=${type}`}
+            class:list={[
+              'px-4 py-2 text-sm font-medium transition-colors border-b-2 whitespace-nowrap snap-start focus-visible:outline-none focus-visible:bg-white/[0.02]',
+              isActive
+                ? 'border-accent text-accent'
+                : 'border-transparent text-text-light hover:text-white hover:border-border',
+            ]}
+            aria-current={isActive ? 'page' : undefined}
+          >
+            {type}
+          </a>
+        );
+      })}
+    </div>
+  </div>
+)}

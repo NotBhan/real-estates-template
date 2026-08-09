@@ -1,15 +1,68 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
+import PropertyCard from '@components/property/PropertyCard.astro';
+import PropertyCategories from '@components/property/PropertyCategories.astro';
+import { getAllProperties } from '@/data/demo-properties';
+import type { PropertyType } from '@/types/property';
+import { PROPERTY_TYPES } from '@/types/property';
+
+// Capture the type parameter from URL
+const typeFilter = Astro.url.searchParams.get('type');
+
+// Ensure the filter is a valid PropertyType (or undefined if null/invalid)
+const activeFilter =
+  typeFilter && PROPERTY_TYPES.includes(typeFilter as PropertyType)
+    ? (typeFilter as PropertyType)
+    : undefined;
+
+// Fetch and filter
+const allProperties = getAllProperties();
+const filteredProperties = activeFilter
+  ? allProperties.filter((p) => p.propertyType === activeFilter)
+  : allProperties;
+
+const count = filteredProperties.length;
 ---
 
 <BaseLayout title="Properties" description="Browse residential, commercial, land, and rental properties.">
+  {/* Header */}
   <div class="pt-28 pb-12 bg-bg-primary">
     <div class="container-site">
       <p class="kicker mb-3">Our Listings</p>
       <h1 class="heading-section--light heading-section">Properties</h1>
     </div>
   </div>
-  <div class="container-site section-padding">
-    <p class="text-body">Property listing, search, and filtering will be implemented in Milestone 2.</p>
+
+  <div class="bg-bg-primary pb-20 min-h-[50vh]">
+    <div class="container-site">
+      {/* Categories / Tabs */}
+      <PropertyCategories variant="filter" />
+
+      {/* Meta Bar */}
+      <div class="flex items-center justify-between mb-8">
+        <p class="text-text-light text-sm font-medium">
+          Showing {count} {count === 1 ? 'property' : 'properties'}
+        </p>
+      </div>
+
+      {/* Grid */}
+      {count > 0 ? (
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          {filteredProperties.map((property) => (
+            <PropertyCard property={property} />
+          ))}
+        </div>
+      ) : (
+        <div class="text-center py-24 border border-border border-dashed rounded-xl bg-bg-dark/30">
+          <p class="text-white text-lg font-medium mb-2">No properties found</p>
+          <p class="text-text-light mb-6">
+            We couldn't find any {activeFilter ? `${activeFilter.toLowerCase()} ` : ''}properties at the moment.
+          </p>
+          <a href="/properties" class="btn btn-outline px-6 py-2">
+            Clear Filters
+          </a>
+        </div>
+      )}
+    </div>
   </div>
 </BaseLayout>

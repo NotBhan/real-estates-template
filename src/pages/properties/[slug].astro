@@ -1,0 +1,39 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { getPropertyBySlug } from '@/data/demo-properties';
+
+const { slug } = Astro.params;
+
+if (!slug) {
+  return new Response(null, { status: 404 });
+}
+
+const property = getPropertyBySlug(slug);
+
+if (!property) {
+  Astro.response.status = 404;
+}
+---
+
+<BaseLayout title={property ? property.title : 'Property Not Found'} description="Property detail page">
+  <div class="pt-28 pb-20 bg-bg-primary min-h-[70vh]">
+    <div class="container-site">
+      {!property ? (
+        <div class="text-center py-24">
+          <h1 class="heading-section--light heading-section mb-4">Property Not Found</h1>
+          <p class="text-text-light mb-8">The property you are looking for does not exist or has been removed.</p>
+          <a href="/properties" class="btn btn-primary">Back to Properties</a>
+        </div>
+      ) : (
+        <div class="max-w-3xl mx-auto border border-border border-dashed rounded-xl bg-bg-dark/30 p-12 text-center">
+          <p class="text-accent text-sm font-bold tracking-wider uppercase mb-4">Phase 2D Placeholder</p>
+          <h1 class="heading-section--light heading-section mb-4">{property.title}</h1>
+          <p class="text-text-light mb-8 text-lg">
+            This property detail route is established, but the full design, image gallery, and complete specifications will be implemented in Phase 2D.
+          </p>
+          <a href="/properties" class="btn btn-outline">← Back to Property Catalogue</a>
+        </div>
+      )}
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,61 @@
+---
+/**
+ * FeaturedProperties — Homepage section displaying featured listings.
+ *
+ * Uses the demo dataset for Phase 2A.
+ * Phase 3 will swap the data source to Drizzle queries
+ * without changing this component.
+ */
+import PropertyCard from '@components/property/PropertyCard.astro';
+import { getFeaturedProperties } from '@/data/demo-properties';
+import { ArrowRight } from '@lucide/astro';
+
+const featured = getFeaturedProperties();
+---
+
+<section
+  class="bg-bg-primary section-padding"
+  aria-labelledby="featured-heading"
+  id="featured-properties"
+>
+  <div class="container-site">
+    {/* ---- Section header ---- */}
+    <div class="text-center mb-12 md:mb-16">
+      <p class="kicker mb-3">Featured Listings</p>
+      <h2
+        class="heading-section heading-section--light mb-4"
+        id="featured-heading"
+      >
+        Handpicked Properties
+      </h2>
+      <p class="text-text-light text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+        Explore a curated selection of residential, commercial, and land
+        properties — each chosen for its location, value, and potential.
+      </p>
+    </div>
+
+    {/* ---- Property grid ---- */}
+    {featured.length > 0 ? (
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+        {featured.map((property) => (
+          <PropertyCard property={property} />
+        ))}
+      </div>
+    ) : (
+      <p class="text-center text-text-light py-12">
+        No featured properties at this time.
+      </p>
+    )}
+
+    {/* ---- CTA ---- */}
+    <div class="text-center mt-12">
+      <a
+        href="/properties"
+        class="btn btn-outline text-base px-8 py-3"
+      >
+        View All Properties
+        <ArrowRight size={18} />
+      </a>
+    </div>
+  </div>
+</section>

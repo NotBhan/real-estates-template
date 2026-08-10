@@ -1,0 +1,73 @@
+---
+import type { Property } from '@/types/property';
+import { Camera } from '@lucide/astro';
+
+interface Props {
+  property: Property;
+}
+
+const { property } = Astro.props;
+const primaryImage = property.images[0];
+const imageCount = property.images.length;
+
+// Ensure alt text is meaningful
+const altText = primaryImage?.alt || `${property.title} - Main view`;
+---
+
+<div class="relative w-full aspect-[4/3] md:aspect-[16/10] xl:aspect-[21/9] xl:max-h-[70vh] overflow-hidden bg-bg-secondary" id="property-hero-image">
+  {primaryImage ? (
+    <img 
+      src={primaryImage.url} 
+      alt={altText}
+      class="w-full h-full object-cover object-center"
+      fetchpriority="high"
+      loading="eager"
+    />
+  ) : (
+    <div class="w-full h-full flex items-center justify-center text-text-muted">
+      <span>No image available</span>
+    </div>
+  )}
+
+  {/* Gradient Overlay for bottom readability */}
+  <div class="absolute inset-0 bg-gradient-to-t from-bg-primary via-bg-primary/20 to-transparent pointer-events-none"></div>
+
+  {/* Badges Container */}
+  <div class="absolute top-4 left-4 right-4 flex justify-between items-start pointer-events-none" id="property-hero-badges">
+    {/* Property Type */}
+    <div class="bg-bg-dark/80 backdrop-blur-md border border-white/10 text-white text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-full pointer-events-auto shadow-lg shadow-black/20">
+      {property.propertyType}
+    </div>
+
+    {/* Status / Featured */}
+    <div class="flex flex-col items-end gap-2 pointer-events-auto">
+      {property.status !== 'Available' ? (
+        <div class="bg-bg-dark/80 backdrop-blur-md border border-white/10 text-text-light text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-full shadow-lg shadow-black/20" aria-label={`Status: ${property.status}`}>
+          {property.status}
+        </div>
+      ) : (
+        <div class="bg-accent text-bg-primary text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full shadow-lg shadow-accent/20">
+          For {property.listingType}
+        </div>
+      )}
+      {property.featured && (
+        <div class="bg-bg-dark/80 backdrop-blur-md border border-accent/30 text-accent text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-full shadow-lg shadow-black/20">
+          Featured
+        </div>
+      )}
+    </div>
+  </div>
+
+  {/* Gallery Entry Button */}
+  {imageCount > 1 && (
+    <div class="absolute bottom-6 right-4 md:right-6 pointer-events-auto z-10">
+      <a 
+        href="#property-gallery" 
+        class="flex items-center gap-2 bg-bg-dark/80 hover:bg-bg-dark backdrop-blur-md border border-white/20 hover:border-accent text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors focus-visible:outline-accent shadow-xl shadow-black/40 no-underline"
+      >
+        <Camera size={18} />
+        <span>View {imageCount} photos</span>
+      </a>
+    </div>
+  )}
+</div>

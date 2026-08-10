@@ -1,0 +1,127 @@
+---
+import type { PropertyImage } from '@/types/property';
+
+interface Props {
+  images: PropertyImage[];
+  propertyTitle: string;
+}
+
+const { images, propertyTitle } = Astro.props;
+
+if (!images || images.length <= 1) {
+  // Gallery only renders if there are 2 or more images.
+  // Single image is handled by PropertyHero.
+  return;
+}
+---
+
+<section class="section-detail border-t border-border bg-bg-primary" aria-labelledby="gallery-heading" id="property-gallery">
+  <div class="container-site">
+    <div class="mb-8">
+      <p class="kicker mb-3">Gallery</p>
+      <h2 class="heading-section" id="gallery-heading">Property Images</h2>
+    </div>
+
+    <div class="flex flex-col gap-4 max-w-5xl">
+      {/* Primary Image Display */}
+      <div class="relative w-full aspect-[4/3] md:aspect-[16/10] overflow-hidden rounded-xl bg-bg-secondary border border-border" id="property-gallery-primary">
+        <img 
+          id="gallery-main-img"
+          src={images[0].url} 
+          alt={images[0].alt || `${propertyTitle} — main image`}
+          class="w-full h-full object-cover object-center transition-opacity duration-300"
+          loading="lazy"
+        />
+      </div>
+
+      {/* Thumbnails Strip */}
+      <div 
+        class="flex items-center gap-3 overflow-x-auto snap-x hide-scrollbar pb-2" 
+        id="property-gallery-thumbs"
+        role="group" 
+        aria-label="Image gallery thumbnails"
+      >
+        {images.map((img, index) => (
+          <button
+            type="button"
+            class="gallery-thumb group relative shrink-0 w-24 h-18 md:w-32 md:h-24 rounded-lg overflow-hidden snap-start focus-visible:outline-none border-2 transition-colors duration-200"
+            class:list={[
+              index === 0 ? 'border-accent' : 'border-transparent hover:border-accent/50'
+            ]}
+            data-src={img.url}
+            data-alt={img.alt || `${propertyTitle} — image ${index + 1}`}
+            aria-current={index === 0 ? 'true' : 'false'}
+            aria-label={`View image ${index + 1}`}
+          >
+            <img 
+              src={img.url} 
+              alt=""
+              class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
+              loading="lazy"
+            />
+            {/* Overlay for inactive state */}
+            <div 
+              class="thumb-overlay absolute inset-0 bg-black/40 transition-opacity duration-200 pointer-events-none"
+              class:list={[index === 0 ? 'opacity-0' : 'opacity-100 group-hover:opacity-20']}
+            ></div>
+          </button>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function setupGallery() {
+    const mainImg = document.getElementById('gallery-main-img') as HTMLImageElement;
+    const thumbs = document.querySelectorAll('.gallery-thumb');
+
+    if (!mainImg || thumbs.length === 0) return;
+
+    thumbs.forEach((thumb) => {
+      thumb.addEventListener('click', (e) => {
+        const target = e.currentTarget as HTMLButtonElement;
+        const newSrc = target.getAttribute('data-src');
+        const newAlt = target.getAttribute('data-alt');
+
+        if (newSrc && newAlt) {
+          // Update main image
+          mainImg.src = newSrc;
+          mainImg.alt = newAlt;
+
+          // Update thumbnail states
+          thumbs.forEach((t) => {
+            t.setAttribute('aria-current', 'false');
+            t.classList.remove('border-accent');
+            t.classList.add('border-transparent');
+            
+            const overlay = t.querySelector('.thumb-overlay');
+            if (overlay) {
+              overlay.classList.remove('opacity-0');
+              overlay.classList.add('opacity-100');
+            }
+          });
+
+          // Set active state on clicked thumb
+          target.setAttribute('aria-current', 'true');
+          target.classList.remove('border-transparent', 'hover:border-accent/50');
+          target.classList.add('border-accent');
+          
+          const targetOverlay = target.querySelector('.thumb-overlay');
+          if (targetOverlay) {
+            targetOverlay.classList.remove('opacity-100', 'group-hover:opacity-20');
+            targetOverlay.classList.add('opacity-0');
+          }
+        }
+      });
+    });
+  }
+
+  // Setup on initial load and after view transitions (if added later)
+  document.addEventListener('astro:page-load', setupGallery);
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    setupGallery();
+  } else {
+    document.addEventListener('DOMContentLoaded', setupGallery);
+  }
+</script>

@@ -1,0 +1,152 @@
+---
+import type { Property } from '@/types/property';
+import { hasRoomInfo, isCommercial, isLandLike } from '@/types/property';
+import { formatPrice, formatArea } from '@/lib/format';
+import { MapPin, BedDouble, Bath, Maximize, Building2, Compass, Car, Layers } from '@lucide/astro';
+
+interface Props {
+  property: Property;
+}
+
+const { property } = Astro.props;
+
+// Formatting price
+const formattedPrice = formatPrice(property.price);
+const priceSuffix = property.priceInterval ? `/${property.priceInterval === 'month' ? 'mo' : 'yr'}` : '';
+
+// Helper for type checking to avoid TS issues in the template
+const hasRooms = hasRoomInfo(property);
+const isComm = isCommercial(property);
+const isLand = isLandLike(property);
+const isFlat = property.propertyType === 'Flat';
+---
+
+<div class="container-site pt-8 pb-10">
+  <div class="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-8">
+    
+    {/* Title & Location */}
+    <div class="flex-1">
+      <h1 class="heading-section--light heading-section mb-3" id="property-title">
+        {property.title}
+      </h1>
+      <p class="flex items-center gap-2 text-text-light text-lg">
+        <MapPin size={20} class="text-accent shrink-0" />
+        <span>{property.location.locality}, {property.location.city}</span>
+      </p>
+    </div>
+
+    {/* Price */}
+    <div class="flex flex-col items-start md:items-end md:shrink-0" id="property-price">
+      <p class="text-3xl md:text-4xl font-bold text-accent tracking-tight">
+        {formattedPrice}<span class="text-xl text-text-light font-medium ml-1">{priceSuffix}</span>
+      </p>
+    </div>
+  </div>
+
+  {/* Metadata Strip */}
+  <div class="grid grid-cols-2 md:flex md:flex-wrap items-center gap-4 md:gap-8 pt-6 border-t border-border" id="property-metadata">
+    
+    {/* Shared: Area */}
+    <div class="flex items-center gap-3">
+      <div class="p-2 bg-bg-dark rounded-md text-accent">
+        <Maximize size={20} />
+      </div>
+      <div>
+        <p class="text-xs text-text-muted uppercase tracking-wider font-semibold mb-0.5">Area</p>
+        <p class="text-white font-medium">{formatArea(property.area.value, property.area.unit)}</p>
+      </div>
+    </div>
+
+    {/* Residential / Flat / Villa */}
+    {hasRooms && (
+      <>
+        <div class="flex items-center gap-3">
+          <div class="p-2 bg-bg-dark rounded-md text-accent">
+            <BedDouble size={20} />
+          </div>
+          <div>
+            <p class="text-xs text-text-muted uppercase tracking-wider font-semibold mb-0.5">Bedrooms</p>
+            <p class="text-white font-medium">{property.bedrooms}</p>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-3">
+          <div class="p-2 bg-bg-dark rounded-md text-accent">
+            <Bath size={20} />
+          </div>
+          <div>
+            <p class="text-xs text-text-muted uppercase tracking-wider font-semibold mb-0.5">Bathrooms</p>
+            <p class="text-white font-medium">{property.bathrooms}</p>
+          </div>
+        </div>
+      </>
+    )}
+
+    {/* Flat specific */}
+    {isFlat && 'floor' in property && (
+      <div class="flex items-center gap-3">
+        <div class="p-2 bg-bg-dark rounded-md text-accent">
+          <Layers size={20} />
+        </div>
+        <div>
+          <p class="text-xs text-text-muted uppercase tracking-wider font-semibold mb-0.5">Floor</p>
+          <p class="text-white font-medium">
+            {property.floor} {property.totalFloors ? `of ${property.totalFloors}` : ''}
+          </p>
+        </div>
+      </div>
+    )}
+
+    {/* Commercial specific */}
+    {isComm && 'commercialType' in property && (
+      <div class="flex items-center gap-3">
+        <div class="p-2 bg-bg-dark rounded-md text-accent">
+          <Building2 size={20} />
+        </div>
+        <div>
+          <p class="text-xs text-text-muted uppercase tracking-wider font-semibold mb-0.5">Type</p>
+          <p class="text-white font-medium">{property.commercialType}</p>
+        </div>
+      </div>
+    )}
+
+    {/* Land / Plot specific */}
+    {isLand && 'facing' in property && property.facing && (
+      <div class="flex items-center gap-3">
+        <div class="p-2 bg-bg-dark rounded-md text-accent">
+          <Compass size={20} />
+        </div>
+        <div>
+          <p class="text-xs text-text-muted uppercase tracking-wider font-semibold mb-0.5">Facing</p>
+          <p class="text-white font-medium">{property.facing}</p>
+        </div>
+      </div>
+    )}
+    
+    {isLand && 'roadWidth' in property && property.roadWidth && (
+      <div class="flex items-center gap-3">
+        <div class="p-2 bg-bg-dark rounded-md text-accent">
+          <MapPin size={20} /> {/* Placeholder icon for road width */}
+        </div>
+        <div>
+          <p class="text-xs text-text-muted uppercase tracking-wider font-semibold mb-0.5">Road Width</p>
+          <p class="text-white font-medium">{property.roadWidth}</p>
+        </div>
+      </div>
+    )}
+
+    {/* Parking (Residential, Flat, Villa, Commercial) */}
+    {'parking' in property && property.parking !== undefined && property.parking > 0 && (
+      <div class="flex items-center gap-3">
+        <div class="p-2 bg-bg-dark rounded-md text-accent">
+          <Car size={20} />
+        </div>
+        <div>
+          <p class="text-xs text-text-muted uppercase tracking-wider font-semibold mb-0.5">Parking</p>
+          <p class="text-white font-medium">{property.parking}</p>
+        </div>
+      </div>
+    )}
+
+  </div>
+</div>

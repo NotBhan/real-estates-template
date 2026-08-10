@@ -48,6 +48,9 @@ export const demoProperties: Property[] = [
     featured: true,
     images: [
       { url: '/images/properties/villa-sunrise.png', alt: 'Sunrise Garden Villa — modern two-storey villa with landscaped gardens at dusk', order: 1 },
+      { url: '/images/properties/residential-home.png', alt: 'Villa exterior — secondary angle showing the entrance', order: 2 },
+      { url: '/images/properties/flat-rental.png', alt: 'Interior view — spacious living room with natural light', order: 3 },
+      { url: '/images/properties/land-parcel.png', alt: 'Extensive garden area and open space', order: 4 },
     ],
     bedrooms: 4,
     bathrooms: 4,
@@ -78,6 +81,8 @@ export const demoProperties: Property[] = [
     featured: true,
     images: [
       { url: '/images/properties/flat-skyview.png', alt: 'Skyview Heights apartment tower exterior with landscaped entrance', order: 1 },
+      { url: '/images/properties/flat-rental.png', alt: 'Living room interior showing wooden flooring and balcony access', order: 2 },
+      { url: '/images/properties/residential-rental.png', alt: 'Building entrance and amenities area', order: 3 },
     ],
     bedrooms: 3,
     bathrooms: 2,
@@ -110,6 +115,8 @@ export const demoProperties: Property[] = [
     featured: true,
     images: [
       { url: '/images/properties/commercial-office.png', alt: 'Modern open-plan office interior with glass partitions and natural light', order: 1 },
+      { url: '/images/properties/commercial-showroom.png', alt: 'Reception area and main entrance', order: 2 },
+      { url: '/images/properties/flat-rental.png', alt: 'Executive cabin / meeting room interior', order: 3 },
     ],
     commercialType: 'Office Space',
     parking: 4,

@@ -1,0 +1,87 @@
+---
+import { config } from '@/lib/config';
+import { Phone, MessageCircle, Mail } from '@lucide/astro';
+
+interface Props {
+  propertyTitle: string;
+  propertySlug: string;
+}
+
+const { propertyTitle } = Astro.props;
+
+// Prepare pre-filled messages
+const whatsappMessage = encodeURIComponent(`Hi, I'm interested in "${propertyTitle}". Could you provide more details?`);
+const emailSubject = encodeURIComponent(`Enquiry: ${propertyTitle}`);
+const emailBody = encodeURIComponent(`Hello,\n\I would like to know more about the property "${propertyTitle}".\n\nThank you.`);
+
+// Construct links
+const whatsappUrl = config.contactWhatsapp ? `https://wa.me/${config.contactWhatsapp}?text=${whatsappMessage}` : undefined;
+const phoneUrl = config.contactPhone ? `tel:${config.contactPhone}` : undefined;
+const emailUrl = config.contactEmail ? `mailto:${config.contactEmail}?subject=${emailSubject}&body=${emailBody}` : undefined;
+---
+
+<section class="section-detail border-t border-border bg-bg-primary" aria-labelledby="enquiry-heading" id="property-enquiry">
+  <div class="container-site">
+    <div class="max-w-4xl mx-auto bg-bg-dark border border-white/5 rounded-2xl p-8 md:p-12 text-center shadow-2xl shadow-black/50 relative overflow-hidden">
+      
+      {/* Decorative gradient blur in background */}
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[120%] h-32 bg-accent/10 blur-[100px] pointer-events-none"></div>
+
+      <div class="relative z-10">
+        <p class="kicker mb-4">Interested?</p>
+        <h2 class="heading-section mb-6" id="enquiry-heading">Enquire About This Property</h2>
+        <p class="text-body--light text-lg mb-10 max-w-2xl mx-auto">
+          Contact our team to schedule a viewing or request more information about 
+          <span class="text-white font-medium">"{propertyTitle}"</span>.
+        </p>
+
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4" id="property-enquiry-actions">
+          
+          {/* Call Button */}
+          {phoneUrl ? (
+            <a href={phoneUrl} class="btn btn-primary w-full sm:w-auto min-w-[160px]">
+              <Phone size={18} />
+              <span>Call Now</span>
+            </a>
+          ) : (
+            <span class="btn btn-primary w-full sm:w-auto min-w-[160px] opacity-50 cursor-not-allowed" title="Contact details pending">
+              <Phone size={18} />
+              <span>Call Now</span>
+            </span>
+          )}
+
+          {/* WhatsApp Button */}
+          {whatsappUrl ? (
+            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline w-full sm:w-auto min-w-[160px] hover:bg-[#25D366]/10 hover:border-[#25D366] hover:text-[#25D366]">
+              <MessageCircle size={18} />
+              <span>WhatsApp</span>
+            </a>
+          ) : (
+            <span class="btn btn-outline w-full sm:w-auto min-w-[160px] opacity-50 cursor-not-allowed" title="WhatsApp details pending">
+              <MessageCircle size={18} />
+              <span>WhatsApp</span>
+            </span>
+          )}
+
+          {/* Email Button */}
+          {emailUrl ? (
+            <a href={emailUrl} class="btn btn-outline w-full sm:w-auto min-w-[160px]">
+              <Mail size={18} />
+              <span>Email Us</span>
+            </a>
+          ) : (
+            <span class="btn btn-outline w-full sm:w-auto min-w-[160px] opacity-50 cursor-not-allowed" title="Email details pending">
+              <Mail size={18} />
+              <span>Email Us</span>
+            </span>
+          )}
+
+        </div>
+
+        <p class="text-xs text-text-muted mt-8">
+          This is a demonstration CTA surface. Phase 3 will connect this to an enquiry persistence system.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

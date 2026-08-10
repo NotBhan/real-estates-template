@@ -1,6 +1,13 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { getPropertyBySlug } from '@/data/demo-properties';
+import { ArrowLeft } from '@lucide/astro';
+
+import PropertyHero from '@components/property/PropertyHero.astro';
+import PropertyInfo from '@components/property/PropertyInfo.astro';
+import PropertyOverview from '@components/property/PropertyOverview.astro';
+import PropertyGallery from '@components/property/PropertyGallery.astro';
+import PropertyEnquiry from '@components/property/PropertyEnquiry.astro';
 
 const { slug } = Astro.params;
 
@@ -13,27 +20,45 @@ const property = getPropertyBySlug(slug);
 if (!property) {
   Astro.response.status = 404;
 }
+
+const ogImage = property?.images[0]?.url;
+const description = property?.description?.slice(0, 155) + '...';
 ---
 
-<BaseLayout title={property ? property.title : 'Property Not Found'} description="Property detail page">
-  <div class="pt-28 pb-20 bg-bg-primary min-h-[70vh]">
-    <div class="container-site">
-      {!property ? (
+<BaseLayout 
+  title={property ? `${property.title} | Maa Laxmi Property` : 'Property Not Found'} 
+  description={description || "Property detail page"}
+  ogImage={ogImage}
+  darkBody
+>
+  {!property ? (
+    <div class="pt-28 pb-20 bg-bg-primary min-h-[70vh] flex items-center">
+      <div class="container-site w-full">
         <div class="text-center py-24">
           <h1 class="heading-section--light heading-section mb-4">Property Not Found</h1>
           <p class="text-text-light mb-8">The property you are looking for does not exist or has been removed.</p>
           <a href="/properties" class="btn btn-primary">Back to Properties</a>
         </div>
-      ) : (
-        <div class="max-w-3xl mx-auto border border-border border-dashed rounded-xl bg-bg-dark/30 p-12 text-center">
-          <p class="text-accent text-sm font-bold tracking-wider uppercase mb-4">Phase 2D Placeholder</p>
-          <h1 class="heading-section--light heading-section mb-4">{property.title}</h1>
-          <p class="text-text-light mb-8 text-lg">
-            This property detail route is established, but the full design, image gallery, and complete specifications will be implemented in Phase 2D.
-          </p>
-          <a href="/properties" class="btn btn-outline">← Back to Property Catalogue</a>
-        </div>
-      )}
+      </div>
     </div>
-  </div>
+  ) : (
+    <div class="bg-bg-primary pb-16">
+      {/* Back Navigation */}
+      <div class="container-site pt-24 pb-4">
+        <a href="/properties" class="breadcrumb-link focus-visible:outline-accent">
+          <ArrowLeft size={16} />
+          Back to Properties
+        </a>
+      </div>
+
+      {/* Detail Page Components */}
+      <PropertyHero property={property} />
+      <PropertyInfo property={property} />
+      <PropertyOverview property={property} />
+      {property.images && property.images.length > 1 && (
+        <PropertyGallery images={property.images} propertyTitle={property.title} />
+      )}
+      <PropertyEnquiry propertyTitle={property.title} propertySlug={property.slug} />
+    </div>
+  )}
 </BaseLayout>

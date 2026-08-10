@@ -57,32 +57,34 @@
    Base Styles
    ============================================================ */
 
-html {
-  scroll-behavior: smooth;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-@media (prefers-reduced-motion: reduce) {
+@layer base {
   html {
-    scroll-behavior: auto;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
 
-body {
-  font-family: var(--font-sans);
-  color: var(--color-text-primary);
-  background-color: var(--color-white);
-  line-height: 1.6;
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  body {
+    font-family: var(--font-sans);
+    color: var(--color-text-on-dark);
+    background-color: var(--color-bg-primary);
+    line-height: 1.6;
+  }
 }
 
 /* ============================================================
@@ -268,4 +270,42 @@ body {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border-width: 0;
+}
+
+/* ============================================================
+   Phase 2D Utilities
+   ============================================================ */
+
+.section-detail {
+  padding-block: var(--spacing-section-sm);
+}
+
+@media (min-width: 768px) {
+  .section-detail {
+    padding-block: calc(var(--spacing-section-sm) * 1.25);
+  }
+}
+
+.breadcrumb-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-light);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-out-expo);
+}
+
+.breadcrumb-link:hover {
+  color: var(--color-white);
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
 }

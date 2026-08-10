@@ -1,61 +1,117 @@
 ---
-/**
- * FeaturedProperties — Homepage section displaying featured listings.
- *
- * Uses the demo dataset for Phase 2A.
- * Phase 3 will swap the data source to Drizzle queries
- * without changing this component.
- */
 import PropertyCard from '@components/property/PropertyCard.astro';
 import { getFeaturedProperties } from '@/data/demo-properties';
-import { ArrowRight } from '@lucide/astro';
+import { ArrowRight, Sparkles } from '@lucide/astro';
 
 const featured = getFeaturedProperties();
 ---
 
 <section
-  class="bg-bg-primary section-padding"
+  class="bg-bg-primary section-padding relative overflow-hidden z-10"
   aria-labelledby="featured-heading"
   id="featured-properties"
 >
-  <div class="container-site">
+  <!-- Background Glow Element -->
+  <div class="absolute top-1/2 right-0 -translate-y-1/2 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[140px] pointer-events-none"></div>
+
+  <div class="container-site relative z-10">
     {/* ---- Section header ---- */}
-    <div class="text-center mb-12 md:mb-16">
-      <p class="kicker mb-3">Featured Listings</p>
-      <h2
-        class="heading-section heading-section--light mb-4"
-        id="featured-heading"
-      >
-        Handpicked Properties
-      </h2>
-      <p class="text-text-light text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
-        Explore a curated selection of residential, commercial, and land
-        properties — each chosen for its location, value, and potential.
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6" id="featured-header">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-surface text-blue-400 border border-blue-500/20 text-xs font-semibold uppercase tracking-[0.15em] mb-4">
+          <Sparkles size={13} class="text-blue-400" />
+          <span>Curated Portfolio</span>
+        </div>
+        <h2
+          class="heading-section heading-section--light text-gradient-silver text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight"
+          id="featured-heading"
+        >
+          Architectural <span class="text-gradient-electric">Highlights</span>
+        </h2>
+      </div>
+
+      <p class="text-slate-400 text-base md:text-lg max-w-md leading-relaxed font-light">
+        A handpicked collection of premier residences, commercial hubs, and strategic land investments across Delhi NCR.
       </p>
     </div>
 
-    {/* ---- Property grid ---- */}
+    {/* ---- Property grid with GSAP staggered entrance ---- */}
     {featured.length > 0 ? (
-      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+      <div id="featured-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
         {featured.map((property) => (
-          <PropertyCard property={property} />
+          <div class="featured-card-wrapper">
+            <PropertyCard property={property} />
+          </div>
         ))}
       </div>
     ) : (
-      <p class="text-center text-text-light py-12">
+      <p class="text-center text-slate-400 py-16">
         No featured properties at this time.
       </p>
     )}
 
     {/* ---- CTA ---- */}
-    <div class="text-center mt-12">
+    <div class="text-center mt-16">
       <a
         href="/properties"
-        class="btn btn-outline text-base px-8 py-3"
+        class="btn glass-surface text-white hover:text-blue-300 border border-white/15 hover:border-blue-500/40 text-base px-9 py-4 rounded-2xl inline-flex items-center gap-3 transition-all duration-300 hover:scale-105"
       >
-        View All Properties
-        <ArrowRight size={18} />
+        <span>Explore Entire Collection</span>
+        <ArrowRight size={18} class="text-blue-400" />
       </a>
     </div>
   </div>
 </section>
+
+<script>
+  import gsap from 'gsap';
+  import ScrollTrigger from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const initFeaturedSection = () => {
+    const grid = document.getElementById('featured-grid');
+    const cards = document.querySelectorAll('.featured-card-wrapper');
+    const header = document.getElementById('featured-header');
+
+    if (!grid || cards.length === 0) return;
+
+    let mm = gsap.matchMedia();
+
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      // Header reveal
+      if (header) {
+        gsap.from(header, {
+          scrollTrigger: {
+            trigger: header,
+            start: 'top 85%',
+          },
+          opacity: 0,
+          y: 40,
+          duration: 0.8,
+          ease: 'power3.out',
+        });
+      }
+
+      // Staggered cards reveal
+      gsap.from(cards, {
+        scrollTrigger: {
+          trigger: grid,
+          start: 'top 80%',
+        },
+        opacity: 0,
+        y: 50,
+        duration: 0.8,
+        stagger: 0.15,
+        ease: 'power3.out',
+      });
+    });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFeaturedSection);
+  } else {
+    initFeaturedSection();
+  }
+  document.addEventListener('astro:page-load', initFeaturedSection);
+</script>

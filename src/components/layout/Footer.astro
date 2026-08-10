@@ -20,39 +20,42 @@ const companyLinks = [
 ];
 ---
 
-<footer class="bg-bg-primary text-text-on-dark" role="contentinfo">
+<footer class="bg-bg-primary text-slate-200 border-t border-white/10 relative overflow-hidden" role="contentinfo">
+  <!-- Subtle ambient glow -->
+  <div class="absolute bottom-0 right-1/4 w-[500px] h-[300px] bg-blue-600/10 rounded-full blur-[140px] pointer-events-none"></div>
+
   <!-- Main footer content -->
-  <div class="container-site section-padding">
+  <div class="container-site section-padding relative z-10">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
 
       <!-- Brand column -->
       <div class="lg:col-span-1">
-        <a href="/" class="inline-flex items-center gap-2 no-underline mb-4">
-          <span class="text-accent font-extrabold text-2xl">ML</span>
-          <span class="text-white font-bold text-lg">{config.brand.name}</span>
+        <a href="/" class="inline-flex items-center gap-3 no-underline mb-5 group">
+          <span class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-500 flex items-center justify-center text-white font-black text-lg shadow-lg shadow-blue-500/20">
+            ML
+          </span>
+          <span class="text-gradient-silver font-bold text-xl">{config.brand.name}</span>
         </a>
-        <p class="text-body--light text-sm mt-3 max-w-xs">
-          {/* Demo description — will be replaced with actual client content */}
+        <p class="text-slate-400 text-sm mt-3 max-w-xs font-light leading-relaxed">
           Your trusted property consultant for residential, commercial,
-          and land properties. Helping you find the right property with
-          transparency and dedication.
+          and land properties in Delhi NCR. Redefining architectural discovery with integrity.
         </p>
       </div>
 
       <!-- Properties column -->
       <div>
-        <h3 class="text-white font-semibold text-sm uppercase tracking-wider mb-4">
+        <h3 class="text-white font-semibold text-xs uppercase tracking-[0.15em] text-blue-400 mb-5">
           Properties
         </h3>
-        <ul class="space-y-2.5" role="list">
+        <ul class="space-y-3" role="list">
           {propertyLinks.map((link) => (
             <li>
               <a
                 href={link.href}
-                class="text-text-light text-sm hover:text-accent transition-colors duration-200 no-underline inline-flex items-center gap-1"
+                class="text-slate-400 text-sm hover:text-blue-300 transition-colors duration-200 no-underline inline-flex items-center gap-1.5 group"
               >
-                {link.label}
-                <ArrowUpRight size={12} class="opacity-0 group-hover:opacity-100 transition-opacity" />
+                <span>{link.label}</span>
+                <ArrowUpRight size={13} class="opacity-0 group-hover:opacity-100 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all text-blue-400" />
               </a>
             </li>
           ))}
@@ -61,15 +64,15 @@ const companyLinks = [
 
       <!-- Company column -->
       <div>
-        <h3 class="text-white font-semibold text-sm uppercase tracking-wider mb-4">
+        <h3 class="text-white font-semibold text-xs uppercase tracking-[0.15em] text-blue-400 mb-5">
           Company
         </h3>
-        <ul class="space-y-2.5" role="list">
+        <ul class="space-y-3" role="list">
           {companyLinks.map((link) => (
             <li>
               <a
                 href={link.href}
-                class="text-text-light text-sm hover:text-accent transition-colors duration-200 no-underline"
+                class="text-slate-400 text-sm hover:text-blue-300 transition-colors duration-200 no-underline"
               >
                 {link.label}
               </a>
@@ -80,35 +83,34 @@ const companyLinks = [
 
       <!-- Contact column -->
       <div>
-        <h3 class="text-white font-semibold text-sm uppercase tracking-wider mb-4">
+        <h3 class="text-white font-semibold text-xs uppercase tracking-[0.15em] text-blue-400 mb-5">
           Contact
         </h3>
-        <ul class="space-y-3" role="list">
-          <li class="flex items-start gap-3 text-sm text-text-light">
-            <MapPin size={16} class="text-accent mt-0.5 shrink-0" />
+        <ul class="space-y-3.5" role="list">
+          <li class="flex items-start gap-3 text-sm text-slate-400">
+            <MapPin size={16} class="text-blue-400 mt-0.5 shrink-0" />
             <span>
-              {/* Demo address — actual address pending from client */}
-              <span class="text-text-light/60 italic">Address pending from client</span>
+              <span class="text-slate-500 italic">Address pending from client</span>
             </span>
           </li>
-          <li class="flex items-center gap-3 text-sm text-text-light">
-            <Phone size={16} class="text-accent shrink-0" />
+          <li class="flex items-center gap-3 text-sm text-slate-400">
+            <Phone size={16} class="text-blue-400 shrink-0" />
             {config.contactPhone ? (
-              <a href={`tel:${config.contactPhone}`} class="hover:text-accent transition-colors no-underline">
+              <a href={`tel:${config.contactPhone}`} class="hover:text-blue-300 transition-colors no-underline">
                 {config.contactPhone}
               </a>
             ) : (
-              <span class="text-text-light/60 italic">Phone pending</span>
+              <span class="text-slate-500 italic">Phone pending</span>
             )}
           </li>
-          <li class="flex items-center gap-3 text-sm text-text-light">
-            <Mail size={16} class="text-accent shrink-0" />
+          <li class="flex items-center gap-3 text-sm text-slate-400">
+            <Mail size={16} class="text-blue-400 shrink-0" />
             {config.contactEmail ? (
-              <a href={`mailto:${config.contactEmail}`} class="hover:text-accent transition-colors no-underline">
+              <a href={`mailto:${config.contactEmail}`} class="hover:text-blue-300 transition-colors no-underline">
                 {config.contactEmail}
               </a>
             ) : (
-              <span class="text-text-light/60 italic">Email pending</span>
+              <span class="text-slate-500 italic">Email pending</span>
             )}
           </li>
         </ul>
@@ -117,16 +119,16 @@ const companyLinks = [
   </div>
 
   <!-- Bottom bar -->
-  <div class="border-t border-border">
+  <div class="border-t border-white/10 relative z-10">
     <div class="container-site py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <p class="text-text-light text-xs">
+      <p class="text-slate-500 text-xs">
         &copy; {currentYear} {config.brand.name}. All rights reserved.
       </p>
       <div class="flex items-center gap-6">
-        <a href="#" class="text-text-light text-xs hover:text-accent transition-colors no-underline">
+        <a href="#" class="text-slate-500 text-xs hover:text-slate-300 transition-colors no-underline">
           Privacy Policy
         </a>
-        <a href="#" class="text-text-light text-xs hover:text-accent transition-colors no-underline">
+        <a href="#" class="text-slate-500 text-xs hover:text-slate-300 transition-colors no-underline">
           Terms of Service
         </a>
       </div>

@@ -4,26 +4,24 @@ import Hero from '@components/hero/Hero.astro';
 import PropertySearchForm from '@components/search/PropertySearchForm.astro';
 import FeaturedProperties from '@components/sections/FeaturedProperties.astro';
 import PropertyCategories from '@components/property/PropertyCategories.astro';
+import TrustTicker from '@components/sections/TrustTicker.astro';
 ---
 
 <BaseLayout title="Home" darkBody>
+  {/* 1. Cinematic Scroll Hero */}
   <Hero />
 
-  <section class="px-4 bg-bg-primary pb-16 relative z-10">
+  {/* 2. Floating Search Interface */}
+  <section class="px-4 bg-bg-primary pb-12 relative z-20">
     <PropertySearchForm variant="hero" />
   </section>
 
+  {/* 3. Continuous Trust Marquee */}
+  <TrustTicker />
+
+  {/* 4. Editorial Featured Showcase */}
   <FeaturedProperties />
 
+  {/* 5. Category Asset Classes */}
   <PropertyCategories variant="homepage" />
-
-  <!-- 
-    Remaining homepage sections (Phase 2B+):
-    - Property Search
-    - About / Company
-    - Services
-    - Why Choose Us
-    - CTA Banner
-    - Contact / Map
-  -->
 </BaseLayout>

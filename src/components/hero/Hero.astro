@@ -1,69 +1,178 @@
 ---
 import { config } from '@/lib/config';
-import { ArrowRight, Search } from '@lucide/astro';
+import { ArrowRight, Search, Compass, ShieldCheck } from '@lucide/astro';
 ---
 
-<section
-  class="relative min-h-[100svh] flex items-center justify-center bg-bg-primary overflow-hidden"
-  aria-label="Hero"
->
-  <!-- Background image with overlay -->
-  <div class="absolute inset-0">
-    <!-- Demo: using a CSS gradient as hero background until actual property images are available -->
+<div id="hero-scroll-container" class="relative w-full h-[220vh] bg-bg-primary">
+  <!-- Sticky Viewport -->
+  <section
+    id="hero-sticky-viewport"
+    class="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden z-10"
+    aria-label="Hero"
+  >
+    <!-- Layer 1: Ambient Electric Mesh Background -->
+    <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+      <!-- Glow Orbs -->
+      <div
+        id="hero-glow-1"
+        class="absolute -top-32 left-1/4 w-[500px] h-[500px] rounded-full bg-blue-600/20 blur-[120px] pointer-events-none transform transition-transform duration-1000"
+      ></div>
+      <div
+        id="hero-glow-2"
+        class="absolute bottom-10 right-1/4 w-[600px] h-[600px] rounded-full bg-purple-600/15 blur-[150px] pointer-events-none transform transition-transform duration-1000"
+      ></div>
+      <div
+        class="absolute inset-0 opacity-[0.03]"
+        style="background-image: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.8) 1px, transparent 1px); background-size: 32px 32px;"
+      ></div>
+    </div>
+
+    <!-- Layer 2: Architectural Portal Image Layer (Scroll-scaled) -->
     <div
-      class="absolute inset-0"
-      style="background: linear-gradient(135deg, #0B0E14 0%, #151922 40%, #1a1f2e 70%, #0B0E14 100%);"
-      role="img"
-      aria-label="Architectural background"
+      id="hero-image-frame"
+      class="absolute z-0 w-[90%] md:w-[78%] h-[60vh] md:h-[70vh] rounded-[2.5rem] overflow-hidden border border-white/10 shadow-2xl shadow-blue-950/80 transition-shadow duration-700"
     >
-    </div>
-    <!-- Subtle decorative element -->
-    <div
-      class="absolute inset-0 opacity-[0.04]"
-      style="background-image: radial-gradient(circle at 30% 50%, rgba(212, 175, 55, 0.3) 0%, transparent 60%), radial-gradient(circle at 70% 30%, rgba(212, 175, 55, 0.15) 0%, transparent 50%);"
-    >
-    </div>
-    <div class="absolute inset-0 bg-black/30"></div>
-  </div>
-
-  <!-- Content -->
-  <div class="relative z-10 container-site text-center px-4 py-32 md:py-40">
-    <!-- Kicker -->
-    <p class="kicker mb-6 tracking-[0.2em]" id="hero-kicker">
-      {config.brand.name}
-    </p>
-
-    <!-- Headline -->
-    <h1 class="heading-hero max-w-4xl mx-auto mb-6" id="hero-heading">
-      {config.brand.tagline}
-    </h1>
-
-    <!-- Supporting text -->
-    <p
-      class="text-text-light text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed"
-      id="hero-description"
-    >
-      Discover residential, commercial, and land properties with trusted
-      guidance. Browse our listings and find your next property today.
-    </p>
-
-    <!-- CTAs -->
-    <div class="flex flex-col sm:flex-row items-center justify-center gap-4" id="hero-ctas">
-      <a href="/properties" class="btn btn-primary text-base px-8 py-3.5">
-        <Search size={18} />
-        Explore Properties
-      </a>
-      <a href="/contact" class="btn btn-outline text-base px-8 py-3.5">
-        Contact Us
-        <ArrowRight size={18} />
-      </a>
+      <img
+        src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=85"
+        alt="Architectural luxury property"
+        class="w-full h-full object-cover object-center scale-110 filter brightness-[0.75] contrast-[1.1]"
+        id="hero-image"
+      />
+      <!-- Gradient Overlays for contrast -->
+      <div class="absolute inset-0 bg-gradient-to-t from-bg-primary via-bg-primary/40 to-transparent"></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-bg-primary/70 via-transparent to-bg-primary/70"></div>
     </div>
 
-    <!-- Scroll indicator -->
-    <div class="absolute bottom-8 left-1/2 -translate-x-1/2" aria-hidden="true">
-      <div class="w-6 h-10 rounded-full border-2 border-white/20 flex items-start justify-center p-1.5">
-        <div class="w-1 h-2.5 bg-white/40 rounded-full animate-bounce"></div>
+    <!-- Layer 3: Hero Content Narrative -->
+    <div class="relative z-10 container-site px-4 text-center flex flex-col items-center justify-center max-w-5xl mx-auto pt-12">
+      <!-- Tag/Badge -->
+      <div
+        id="hero-badge"
+        class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-surface text-blue-400 border border-blue-500/30 text-xs font-semibold uppercase tracking-[0.2em] mb-6 shadow-lg shadow-blue-500/10"
+      >
+        <Compass size={14} class="text-blue-400 animate-spin-slow" />
+        <span>{config.brand.name} • Architectural Excellence</span>
+      </div>
+
+      <!-- Main Headline -->
+      <h1
+        id="hero-title"
+        class="font-sans font-extrabold text-4xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight leading-[1.05] mb-6 text-gradient-silver max-w-4xl"
+      >
+        Redefining <span class="text-gradient-electric">Luxury Living</span> & Real Estate.
+      </h1>
+
+      <!-- Subtitle -->
+      <p
+        id="hero-subtitle"
+        class="text-slate-300 text-base sm:text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed font-light"
+      >
+        Discover curated residential residences, commercial headquarters, and premium land holdings tailored to your vision.
+      </p>
+
+      <!-- Action Buttons -->
+      <div id="hero-actions" class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
+        <a href="/properties" class="btn btn-electric text-base px-8 py-4 rounded-2xl w-full sm:w-auto font-semibold flex items-center justify-center gap-2">
+          <Search size={18} />
+          Explore Catalogue
+        </a>
+        <a href="/contact" class="btn glass-surface text-white hover:text-blue-300 border border-white/15 hover:border-blue-500/40 text-base px-8 py-4 rounded-2xl w-full sm:w-auto font-semibold flex items-center justify-center gap-2 transition-all">
+          Schedule Consultation
+          <ArrowRight size={18} />
+        </a>
+      </div>
+
+      <!-- Key Micro Stats pill -->
+      <div id="hero-stats" class="mt-12 hidden sm:flex items-center justify-center gap-8 px-8 py-3 rounded-full glass-surface border border-white/10 text-xs text-slate-300">
+        <div class="flex items-center gap-2">
+          <ShieldCheck size={16} class="text-blue-400" />
+          <span>Verified Demo Inventory</span>
+        </div>
+        <div class="w-1 h-1 rounded-full bg-slate-600"></div>
+        <div>Gurugram & Delhi NCR</div>
+        <div class="w-1 h-1 rounded-full bg-slate-600"></div>
+        <div class="text-blue-400 font-semibold">Residential • Commercial • Plots</div>
       </div>
     </div>
-  </div>
-</section>
+
+    <!-- Scroll Indicator -->
+    <div id="hero-scroll-indicator" class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2">
+      <span class="text-[10px] tracking-[0.25em] text-slate-400 uppercase font-medium">Scroll to Discover</span>
+      <div class="w-5 h-9 rounded-full border border-white/20 flex items-start justify-center p-1">
+        <div class="w-1 h-2 bg-blue-400 rounded-full animate-bounce"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  import gsap from 'gsap';
+  import ScrollTrigger from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const initHeroAnimation = () => {
+    const container = document.getElementById('hero-scroll-container');
+    const imageFrame = document.getElementById('hero-image-frame');
+    const image = document.getElementById('hero-image');
+    const title = document.getElementById('hero-title');
+    const subtitle = document.getElementById('hero-subtitle');
+    const indicator = document.getElementById('hero-scroll-indicator');
+
+    if (!container || !imageFrame) return;
+
+    let mm = gsap.matchMedia();
+
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: container,
+          start: 'top top',
+          end: 'bottom bottom',
+          scrub: 0.8,
+        },
+      });
+
+      tl.to(imageFrame, {
+        width: '100%',
+        height: '100vh',
+        borderRadius: '0rem',
+        duration: 1.5,
+        ease: 'power2.inOut',
+      }, 0);
+
+      tl.to(image, {
+        scale: 1.0,
+        filter: 'brightness(0.4) contrast(1.05)',
+        duration: 1.5,
+        ease: 'power2.inOut',
+      }, 0);
+
+      tl.to(title, {
+        y: -30,
+        scale: 1.03,
+        duration: 1,
+        ease: 'power1.out',
+      }, 0.2);
+
+      tl.to(subtitle, {
+        y: -20,
+        opacity: 0.8,
+        duration: 1,
+      }, 0.2);
+
+      tl.to(indicator, {
+        opacity: 0,
+        y: 20,
+        duration: 0.4,
+      }, 0);
+    });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initHeroAnimation);
+  } else {
+    initHeroAnimation();
+  }
+  document.addEventListener('astro:page-load', initHeroAnimation);
+</script>

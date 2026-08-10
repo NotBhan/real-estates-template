@@ -19,8 +19,8 @@ const isHero = variant === 'hero';
 
 // Hero variant uses a more elevated, contained style. Default variant is flatter.
 const formContainerClasses = isHero
-  ? 'bg-bg-dark border border-border p-4 md:p-6 rounded-2xl shadow-2xl relative z-10 w-full max-w-5xl mx-auto -mt-16'
-  : 'bg-bg-dark border border-border p-4 rounded-xl w-full';
+  ? 'glass-card border border-white/15 p-5 md:p-7 rounded-3xl shadow-2xl shadow-blue-950/80 relative z-20 w-full max-w-5xl mx-auto -mt-20'
+  : 'glass-card border border-white/10 p-5 rounded-2xl w-full';
 
 const gridClasses = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 items-end';
 ---
@@ -29,11 +29,11 @@ const gridClasses = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 items-
   <div class={gridClasses}>
     {/* Keyword Search */}
     <div class="lg:col-span-2">
-      <label for={`q-${variant}`} class="block text-sm font-medium text-text-light mb-1.5">
+      <label for={`q-${variant}`} class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
         Location or Keyword
       </label>
       <div class="relative">
-        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-text-light">
+        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-blue-400">
           <Search size={18} />
         </div>
         <input
@@ -41,25 +41,25 @@ const gridClasses = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 items-
           id={`q-${variant}`}
           name="q"
           value={currentQ}
-          placeholder="e.g. Goa, Villa, 4BHK..."
-          class="w-full bg-bg-primary border border-border rounded-lg py-2.5 pl-10 pr-4 text-white placeholder:text-text-light/50 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors"
+          placeholder="e.g. Gurugram, Villa, 4BHK..."
+          class="w-full bg-slate-900/80 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 transition-all"
         />
       </div>
     </div>
 
     {/* Property Type */}
     <div>
-      <label for={`type-${variant}`} class="block text-sm font-medium text-text-light mb-1.5">
+      <label for={`type-${variant}`} class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
         Property Type
       </label>
       <select
         id={`type-${variant}`}
         name="type"
-        class="w-full bg-bg-primary border border-border rounded-lg py-2.5 px-4 text-white focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors appearance-none"
+        class="w-full bg-slate-900/80 border border-white/10 rounded-xl py-3 px-4 text-white text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 transition-all appearance-none"
       >
-        <option value="">All Types</option>
+        <option value="" class="bg-slate-900">All Types</option>
         {PROPERTY_TYPES.map((type) => (
-          <option value={type} selected={currentType === type}>
+          <option value={type} selected={currentType === type} class="bg-slate-900">
             {type}
           </option>
         ))}
@@ -68,24 +68,24 @@ const gridClasses = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 items-
 
     {/* Listing Type */}
     <div>
-      <label for={`listing-${variant}`} class="block text-sm font-medium text-text-light mb-1.5">
+      <label for={`listing-${variant}`} class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
         Status
       </label>
       <select
         id={`listing-${variant}`}
         name="listing"
-        class="w-full bg-bg-primary border border-border rounded-lg py-2.5 px-4 text-white focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors appearance-none"
+        class="w-full bg-slate-900/80 border border-white/10 rounded-xl py-3 px-4 text-white text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 transition-all appearance-none"
       >
-        <option value="">Any</option>
-        <option value="Sale" selected={currentListing === 'Sale'}>For Sale</option>
-        <option value="Rent" selected={currentListing === 'Rent'}>For Rent</option>
+        <option value="" class="bg-slate-900">Any Status</option>
+        <option value="Sale" selected={currentListing === 'Sale'} class="bg-slate-900">For Sale</option>
+        <option value="Rent" selected={currentListing === 'Rent'} class="bg-slate-900">For Rent</option>
       </select>
     </div>
 
     {/* Price Range */}
     <div class="grid grid-cols-2 gap-2 lg:col-span-1">
       <div>
-        <label for={`minPrice-${variant}`} class="block text-sm font-medium text-text-light mb-1.5">
+        <label for={`minPrice-${variant}`} class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
           Min Price
         </label>
         <input
@@ -96,11 +96,11 @@ const gridClasses = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 items-
           placeholder="₹ Min"
           min="0"
           step="100000"
-          class="w-full bg-bg-primary border border-border rounded-lg py-2.5 px-3 text-white placeholder:text-text-light/50 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors"
+          class="w-full bg-slate-900/80 border border-white/10 rounded-xl py-3 px-3 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 transition-all"
         />
       </div>
       <div>
-        <label for={`maxPrice-${variant}`} class="block text-sm font-medium text-text-light mb-1.5">
+        <label for={`maxPrice-${variant}`} class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
           Max Price
         </label>
         <input
@@ -111,14 +111,14 @@ const gridClasses = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 items-
           placeholder="₹ Max"
           min="0"
           step="100000"
-          class="w-full bg-bg-primary border border-border rounded-lg py-2.5 px-3 text-white placeholder:text-text-light/50 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors"
+          class="w-full bg-slate-900/80 border border-white/10 rounded-xl py-3 px-3 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 transition-all"
         />
       </div>
     </div>
 
     {/* Submit Button */}
     <div class="lg:col-span-1 h-full flex items-end pt-4 lg:pt-0">
-      <button type="submit" class="btn btn-primary w-full py-2.5 h-[42px] flex items-center justify-center">
+      <button type="submit" class="btn btn-electric w-full py-3 h-[46px] rounded-xl flex items-center justify-center font-semibold text-sm tracking-wide">
         Search
       </button>
     </div>

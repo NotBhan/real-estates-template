@@ -15,37 +15,46 @@ const currentPath = Astro.url.pathname;
 
 <header
   id="site-navbar"
-  class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-out"
+  class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-out py-4"
 >
   <nav
-    class="container-site flex items-center justify-between h-20"
+    class="container-site flex items-center justify-between h-16 px-6 rounded-full transition-all duration-300"
+    id="nav-inner"
     aria-label="Main navigation"
   >
     <!-- Brand -->
     <a
       href="/"
-      class="flex items-center gap-2 text-white font-bold text-lg tracking-tight no-underline"
+      class="flex items-center gap-3 text-white font-extrabold text-xl tracking-tight no-underline group"
       aria-label={`${config.brand.name} — Home`}
     >
-      <span class="text-accent font-extrabold text-xl">ML</span>
-      <span class="hidden sm:inline">{config.brand.name}</span>
+      <span class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-500 flex items-center justify-center text-white font-black text-lg shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-transform duration-300">
+        ML
+      </span>
+      <span class="hidden sm:inline font-sans text-gradient-silver tracking-tight group-hover:text-white transition-colors">{config.brand.name}</span>
     </a>
 
     <!-- Desktop nav links -->
-    <ul class="hidden lg:flex items-center gap-1" role="list">
+    <ul class="hidden lg:flex items-center gap-2" role="list">
       {navLinks.map((link) => (
         <li>
           <a
             href={link.href}
             class:list={[
-              'px-4 py-2 text-sm font-medium rounded-md transition-colors duration-200 no-underline',
+              'relative px-4 py-2 text-sm font-medium transition-colors duration-200 no-underline group',
               currentPath === link.href
-                ? 'text-accent'
-                : 'text-white/80 hover:text-white',
+                ? 'text-blue-400 font-semibold'
+                : 'text-slate-300 hover:text-white',
             ]}
             aria-current={currentPath === link.href ? 'page' : undefined}
           >
             {link.label}
+            <span
+              class:list={[
+                'absolute bottom-0 left-4 right-4 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transition-all duration-300 transform origin-left',
+                currentPath === link.href ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100',
+              ]}
+            />
           </a>
         </li>
       ))}
@@ -56,14 +65,14 @@ const currentPath = Astro.url.pathname;
       {config.contactPhone ? (
         <a
           href={`tel:${config.contactPhone}`}
-          class="btn btn-primary hidden lg:inline-flex text-sm"
+          class="btn btn-electric hidden lg:inline-flex text-xs uppercase tracking-wider font-semibold rounded-full px-5 py-2.5"
         >
-          <Phone size={16} />
+          <Phone size={15} />
           Call Now
         </a>
       ) : (
-        <span class="btn btn-primary hidden lg:inline-flex text-sm opacity-60 cursor-default" title="Phone number pending">
-          <Phone size={16} />
+        <span class="btn btn-electric hidden lg:inline-flex text-xs uppercase tracking-wider font-semibold rounded-full px-5 py-2.5 opacity-70 cursor-default" title="Phone number pending">
+          <Phone size={15} />
           Call Now
         </span>
       )}
@@ -72,13 +81,13 @@ const currentPath = Astro.url.pathname;
       <button
         id="mobile-menu-toggle"
         type="button"
-        class="lg:hidden flex items-center justify-center w-10 h-10 text-white rounded-md hover:bg-white/10 transition-colors"
+        class="lg:hidden flex items-center justify-center w-10 h-10 text-white rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
         aria-expanded="false"
         aria-controls="mobile-menu"
         aria-label="Open menu"
       >
-        <Menu id="menu-icon-open" size={24} />
-        <X id="menu-icon-close" size={24} class="hidden" />
+        <Menu id="menu-icon-open" size={22} />
+        <X id="menu-icon-close" size={22} class="hidden" />
       </button>
     </div>
   </nav>
@@ -86,21 +95,21 @@ const currentPath = Astro.url.pathname;
   <!-- Mobile menu overlay -->
   <div
     id="mobile-menu"
-    class="lg:hidden absolute top-full left-0 right-0 h-[calc(100dvh-5rem)] bg-bg-primary backdrop-blur-md transform translate-x-full transition-transform duration-300 ease-out overflow-y-auto"
+    class="lg:hidden absolute top-full left-0 right-0 h-[calc(100dvh-5rem)] bg-gray-950/95 backdrop-blur-xl border-t border-white/10 transform translate-x-full transition-transform duration-300 ease-out overflow-y-auto"
     aria-hidden="true"
     role="dialog"
     aria-label="Mobile navigation"
   >
-    <ul class="flex flex-col items-center gap-2 pt-8 px-6" role="list">
+    <ul class="flex flex-col items-center gap-3 pt-8 px-6" role="list">
       {navLinks.map((link) => (
         <li class="w-full">
           <a
             href={link.href}
             class:list={[
-              'block w-full text-center py-3 text-lg font-medium rounded-lg transition-colors duration-200 no-underline',
+              'block w-full text-center py-3.5 text-lg font-medium rounded-xl transition-all duration-200 no-underline',
               currentPath === link.href
-                ? 'text-accent bg-white/5'
-                : 'text-white/80 hover:text-white hover:bg-white/5',
+                ? 'text-blue-400 bg-blue-500/10 border border-blue-500/20'
+                : 'text-slate-300 hover:text-white hover:bg-white/5',
             ]}
             aria-current={currentPath === link.href ? 'page' : undefined}
           >
@@ -112,13 +121,13 @@ const currentPath = Astro.url.pathname;
         {config.contactPhone ? (
           <a
             href={`tel:${config.contactPhone}`}
-            class="btn btn-primary w-full justify-center"
+            class="btn btn-electric w-full justify-center rounded-xl py-3 text.sm"
           >
             <Phone size={16} />
             Call Now
           </a>
         ) : (
-          <span class="btn btn-primary w-full justify-center opacity-60 cursor-default" title="Phone number pending">
+          <span class="btn btn-electric w-full justify-center rounded-xl py-3 text-sm opacity-70 cursor-default" title="Phone number pending">
             <Phone size={16} />
             Call Now
           </span>
@@ -149,18 +158,20 @@ const currentPath = Astro.url.pathname;
     });
   }
 
-  // Navbar scroll behavior: add background on scroll
-  const navbar = document.getElementById('site-navbar');
-  if (navbar) {
+  // Navbar scroll behavior: apply floating pill glass style on scroll
+  const navInner = document.getElementById('nav-inner');
+  if (navInner) {
     const onScroll = () => {
       if (window.scrollY > 40) {
-        navbar.classList.add('bg-bg-primary/95', 'backdrop-blur-md', 'shadow-lg', 'shadow-black/10');
+        navInner.classList.add('glass-nav', 'shadow-2xl', 'shadow-blue-950/40');
+        navInner.classList.remove('bg-transparent');
       } else {
-        navbar.classList.remove('bg-bg-primary/95', 'backdrop-blur-md', 'shadow-lg', 'shadow-black/10');
+        navInner.classList.remove('glass-nav', 'shadow-2xl', 'shadow-blue-950/40');
+        navInner.classList.add('bg-transparent');
       }
     };
     window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll(); // run on load
+    onScroll();
   }
 </script>
 

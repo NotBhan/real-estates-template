@@ -5,35 +5,38 @@
    ============================================================ */
 
 @theme {
-  /* --- Colors ------------------------------------------------ */
-  --color-bg-primary: #050505;
-  --color-bg-dark: #0B0E14;
-  --color-bg-secondary: #151922;
-  --color-bg-light: #F7F7F5;
+  /* --- Colors (Midnight Blue + Electric Blue/Purple) ---------- */
+  --color-bg-primary: #030712;
+  --color-bg-dark: #0B0F19;
+  --color-bg-secondary: #111827;
+  --color-bg-light: #F8FAFC;
   --color-white: #FFFFFF;
 
-  --color-accent: #D4AF37;
-  --color-accent-light: #E7C98B;
-  --color-accent-muted: #D4AF3733; /* 20% opacity gold */
+  --color-accent: #3B82F6;
+  --color-accent-purple: #8B5CF6;
+  --color-accent-cyan: #06B6D4;
+  --color-accent-light: #60A5FA;
+  --color-accent-muted: rgba(59, 130, 246, 0.15);
 
-  --color-text-primary: #111111;
-  --color-text-muted: #5F6368;
-  --color-text-light: #A0A0A0;
-  --color-text-on-dark: #E8E8E8;
+  --color-text-primary: #0F172A;
+  --color-text-muted: #64748B;
+  --color-text-light: #94A3B8;
+  --color-text-on-dark: #F1F5F9;
 
-  --color-border: #2A2E38;
-  --color-border-light: #E0E0E0;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-light: rgba(255, 255, 255, 0.15);
+  --color-border-glow: rgba(99, 102, 241, 0.3);
 
-  --color-success: #22C55E;
-  --color-error: #EF4444;
+  --color-success: #10B981;
+  --color-error: #F43F5E;
   --color-warning: #F59E0B;
 
   /* --- Typography -------------------------------------------- */
-  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-sans: "Outfit", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
 
   /* --- Spacing ----------------------------------------------- */
-  --spacing-section: 6rem;
-  --spacing-section-sm: 4rem;
+  --spacing-section: 7rem;
+  --spacing-section-sm: 4.5rem;
 
   /* --- Container --------------------------------------------- */
   --container-max: 80rem; /* 1280px */
@@ -44,7 +47,8 @@
   --radius-sm: 0.375rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
-  --radius-xl: 1rem;
+  --radius-xl: 1.25rem;
+  --radius-2xl: 2rem;
 
   /* --- Transitions ------------------------------------------- */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -309,3 +313,79 @@
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+/* ============================================================
+   Phase 3 Glassmorphism & Motion Utilities
+   ============================================================ */
+
+.glass-surface {
+  background: rgba(17, 24, 39, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-nav {
+  background: rgba(3, 7, 18, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.glass-card {
+  background: linear-gradient(135deg, rgba(17, 24, 39, 0.7) 0%, rgba(11, 15, 25, 0.85) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card:hover {
+  border-color: rgba(99, 102, 241, 0.35);
+  box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.25);
+}
+
+.text-gradient-electric {
+  background: linear-gradient(135deg, #60A5FA 0%, #C084FC 50%, #38BDF8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-silver {
+  background: linear-gradient(180deg, #FFFFFF 0%, #94A3B8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.btn-electric {
+  background: linear-gradient(135deg, #2563EB 0%, #7C3AED 100%);
+  color: #FFFFFF;
+  box-shadow: 0 4px 20px rgba(37, 99, 235, 0.35);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-electric:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 30px rgba(124, 58, 237, 0.5);
+}
+
+.btn-electric:active {
+  transform: translateY(0) scale(0.98);
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 35s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+

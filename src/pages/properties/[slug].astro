@@ -29,24 +29,23 @@ const description = property?.description?.slice(0, 155) + '...';
   title={property ? `${property.title} | Maa Laxmi Property` : 'Property Not Found'} 
   description={description || "Property detail page"}
   ogImage={ogImage}
-  darkBody
 >
   {!property ? (
-    <div class="pt-32 pb-24 bg-bg-primary min-h-[70vh] flex items-center">
+    <div class="pt-32 pb-24 bg-canvas min-h-[70vh] flex items-center">
       <div class="container-site w-full">
-        <div class="text-center py-24 glass-surface rounded-3xl border border-white/10 max-w-xl mx-auto">
-          <h1 class="text-white text-3xl font-bold mb-4">Property Not Found</h1>
-          <p class="text-slate-400 mb-8 font-light">The property you are looking for does not exist or has been removed.</p>
-          <a href="/properties" class="btn btn-electric px-6 py-3 rounded-xl">Back to Properties</a>
+        <div class="text-center py-20 bg-white rounded-3xl border border-stone-200 shadow-sm max-w-xl mx-auto p-8">
+          <h1 class="text-ink text-3xl font-bold mb-4">Property Not Found</h1>
+          <p class="text-muted mb-8 font-light">The property you are looking for does not exist or has been removed.</p>
+          <a href="/properties" class="btn btn-action-blue px-7 py-3 rounded-full">Back to Properties</a>
         </div>
       </div>
     </div>
   ) : (
-    <div class="bg-bg-primary pb-20">
+    <div class="bg-canvas pb-20">
       {/* Back Navigation */}
-      <div class="container-site pt-28 pb-4">
-        <a href="/properties" class="inline-flex items-center gap-2 text-slate-400 hover:text-blue-300 text-sm font-medium transition-colors no-underline group">
-          <ArrowLeft size={16} class="transform group-hover:-translate-x-1 transition-transform text-blue-400" />
+      <div class="container-site pt-24 md:pt-28 pb-4">
+        <a href="/properties" class="inline-flex items-center gap-2 text-muted hover:text-action-blue text-sm font-semibold transition-colors no-underline group">
+          <ArrowLeft size={16} class="transform group-hover:-translate-x-1 transition-transform text-action-blue" />
           <span>Back to All Properties</span>
         </a>
       </div>

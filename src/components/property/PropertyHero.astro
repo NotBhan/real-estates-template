@@ -10,49 +10,48 @@ const { property } = Astro.props;
 const primaryImage = property.images[0];
 const imageCount = property.images.length;
 
-// Ensure alt text is meaningful
 const altText = primaryImage?.alt || `${property.title} - Main view`;
 ---
 
-<div class="relative w-full aspect-[4/3] md:aspect-[16/10] xl:aspect-[21/9] xl:max-h-[75vh] overflow-hidden bg-gray-950" id="property-hero-image">
+<div class="relative w-full aspect-[4/3] md:aspect-[16/10] xl:aspect-[21/9] xl:max-h-[72vh] overflow-hidden bg-stone-900" id="property-hero-image">
   {primaryImage ? (
     <img 
       src={primaryImage.url} 
       alt={altText}
-      class="w-full h-full object-cover object-center filter brightness-[0.85] contrast-[1.05]"
+      class="w-full h-full object-cover object-center filter brightness-[0.8] contrast-[1.05] transition-transform duration-700"
       fetchpriority="high"
       loading="eager"
+      id="detail-hero-img"
     />
   ) : (
-    <div class="w-full h-full flex items-center justify-center text-slate-400">
+    <div class="w-full h-full flex items-center justify-center text-stone-400">
       <span>No image available</span>
     </div>
   )}
 
-  {/* Gradient Overlay for bottom readability */}
-  <div class="absolute inset-0 bg-gradient-to-t from-bg-primary via-bg-primary/30 to-transparent pointer-events-none"></div>
-  <div class="absolute inset-0 bg-gradient-to-r from-bg-primary/50 via-transparent to-bg-primary/50 pointer-events-none"></div>
+  {/* Soft gradient overlay */}
+  <div class="absolute inset-0 bg-gradient-to-t from-canvas via-transparent to-black/30 pointer-events-none"></div>
 
   {/* Badges Container */}
-  <div class="absolute top-28 left-4 right-4 md:left-8 md:right-8 flex justify-between items-start pointer-events-none z-10" id="property-hero-badges">
+  <div class="absolute top-24 md:top-28 left-4 right-4 md:left-8 md:right-8 flex justify-between items-start pointer-events-none z-10" id="property-hero-badges">
     {/* Property Type */}
-    <div class="glass-surface border border-white/15 text-slate-200 text-xs font-semibold uppercase tracking-[0.15em] px-4 py-2 rounded-full pointer-events-auto shadow-lg shadow-black/40">
+    <div class="bg-white/95 backdrop-blur-md border border-stone-200 text-ink text-xs font-bold uppercase tracking-[0.15em] px-4 py-2 rounded-full pointer-events-auto shadow-sm">
       {property.propertyType}
     </div>
 
     {/* Status / Featured */}
     <div class="flex flex-col items-end gap-2 pointer-events-auto">
       {property.status !== 'Available' ? (
-        <div class="glass-surface border border-white/15 text-slate-300 text-xs font-semibold uppercase tracking-[0.15em] px-4 py-2 rounded-full shadow-lg shadow-black/40" aria-label={`Status: ${property.status}`}>
+        <div class="bg-stone-800 text-white text-xs font-bold uppercase tracking-[0.15em] px-4 py-2 rounded-full shadow-sm" aria-label={`Status: ${property.status}`}>
           {property.status}
         </div>
       ) : (
-        <div class="btn-electric text-white text-xs font-bold uppercase tracking-[0.15em] px-4 py-2 rounded-full shadow-lg shadow-blue-500/30">
+        <div class="bg-action-blue text-white text-xs font-bold uppercase tracking-[0.15em] px-4 py-2 rounded-full shadow-sm">
           For {property.listingType}
         </div>
       )}
       {property.featured && (
-        <div class="bg-gradient-to-r from-blue-600 to-purple-600 border border-white/20 text-white text-xs font-bold uppercase tracking-[0.15em] px-4 py-2 rounded-full shadow-lg shadow-purple-500/20">
+        <div class="bg-brand-gold text-white text-xs font-bold uppercase tracking-[0.15em] px-4 py-2 rounded-full shadow-sm">
           ★ Featured
         </div>
       )}
@@ -61,14 +60,48 @@ const altText = primaryImage?.alt || `${property.title} - Main view`;
 
   {/* Gallery Entry Button */}
   {imageCount > 1 && (
-    <div class="absolute bottom-8 right-6 md:right-10 pointer-events-auto z-10">
+    <div class="absolute bottom-6 right-6 md:right-10 pointer-events-auto z-10">
       <a 
         href="#property-gallery" 
-        class="flex items-center gap-2.5 glass-card border border-white/20 hover:border-blue-400 text-white text-xs font-semibold uppercase tracking-wider px-5 py-3 rounded-xl transition-all duration-300 shadow-2xl shadow-blue-950/80 no-underline hover:scale-105"
+        class="flex items-center gap-2.5 bg-white/95 backdrop-blur-md border border-stone-200 hover:border-action-blue text-ink text-xs font-bold uppercase tracking-wider px-5 py-3 rounded-full transition-all duration-300 shadow-md no-underline hover:text-action-blue"
       >
-        <Camera size={18} class="text-blue-400" />
+        <Camera size={16} class="text-action-blue" />
         <span>View {imageCount} Photographs</span>
       </a>
     </div>
   )}
 </div>
+
+<script>
+  import gsap from 'gsap';
+  import ScrollTrigger from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const initDetailHeroAnimation = () => {
+    const heroImg = document.getElementById('detail-hero-img');
+    if (!heroImg) return;
+
+    let mm = gsap.matchMedia();
+
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      gsap.to(heroImg, {
+        scrollTrigger: {
+          trigger: '#property-hero-image',
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 0.5,
+        },
+        scale: 1.08,
+        y: 20,
+      });
+    });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initDetailHeroAnimation);
+  } else {
+    initDetailHeroAnimation();
+  }
+  document.addEventListener('astro:page-load', initDetailHeroAnimation);
+</script>

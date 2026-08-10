@@ -20,23 +20,52 @@ const companyLinks = [
 ];
 ---
 
-<footer class="bg-bg-primary text-slate-200 border-t border-white/10 relative overflow-hidden" role="contentinfo">
-  <!-- Subtle ambient glow -->
-  <div class="absolute bottom-0 right-1/4 w-[500px] h-[300px] bg-blue-600/10 rounded-full blur-[140px] pointer-events-none"></div>
+<footer class="bg-surface-dark text-stone-200 border-t border-stone-800 relative overflow-hidden" role="contentinfo">
+  <!-- Prominent Final CTA Section -->
+  <div class="border-b border-stone-800/80 py-14 sm:py-20">
+    <div class="container-site text-center max-w-3xl mx-auto">
+      <div class="eyebrow-label mb-3 justify-center">
+        <span class="w-1.5 h-1.5 rounded-full bg-brand-gold"></span>
+        <span class="text-brand-gold">Get Started</span>
+      </div>
+      <h2 class="text-3xl sm:text-5xl font-bold tracking-tight text-white mb-6">
+        Find a place worth calling home.
+      </h2>
+      <p class="text-stone-400 text-base md:text-lg mb-8 font-light leading-relaxed">
+        Speak with our property consultants today or browse our handpicked collection of residential, commercial, and investment holdings.
+      </p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        {config.contactPhone ? (
+          <a href={`tel:${config.contactPhone}`} class="btn btn-action-blue text-base px-8 py-3.5 rounded-full w-full sm:w-auto font-semibold">
+            <Phone size={16} />
+            Call Now
+          </a>
+        ) : (
+          <a href="/contact" class="btn btn-action-blue text-base px-8 py-3.5 rounded-full w-full sm:w-auto font-semibold">
+            <Phone size={16} />
+            Call Now
+          </a>
+        )}
+        <a href="/properties" class="btn btn-dark-outline text-base px-8 py-3.5 rounded-full w-full sm:w-auto font-semibold">
+          Explore Properties
+        </a>
+      </div>
+    </div>
+  </div>
 
-  <!-- Main footer content -->
+  <!-- Main Footer Content -->
   <div class="container-site section-padding relative z-10">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
 
       <!-- Brand column -->
       <div class="lg:col-span-1">
-        <a href="/" class="inline-flex items-center gap-3 no-underline mb-5 group">
-          <span class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-500 flex items-center justify-center text-white font-black text-lg shadow-lg shadow-blue-500/20">
+        <a href="/" class="inline-flex items-center gap-3 no-underline mb-4 group">
+          <span class="w-9 h-9 rounded-full bg-white text-ink font-black text-xs tracking-widest flex items-center justify-center shadow-xs">
             ML
           </span>
-          <span class="text-gradient-silver font-bold text-xl">{config.brand.name}</span>
+          <span class="font-bold text-xl text-white tracking-tight">{config.brand.name}</span>
         </a>
-        <p class="text-slate-400 text-sm mt-3 max-w-xs font-light leading-relaxed">
+        <p class="text-stone-400 text-sm mt-2 max-w-xs font-light leading-relaxed">
           Your trusted property consultant for residential, commercial,
           and land properties in Delhi NCR. Redefining architectural discovery with integrity.
         </p>
@@ -44,18 +73,18 @@ const companyLinks = [
 
       <!-- Properties column -->
       <div>
-        <h3 class="text-white font-semibold text-xs uppercase tracking-[0.15em] text-blue-400 mb-5">
+        <h3 class="text-white font-bold text-xs uppercase tracking-[0.18em] mb-4">
           Properties
         </h3>
-        <ul class="space-y-3" role="list">
+        <ul class="space-y-2.5" role="list">
           {propertyLinks.map((link) => (
             <li>
               <a
                 href={link.href}
-                class="text-slate-400 text-sm hover:text-blue-300 transition-colors duration-200 no-underline inline-flex items-center gap-1.5 group"
+                class="text-stone-400 text-sm hover:text-white transition-colors duration-200 no-underline inline-flex items-center gap-1 group"
               >
                 <span>{link.label}</span>
-                <ArrowUpRight size={13} class="opacity-0 group-hover:opacity-100 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all text-blue-400" />
+                <ArrowUpRight size={13} class="opacity-0 group-hover:opacity-100 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all text-brand-gold" />
               </a>
             </li>
           ))}
@@ -64,15 +93,15 @@ const companyLinks = [
 
       <!-- Company column -->
       <div>
-        <h3 class="text-white font-semibold text-xs uppercase tracking-[0.15em] text-blue-400 mb-5">
+        <h3 class="text-white font-bold text-xs uppercase tracking-[0.18em] mb-4">
           Company
         </h3>
-        <ul class="space-y-3" role="list">
+        <ul class="space-y-2.5" role="list">
           {companyLinks.map((link) => (
             <li>
               <a
                 href={link.href}
-                class="text-slate-400 text-sm hover:text-blue-300 transition-colors duration-200 no-underline"
+                class="text-stone-400 text-sm hover:text-white transition-colors duration-200 no-underline"
               >
                 {link.label}
               </a>
@@ -83,34 +112,34 @@ const companyLinks = [
 
       <!-- Contact column -->
       <div>
-        <h3 class="text-white font-semibold text-xs uppercase tracking-[0.15em] text-blue-400 mb-5">
+        <h3 class="text-white font-bold text-xs uppercase tracking-[0.18em] mb-4">
           Contact
         </h3>
-        <ul class="space-y-3.5" role="list">
-          <li class="flex items-start gap-3 text-sm text-slate-400">
-            <MapPin size={16} class="text-blue-400 mt-0.5 shrink-0" />
+        <ul class="space-y-3" role="list">
+          <li class="flex items-start gap-3 text-sm text-stone-400">
+            <MapPin size={16} class="text-brand-gold mt-0.5 shrink-0" />
             <span>
-              <span class="text-slate-500 italic">Address pending from client</span>
+              <span class="text-stone-500 italic">Address pending from client</span>
             </span>
           </li>
-          <li class="flex items-center gap-3 text-sm text-slate-400">
-            <Phone size={16} class="text-blue-400 shrink-0" />
+          <li class="flex items-center gap-3 text-sm text-stone-400">
+            <Phone size={16} class="text-brand-gold shrink-0" />
             {config.contactPhone ? (
-              <a href={`tel:${config.contactPhone}`} class="hover:text-blue-300 transition-colors no-underline">
+              <a href={`tel:${config.contactPhone}`} class="hover:text-white transition-colors no-underline">
                 {config.contactPhone}
               </a>
             ) : (
-              <span class="text-slate-500 italic">Phone pending</span>
+              <span class="text-stone-500 italic">Phone pending</span>
             )}
           </li>
-          <li class="flex items-center gap-3 text-sm text-slate-400">
-            <Mail size={16} class="text-blue-400 shrink-0" />
+          <li class="flex items-center gap-3 text-sm text-stone-400">
+            <Mail size={16} class="text-brand-gold shrink-0" />
             {config.contactEmail ? (
-              <a href={`mailto:${config.contactEmail}`} class="hover:text-blue-300 transition-colors no-underline">
+              <a href={`mailto:${config.contactEmail}`} class="hover:text-white transition-colors no-underline">
                 {config.contactEmail}
               </a>
             ) : (
-              <span class="text-slate-500 italic">Email pending</span>
+              <span class="text-stone-500 italic">Email pending</span>
             )}
           </li>
         </ul>
@@ -118,17 +147,17 @@ const companyLinks = [
     </div>
   </div>
 
-  <!-- Bottom bar -->
-  <div class="border-t border-white/10 relative z-10">
+  <!-- Bottom Bar -->
+  <div class="border-t border-stone-800/80 relative z-10">
     <div class="container-site py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <p class="text-slate-500 text-xs">
-        &copy; {currentYear} {config.brand.name}. All rights reserved.
+      <p class="text-stone-500 text-xs">
+        &copy; {currentYear} {config.brand.name}. All rights reserved. Pre-contract demonstration.
       </p>
       <div class="flex items-center gap-6">
-        <a href="#" class="text-slate-500 text-xs hover:text-slate-300 transition-colors no-underline">
+        <a href="#" class="text-stone-500 text-xs hover:text-stone-300 transition-colors no-underline">
           Privacy Policy
         </a>
-        <a href="#" class="text-slate-500 text-xs hover:text-slate-300 transition-colors no-underline">
+        <a href="#" class="text-stone-500 text-xs hover:text-stone-300 transition-colors no-underline">
           Terms of Service
         </a>
       </div>

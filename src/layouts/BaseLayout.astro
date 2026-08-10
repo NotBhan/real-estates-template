@@ -9,15 +9,12 @@ interface Props {
   description?: string;
   /** Optional OG image URL */
   ogImage?: string;
-  /** If true, use dark background for page body (e.g. homepage hero bleed) */
-  darkBody?: boolean;
 }
 
 const {
   title,
   description = `${config.brand.name} — Your trusted property consultant for residential, commercial, land, and rental properties.`,
   ogImage,
-  darkBody = false,
 } = Astro.props;
 
 const canonicalUrl = new URL(Astro.url.pathname, config.siteUrl).href;
@@ -57,7 +54,7 @@ const fullTitle = title === 'Home'
       rel="stylesheet"
     />
   </head>
-  <body class:list={[darkBody && 'bg-bg-primary']}>
+  <body class="bg-canvas text-ink font-sans antialiased overflow-x-hidden w-full min-h-screen">
     <a href="#main-content" class="skip-link">Skip to main content</a>
 
     <Navbar />

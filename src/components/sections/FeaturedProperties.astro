@@ -7,30 +7,27 @@ const featured = getFeaturedProperties();
 ---
 
 <section
-  class="bg-bg-primary section-padding relative overflow-hidden z-10"
+  class="bg-white section-padding relative overflow-hidden z-10 border-b border-stone-200/80"
   aria-labelledby="featured-heading"
   id="featured-properties"
 >
-  <!-- Background Glow Element -->
-  <div class="absolute top-1/2 right-0 -translate-y-1/2 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[140px] pointer-events-none"></div>
-
   <div class="container-site relative z-10">
     {/* ---- Section header ---- */}
-    <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6" id="featured-header">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-14 gap-6" id="featured-header">
       <div>
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-surface text-blue-400 border border-blue-500/20 text-xs font-semibold uppercase tracking-[0.15em] mb-4">
-          <Sparkles size={13} class="text-blue-400" />
+        <div class="eyebrow-label mb-3">
+          <Sparkles size={13} class="text-brand-gold" />
           <span>Curated Portfolio</span>
         </div>
         <h2
-          class="heading-section heading-section--light text-gradient-silver text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight"
+          class="heading-section text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-ink"
           id="featured-heading"
         >
-          Architectural <span class="text-gradient-electric">Highlights</span>
+          Architectural <span class="font-normal italic text-stone-500">Highlights</span>
         </h2>
       </div>
 
-      <p class="text-slate-400 text-base md:text-lg max-w-md leading-relaxed font-light">
+      <p class="text-muted text-base md:text-lg max-w-md leading-relaxed font-light">
         A handpicked collection of premier residences, commercial hubs, and strategic land investments across Delhi NCR.
       </p>
     </div>
@@ -39,25 +36,25 @@ const featured = getFeaturedProperties();
     {featured.length > 0 ? (
       <div id="featured-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
         {featured.map((property) => (
-          <div class="featured-card-wrapper">
+          <div class="featured-card-wrapper h-full flex flex-col">
             <PropertyCard property={property} />
           </div>
         ))}
       </div>
     ) : (
-      <p class="text-center text-slate-400 py-16">
+      <p class="text-center text-muted py-16">
         No featured properties at this time.
       </p>
     )}
 
     {/* ---- CTA ---- */}
-    <div class="text-center mt-16">
+    <div class="text-center mt-14">
       <a
         href="/properties"
-        class="btn glass-surface text-white hover:text-blue-300 border border-white/15 hover:border-blue-500/40 text-base px-9 py-4 rounded-2xl inline-flex items-center gap-3 transition-all duration-300 hover:scale-105"
+        class="btn btn-action-blue text-base px-8 py-3.5 rounded-full inline-flex items-center gap-3 shadow-md"
       >
         <span>Explore Entire Collection</span>
-        <ArrowRight size={18} class="text-blue-400" />
+        <ArrowRight size={18} />
       </a>
     </div>
   </div>
@@ -87,7 +84,7 @@ const featured = getFeaturedProperties();
             start: 'top 85%',
           },
           opacity: 0,
-          y: 40,
+          y: 35,
           duration: 0.8,
           ease: 'power3.out',
         });
@@ -97,10 +94,10 @@ const featured = getFeaturedProperties();
       gsap.from(cards, {
         scrollTrigger: {
           trigger: grid,
-          start: 'top 80%',
+          start: 'top 82%',
         },
         opacity: 0,
-        y: 50,
+        y: 45,
         duration: 0.8,
         stagger: 0.15,
         ease: 'power3.out',

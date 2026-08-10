@@ -10,30 +10,31 @@ const { property } = Astro.props;
 const hasAmenities = 'amenities' in property && Array.isArray(property.amenities) && property.amenities.length > 0;
 ---
 
-<section class="section-detail border-t border-white/10 bg-bg-primary relative overflow-hidden" aria-labelledby="overview-heading" id="property-overview">
+<section class="section-padding border-t border-stone-200/80 bg-canvas relative overflow-hidden" aria-labelledby="overview-heading" id="property-overview">
   <div class="container-site relative z-10">
     <div class="max-w-4xl">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-surface text-blue-400 border border-blue-500/20 text-xs font-semibold uppercase tracking-[0.15em] mb-4">
-        Property Overview
+      <div class="eyebrow-label mb-3">
+        <span class="w-1.5 h-1.5 rounded-full bg-brand-gold"></span>
+        <span>Property Overview</span>
       </div>
-      <h2 class="text-gradient-silver text-3xl font-extrabold tracking-tight mb-6" id="overview-heading">About This Residence</h2>
+      <h2 class="heading-section text-3xl font-bold tracking-tight mb-6 text-ink" id="overview-heading">About This Residence</h2>
       
-      <div class="prose prose-invert prose-lg max-w-none">
-        <p class="text-slate-300 text-lg leading-relaxed font-light whitespace-pre-line">
+      <div class="max-w-none">
+        <p class="text-muted text-lg leading-relaxed font-light whitespace-pre-line">
           {property.description}
         </p>
       </div>
 
       {hasAmenities && (
-        <div class="mt-12 pt-10 border-t border-white/10" id="property-amenities">
-          <h3 class="text-xl font-bold text-white mb-6">Features & Amenities</h3>
+        <div class="mt-12 pt-10 border-t border-stone-200" id="property-amenities">
+          <h3 class="text-xl font-bold text-ink mb-6">Features & Amenities</h3>
           <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" role="list">
             {(property as any).amenities.map((amenity: string) => (
-              <li class="flex items-center gap-3.5 p-4 rounded-xl glass-card border border-white/10">
-                <div class="p-1.5 bg-blue-500/10 border border-blue-500/20 rounded-lg text-blue-400 shrink-0">
+              <li class="flex items-center gap-3.5 p-4 rounded-xl bg-white border border-stone-200 shadow-xs">
+                <div class="p-1.5 bg-stone-100 border border-stone-200 rounded-lg text-action-blue shrink-0">
                   <Check size={16} class="stroke-[3px]" />
                 </div>
-                <span class="text-slate-200 font-medium text-sm">{amenity}</span>
+                <span class="text-ink font-semibold text-sm">{amenity}</span>
               </li>
             ))}
           </ul>

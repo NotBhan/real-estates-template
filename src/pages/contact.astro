@@ -1,18 +1,91 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
+import { config } from '@/lib/config';
+import { Phone, Mail, MapPin } from '@lucide/astro';
 ---
 
 <BaseLayout title="Contact" description="Get in touch with Maa Laxmi Property Consultant.">
-  <div class="pt-28 pb-12 bg-bg-primary">
+  <div class="pt-28 sm:pt-32 pb-12 sm:pb-16 bg-canvas border-b border-stone-200/80">
     <div class="container-site">
-      <p class="kicker mb-3">Get in Touch</p>
-      <h1 class="heading-section--light heading-section">Contact Us</h1>
+      <div class="eyebrow-label mb-3">
+        <span class="w-1.5 h-1.5 rounded-full bg-brand-gold"></span>
+        <span>Get in Touch</span>
+      </div>
+      <h1 class="heading-editorial text-4xl sm:text-5xl md:text-6xl tracking-tight mb-4 text-ink">
+        Contact Us
+      </h1>
+      <p class="text-muted text-base md:text-lg max-w-2xl font-light">
+        Schedule a private consultation or enquire about specific properties in our portfolio.
+      </p>
     </div>
   </div>
-  <div class="container-site section-padding">
-    <p class="text-body max-w-2xl">
-      Contact form, map integration, and WhatsApp/Call actions will be
-      implemented in Milestone 3.
-    </p>
+  <div class="bg-canvas section-padding">
+    <div class="container-site">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl">
+        <div class="bg-white border border-stone-200 rounded-3xl p-8 shadow-sm">
+          <h2 class="text-2xl font-bold text-ink mb-6">Contact Advisory</h2>
+          <ul class="space-y-5">
+            <li class="flex items-start gap-4">
+              <div class="w-10 h-10 rounded-xl bg-stone-100 border border-stone-200 flex items-center justify-center text-action-blue shrink-0">
+                <MapPin size={20} />
+              </div>
+              <div>
+                <p class="text-xs uppercase font-bold text-muted tracking-wider mb-1">Office Location</p>
+                <p class="text-ink text-sm italic">Address pending from client</p>
+              </div>
+            </li>
+            <li class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-xl bg-stone-100 border border-stone-200 flex items-center justify-center text-action-blue shrink-0">
+                <Phone size={20} />
+              </div>
+              <div>
+                <p class="text-xs uppercase font-bold text-muted tracking-wider mb-1">Telephone</p>
+                {config.contactPhone ? (
+                  <a href={`tel:${config.contactPhone}`} class="text-ink font-semibold text-sm hover:text-action-blue">
+                    {config.contactPhone}
+                  </a>
+                ) : (
+                  <p class="text-ink text-sm italic">Phone pending</p>
+                )}
+              </div>
+            </li>
+            <li class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-xl bg-stone-100 border border-stone-200 flex items-center justify-center text-action-blue shrink-0">
+                <Mail size={20} />
+              </div>
+              <div>
+                <p class="text-xs uppercase font-bold text-muted tracking-wider mb-1">Email</p>
+                {config.contactEmail ? (
+                  <a href={`mailto:${config.contactEmail}`} class="text-ink font-semibold text-sm hover:text-action-blue">
+                    {config.contactEmail}
+                  </a>
+                ) : (
+                  <p class="text-ink text-sm italic">Email pending</p>
+                )}
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-white border border-stone-200 rounded-3xl p-8 shadow-sm flex flex-col justify-between">
+          <div>
+            <h2 class="text-2xl font-bold text-ink mb-4">Client Consultation</h2>
+            <p class="text-muted text-sm leading-relaxed mb-6 font-light">
+              Interactive contact form, map integration, and instant inquiry messaging are available in the full client implementation.
+            </p>
+          </div>
+          {config.contactPhone ? (
+            <a href={`tel:${config.contactPhone}`} class="btn btn-action-blue w-full py-3.5 rounded-full font-semibold">
+              <Phone size={16} />
+              Call Now Directly
+            </a>
+          ) : (
+            <a href="/properties" class="btn btn-action-blue w-full py-3.5 rounded-full font-semibold">
+              Explore Property Portfolio
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
   </div>
 </BaseLayout>

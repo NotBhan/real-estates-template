@@ -1,0 +1,105 @@
+---
+import { config } from '@/lib/config';
+import { ArrowRight, Phone } from '@lucide/astro';
+---
+
+<section
+  class="bg-surface-dark text-white section-padding relative overflow-hidden z-10 border-b border-stone-800"
+  aria-label="Architectural Philosophy"
+>
+  <!-- Background Image with Parallax & Dark Overlay -->
+  <div class="absolute inset-0 z-0 pointer-events-none opacity-20 overflow-hidden">
+    <img
+      src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1920&q=85"
+      alt="Architectural detailing"
+      class="w-full h-full object-cover object-center scale-105"
+      id="statement-bg-img"
+    />
+  </div>
+
+  <div class="container-site relative z-10 py-8">
+    <div class="max-w-4xl mx-auto text-center" id="statement-content">
+      <!-- Gold Eyebrow -->
+      <div class="eyebrow-label mb-6 justify-center">
+        <span class="w-2 h-2 rounded-full bg-brand-gold"></span>
+        <span class="text-brand-gold">Our Philosophy</span>
+      </div>
+
+      <!-- Main Statement -->
+      <blockquote class="text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-[1.12] mb-8 text-white">
+        "Property is not simply space.<br class="hidden sm:inline" />
+        It is <span class="font-normal italic text-brand-gold">where life takes shape</span>."
+      </blockquote>
+
+      <p class="text-stone-300 text-base md:text-lg max-w-2xl mx-auto mb-10 font-light leading-relaxed">
+        At {config.brand.name}, we believe every residence and commercial space carries a unique architectural legacy. Our advisory ensures your real-estate portfolio reflects precision, value, and permanence.
+      </p>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="/properties" class="btn btn-action-blue text-base px-8 py-3.5 rounded-full w-full sm:w-auto font-semibold">
+          Explore Properties
+          <ArrowRight size={18} />
+        </a>
+        {config.contactPhone ? (
+          <a href={`tel:${config.contactPhone}`} class="btn btn-dark-outline text-base px-8 py-3.5 rounded-full w-full sm:w-auto font-semibold">
+            <Phone size={16} class="text-brand-gold" />
+            Speak With Consultant
+          </a>
+        ) : (
+          <a href="/contact" class="btn btn-dark-outline text-base px-8 py-3.5 rounded-full w-full sm:w-auto font-semibold">
+            Contact Advisory
+          </a>
+        )}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import gsap from 'gsap';
+  import ScrollTrigger from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const initStatementAnimation = () => {
+    const bgImg = document.getElementById('statement-bg-img');
+    const content = document.getElementById('statement-content');
+
+    if (!content) return;
+
+    let mm = gsap.matchMedia();
+
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      if (bgImg) {
+        gsap.to(bgImg, {
+          scrollTrigger: {
+            trigger: content,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 0.5,
+          },
+          y: -40,
+        });
+      }
+
+      gsap.from(content, {
+        scrollTrigger: {
+          trigger: content,
+          start: 'top 80%',
+        },
+        opacity: 0,
+        y: 40,
+        duration: 0.9,
+        ease: 'power3.out',
+      });
+    });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initStatementAnimation);
+  } else {
+    initStatementAnimation();
+  }
+  document.addEventListener('astro:page-load', initStatementAnimation);
+</script>

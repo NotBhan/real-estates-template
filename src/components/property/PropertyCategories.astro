@@ -2,8 +2,8 @@
 /**
  * PropertyCategories — Reusable category navigation.
  * 
- * Used on the homepage as a visually polished section,
- * and on the catalogue page as a filter navigation.
+ * Used on the homepage as an architectural asset class section,
+ * and on the catalogue page as a filter navigation strip.
  */
 import { PROPERTY_TYPES } from '@/types/property';
 import { House, Building2, Map, Maximize, Key, Building } from '@lucide/astro';
@@ -17,7 +17,6 @@ const { variant = 'filter' } = Astro.props;
 // Determine active category from URL
 const activeCategory = Astro.url.searchParams.get('type');
 
-// Optional: Map categories to icons for a more polished look
 const categoryIcons: Record<string, any> = {
   Residential: House,
   Commercial: Building2,
@@ -39,19 +38,17 @@ function getCategoryUrl(type?: string) {
 ---
 
 {variant === 'homepage' ? (
-  <section class="bg-bg-primary section-padding relative overflow-hidden z-10" aria-labelledby="categories-heading">
-    <!-- Ambient background glow -->
-    <div class="absolute bottom-0 left-1/3 w-[450px] h-[450px] bg-purple-600/10 rounded-full blur-[130px] pointer-events-none"></div>
-
+  <section class="bg-canvas section-padding relative overflow-hidden z-10 border-b border-stone-200/80" aria-labelledby="categories-heading">
     <div class="container-site relative z-10">
-      <div class="text-center mb-16" id="categories-header">
-        <span class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full glass-surface text-purple-400 border border-purple-500/20 text-xs font-semibold uppercase tracking-[0.15em] mb-4">
-          Discover Asset Classes
-        </span>
-        <h2 class="heading-section text-gradient-silver text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-4" id="categories-heading">
-          Explore by <span class="text-gradient-electric">Category</span>
+      <div class="text-center mb-14" id="categories-header">
+        <div class="eyebrow-label mb-3 justify-center">
+          <span class="w-1.5 h-1.5 rounded-full bg-brand-gold"></span>
+          <span>Discover Asset Classes</span>
+        </div>
+        <h2 class="heading-section text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4 text-ink" id="categories-heading">
+          Explore by <span class="font-normal italic text-stone-500">Category</span>
         </h2>
-        <p class="text-slate-400 text-base md:text-lg max-w-2xl mx-auto font-light leading-relaxed">
+        <p class="text-muted text-base md:text-lg max-w-2xl mx-auto font-light leading-relaxed">
           Find exactly what you're looking for by browsing our specialized property collections across residential, commercial, and land sectors.
         </p>
       </div>
@@ -62,15 +59,15 @@ function getCategoryUrl(type?: string) {
           return (
             <a
               href={getCategoryUrl(type)}
-              class="group flex flex-col items-center justify-center p-6 rounded-2xl glass-card text-center no-underline transition-all duration-500 hover:-translate-y-2 hover:border-blue-500/40 hover:shadow-2xl hover:shadow-blue-500/15"
+              class="group flex flex-col items-center justify-center p-6 rounded-2xl bg-white border border-stone-200 text-center no-underline transition-all duration-400 hover:-translate-y-1.5 hover:border-action-blue/40 hover:shadow-editorial"
             >
               {Icon && (
-                <div class="w-14 h-14 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mb-5 group-hover:scale-110 group-hover:bg-gradient-to-tr group-hover:from-blue-600 group-hover:to-purple-600 group-hover:text-white group-hover:border-transparent transition-all duration-500">
-                  <Icon size={26} class="text-blue-400 group-hover:text-white transition-colors duration-300" />
+                <div class="w-13 h-13 rounded-2xl bg-stone-100 border border-stone-200 flex items-center justify-center mb-4 group-hover:bg-action-blue group-hover:text-white group-hover:border-action-blue transition-all duration-300">
+                  <Icon size={24} class="text-ink group-hover:text-white transition-colors duration-300" />
                 </div>
               )}
-              <span class="text-white font-semibold text-lg group-hover:text-blue-300 transition-colors">{type}</span>
-              <span class="text-[11px] font-medium uppercase tracking-wider text-slate-400 mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">View All →</span>
+              <span class="text-ink font-bold text-base group-hover:text-action-blue transition-colors">{type}</span>
+              <span class="text-[11px] font-semibold uppercase tracking-wider text-action-blue mt-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">Browse →</span>
             </a>
           );
         })}
@@ -78,15 +75,15 @@ function getCategoryUrl(type?: string) {
     </div>
   </section>
 ) : (
-  <div class="w-full border-b border-white/10 mb-10 overflow-x-auto snap-x hide-scrollbar">
-    <div class="flex items-center gap-3 pb-3 min-w-max">
+  <div class="w-full border-b border-stone-200 mb-8 overflow-x-auto snap-x hide-scrollbar">
+    <div class="flex items-center gap-2.5 pb-3 min-w-max">
       <a
         href={getCategoryUrl()}
         class:list={[
           'px-5 py-2.5 text-sm font-semibold rounded-full transition-all duration-300 no-underline snap-start',
           !activeCategory
-            ? 'btn-electric shadow-lg shadow-blue-500/20'
-            : 'glass-surface text-slate-300 hover:text-white hover:border-blue-500/30',
+            ? 'bg-action-blue text-white shadow-sm'
+            : 'bg-white text-ink border border-stone-200 hover:border-action-blue/50 hover:text-action-blue',
         ]}
         aria-current={!activeCategory ? 'page' : undefined}
       >
@@ -100,8 +97,8 @@ function getCategoryUrl(type?: string) {
             class:list={[
               'px-5 py-2.5 text-sm font-semibold rounded-full transition-all duration-300 no-underline snap-start',
               isActive
-                ? 'btn-electric shadow-lg shadow-blue-500/20'
-                : 'glass-surface text-slate-300 hover:text-white hover:border-blue-500/30',
+                ? 'bg-action-blue text-white shadow-sm'
+                : 'bg-white text-ink border border-stone-200 hover:border-action-blue/50 hover:text-action-blue',
             ]}
             aria-current={isActive ? 'page' : undefined}
           >

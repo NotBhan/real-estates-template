@@ -5,14 +5,15 @@ import PropertySearchForm from '@components/search/PropertySearchForm.astro';
 import FeaturedProperties from '@components/sections/FeaturedProperties.astro';
 import PropertyCategories from '@components/property/PropertyCategories.astro';
 import TrustTicker from '@components/sections/TrustTicker.astro';
+import ArchitecturalStatement from '@components/sections/ArchitecturalStatement.astro';
 ---
 
-<BaseLayout title="Home" darkBody>
+<BaseLayout title="Home">
   {/* 1. Cinematic Scroll Hero */}
   <Hero />
 
   {/* 2. Floating Search Interface */}
-  <section class="px-4 bg-bg-primary pb-12 relative z-20">
+  <section class="px-4 sm:px-6 bg-canvas pb-12 relative z-20">
     <PropertySearchForm variant="hero" />
   </section>
 
@@ -24,4 +25,7 @@ import TrustTicker from '@components/sections/TrustTicker.astro';
 
   {/* 5. Category Asset Classes */}
   <PropertyCategories variant="homepage" />
+
+  {/* 6. Strategic Dark Architectural Statement */}
+  <ArchitecturalStatement />
 </BaseLayout>

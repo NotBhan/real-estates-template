@@ -166,7 +166,8 @@ const currentPath = Astro.url.pathname;
   const navInner = document.getElementById('nav-inner');
   if (navInner) {
     const onScroll = () => {
-      if (window.scrollY > 30) {
+      const isMobile = window.innerWidth < 768;
+      if (window.scrollY > 30 || isMobile) {
         navInner.classList.add('bg-white/90', 'backdrop-blur-md', 'border-stone-200/80', 'shadow-editorial', 'text-ink');
         navInner.classList.remove('bg-transparent', 'border-transparent');
       } else {
@@ -175,6 +176,8 @@ const currentPath = Astro.url.pathname;
       }
     };
     window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    document.addEventListener('astro:page-load', onScroll);
     onScroll();
   }
 </script>

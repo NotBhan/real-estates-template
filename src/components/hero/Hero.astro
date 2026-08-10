@@ -3,92 +3,89 @@ import { config } from '@/lib/config';
 import { ArrowRight, Search, ShieldCheck } from '@lucide/astro';
 ---
 
-<div id="hero-scroll-container" class="relative w-full h-[125vh] md:h-[135vh] bg-canvas">
-  <!-- Sticky Viewport -->
-  <section
-    id="hero-sticky-viewport"
-    class="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden z-10"
-    aria-label="Hero"
+<section
+  id="hero-scroll-container"
+  class="relative w-full h-[85vh] sm:h-[90vh] md:h-screen flex items-center justify-center overflow-hidden z-10 bg-canvas"
+  aria-label="Hero"
+>
+  <!-- Layer 1: Architectural Image Frame (Scroll-scaled & Parallaxed on Desktop) -->
+  <div
+    id="hero-image-frame"
+    class="absolute z-0 w-full h-full md:w-[84%] md:h-[76vh] rounded-none md:rounded-[2.5rem] overflow-hidden border-0 md:border md:border-stone-300/40 shadow-none md:shadow-2xl transition-shadow duration-500"
   >
-    <!-- Layer 1: Architectural Image Frame (Scroll-scaled & Parallaxed) -->
+    <img
+      src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=85"
+      alt="Architectural luxury property"
+      class="w-full h-full object-cover object-center scale-100 filter brightness-[0.7] contrast-[1.05]"
+      id="hero-image"
+    />
+    <!-- Soft vignette for contrast -->
+    <div class="absolute inset-0 bg-gradient-to-t from-ink-deep/80 via-ink-deep/30 to-transparent"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-ink-deep/40 via-transparent to-ink-deep/40"></div>
+  </div>
+
+  <!-- Layer 2: Editorial Hero Narrative -->
+  <div class="relative z-10 container-site px-4 text-center flex flex-col items-center justify-center max-w-4xl mx-auto pt-16 md:pt-20">
+    <!-- Eyebrow Tag -->
     <div
-      id="hero-image-frame"
-      class="absolute z-0 w-[92%] md:w-[84%] h-[68vh] md:h-[76vh] rounded-[2rem] md:rounded-[2.5rem] overflow-hidden border border-stone-300/40 shadow-2xl transition-all duration-700"
+      id="hero-badge"
+      class="inline-flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-stone-200 text-ink text-[11px] sm:text-xs font-semibold uppercase tracking-[0.15em] sm:tracking-[0.18em] mb-4 sm:mb-6 shadow-sm"
     >
-      <img
-        src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=85"
-        alt="Architectural luxury property"
-        class="w-full h-full object-cover object-center scale-100 filter brightness-[0.7] contrast-[1.05]"
-        id="hero-image"
-      />
-      <!-- Soft vignette for contrast -->
-      <div class="absolute inset-0 bg-gradient-to-t from-ink-deep/80 via-ink-deep/30 to-transparent"></div>
-      <div class="absolute inset-0 bg-gradient-to-r from-ink-deep/40 via-transparent to-ink-deep/40"></div>
+      <span class="w-2 h-2 rounded-full bg-brand-gold"></span>
+      <span class="text-brand-gold font-bold">{config.brand.name}</span>
+      <span class="text-muted-light">•</span>
+      <span class="text-ink">Architectural Excellence</span>
     </div>
 
-    <!-- Layer 2: Editorial Hero Narrative -->
-    <div class="relative z-10 container-site px-4 text-center flex flex-col items-center justify-center max-w-4xl mx-auto pt-16">
-      <!-- Eyebrow Tag -->
-      <div
-        id="hero-badge"
-        class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-stone-200 text-ink text-xs font-semibold uppercase tracking-[0.18em] mb-6 shadow-sm"
-      >
-        <span class="w-2 h-2 rounded-full bg-brand-gold"></span>
-        <span class="text-brand-gold font-bold">{config.brand.name}</span>
-        <span class="text-muted-light">•</span>
-        <span class="text-ink">Architectural Excellence</span>
-      </div>
+    <!-- Main Headline -->
+    <h1
+      id="hero-title"
+      class="font-sans font-bold text-3xl sm:text-5xl md:text-7xl lg:text-8xl tracking-tight leading-[1.1] sm:leading-[1.05] mb-4 sm:mb-6 text-white max-w-4xl"
+    >
+      Spaces Worth <span class="text-stone-200 italic font-normal">Coming Home</span> To.
+    </h1>
 
-      <!-- Main Headline -->
-      <h1
-        id="hero-title"
-        class="font-sans font-bold text-4xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight leading-[1.05] mb-6 text-white max-w-4xl"
-      >
-        Spaces Worth <span class="text-stone-200 italic font-normal">Coming Home</span> To.
-      </h1>
+    <!-- Subtitle -->
+    <p
+      id="hero-subtitle"
+      class="text-stone-200 text-sm sm:text-lg md:text-xl max-w-2xl mx-auto mb-6 sm:mb-10 leading-relaxed font-light px-2"
+    >
+      Curated residential residences, commercial headquarters, and strategic land investments across Delhi NCR.
+    </p>
 
-      <!-- Subtitle -->
-      <p
-        id="hero-subtitle"
-        class="text-stone-200 text-base sm:text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed font-light"
-      >
-        Curated residential residences, commercial headquarters, and strategic land investments across Delhi NCR.
-      </p>
-
-      <!-- Action Buttons -->
-      <div id="hero-actions" class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
-        <a href="/properties" class="btn btn-action-blue text-base px-8 py-3.5 rounded-full w-full sm:w-auto font-semibold flex items-center justify-center gap-2 shadow-lg">
-          <Search size={18} />
-          Explore Properties
-        </a>
-        <a href="/contact" class="btn btn-stone-outline text-base px-8 py-3.5 rounded-full w-full sm:w-auto font-semibold flex items-center justify-center gap-2 shadow-sm hover:border-action-blue">
-          Schedule Consultation
-          <ArrowRight size={18} class="text-action-blue" />
-        </a>
-      </div>
-
-      <!-- Key Micro Stats -->
-      <div id="hero-stats" class="mt-12 hidden sm:flex items-center justify-center gap-8 px-8 py-2.5 rounded-full bg-white/80 backdrop-blur-md border border-stone-200/80 text-xs text-ink shadow-sm">
-        <div class="flex items-center gap-2">
-          <ShieldCheck size={16} class="text-action-blue" />
-          <span class="font-medium">Verified Property Inventory</span>
-        </div>
-        <div class="w-1 h-1 rounded-full bg-stone-400"></div>
-        <div class="text-muted">Gurugram & Delhi NCR</div>
-        <div class="w-1 h-1 rounded-full bg-stone-400"></div>
-        <div class="text-brand-gold font-semibold">Residential • Commercial • Plots</div>
-      </div>
+    <!-- Action Buttons -->
+    <div id="hero-actions" class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto px-4 sm:px-0">
+      <a href="/properties" class="btn btn-action-blue text-sm sm:text-base px-6 sm:px-8 py-3 sm:py-3.5 rounded-full w-full sm:w-auto font-semibold flex items-center justify-center gap-2 shadow-lg">
+        <Search size={18} />
+        Explore Properties
+      </a>
+      <a href="/contact" class="btn btn-stone-outline text-sm sm:text-base px-6 sm:px-8 py-3 sm:py-3.5 rounded-full w-full sm:w-auto font-semibold flex items-center justify-center gap-2 shadow-sm hover:border-action-blue">
+        Schedule Consultation
+        <ArrowRight size={18} class="text-action-blue" />
+      </a>
     </div>
 
-    <!-- Scroll Indicator -->
-    <div id="hero-scroll-indicator" class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2">
-      <span class="text-[10px] tracking-[0.25em] text-stone-300 uppercase font-semibold">Scroll to Discover</span>
-      <div class="w-5 h-9 rounded-full border border-white/40 flex items-start justify-center p-1">
-        <div class="w-1 h-2 bg-white rounded-full animate-bounce"></div>
+    <!-- Key Micro Stats -->
+    <div id="hero-stats" class="mt-8 sm:mt-12 hidden sm:flex items-center justify-center gap-6 md:gap-8 px-6 sm:px-8 py-2.5 rounded-full bg-white/80 backdrop-blur-md border border-stone-200/80 text-xs text-ink shadow-sm">
+      <div class="flex items-center gap-2">
+        <ShieldCheck size={16} class="text-action-blue" />
+        <span class="font-medium">Verified Property Inventory</span>
       </div>
+      <div class="w-1 h-1 rounded-full bg-stone-400"></div>
+      <div class="text-muted">Gurugram & Delhi NCR</div>
+      <div class="w-1 h-1 rounded-full bg-stone-400"></div>
+      <div class="text-brand-gold font-semibold">Residential • Commercial • Plots</div>
     </div>
-  </section>
-</div>
+  </div>
+
+  <!-- Scroll Indicator (Desktop only) -->
+  <div id="hero-scroll-indicator" class="hidden md:flex absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex-col items-center gap-2">
+    <span class="text-[10px] tracking-[0.25em] text-stone-300 uppercase font-semibold">Scroll to Discover</span>
+    <div class="w-5 h-9 rounded-full border border-white/40 flex items-start justify-center p-1">
+      <div class="w-1 h-2 bg-white rounded-full animate-bounce"></div>
+    </div>
+  </div>
+</section>
 
 <script>
   import gsap from 'gsap';
@@ -103,18 +100,38 @@ import { ArrowRight, Search, ShieldCheck } from '@lucide/astro';
     const title = document.getElementById('hero-title');
     const subtitle = document.getElementById('hero-subtitle');
     const indicator = document.getElementById('hero-scroll-indicator');
+    const badge = document.getElementById('hero-badge');
+    const actions = document.getElementById('hero-actions');
 
     if (!container || !imageFrame) return;
 
     let mm = gsap.matchMedia();
 
-    mm.add('(prefers-reduced-motion: no-preference)', () => {
+    // Desktop: Cinematic ScrollTrigger transformation pinned across ~110% scroll distance
+    mm.add('(min-width: 768px) and (prefers-reduced-motion: no-preference)', () => {
+      gsap.set(imageFrame, {
+        width: '84%',
+        height: '76vh',
+        borderRadius: '2.5rem',
+      });
+      gsap.set(image, {
+        scale: 1.02,
+        y: 0,
+      });
+      if (title) gsap.set(title, { y: 0 });
+      if (subtitle) gsap.set(subtitle, { y: 0, opacity: 1 });
+      if (indicator) gsap.set(indicator, { opacity: 1, y: 0 });
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: container,
           start: 'top top',
-          end: 'bottom bottom',
-          scrub: 0.8,
+          end: '+=110%',
+          pin: true,
+          pinSpacing: true,
+          scrub: 0.5,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
         },
       });
 
@@ -122,35 +139,79 @@ import { ArrowRight, Search, ShieldCheck } from '@lucide/astro';
         width: '100%',
         height: '100vh',
         borderRadius: '0rem',
-        duration: 1.5,
-        ease: 'power2.inOut',
+        duration: 1,
+        ease: 'none',
       }, 0);
 
       tl.to(image, {
         scale: 1.08,
-        y: 20,
-        filter: 'brightness(0.65) contrast(1.05)',
-        duration: 1.5,
-        ease: 'power2.inOut',
+        y: 35,
+        duration: 1,
+        ease: 'none',
       }, 0);
 
-      tl.to(title, {
-        y: -30,
-        duration: 1,
-        ease: 'power1.out',
-      }, 0.2);
+      if (title) {
+        tl.to(title, {
+          y: -25,
+          duration: 1,
+          ease: 'none',
+        }, 0);
+      }
 
-      tl.to(subtitle, {
-        y: -20,
-        opacity: 0.7,
-        duration: 1,
-      }, 0.2);
+      if (subtitle) {
+        tl.to(subtitle, {
+          y: -15,
+          opacity: 0.85,
+          duration: 1,
+          ease: 'none',
+        }, 0);
+      }
 
-      tl.to(indicator, {
-        opacity: 0,
-        y: 15,
-        duration: 0.4,
-      }, 0);
+      if (indicator) {
+        tl.to(indicator, {
+          opacity: 0,
+          y: 15,
+          duration: 0.2,
+          ease: 'power1.out',
+        }, 0);
+      }
+    });
+
+    // Mobile: Immediate final expanded state + lightweight load entrance only (no ScrollTrigger)
+    mm.add('(max-width: 767px) and (prefers-reduced-motion: no-preference)', () => {
+      gsap.set(imageFrame, {
+        width: '100%',
+        height: '100%',
+        borderRadius: '0rem',
+        clearProps: 'transform',
+      });
+      gsap.set(image, {
+        scale: 1.0,
+        y: 0,
+      });
+      if (indicator) gsap.set(indicator, { opacity: 0 });
+
+      gsap.fromTo(image,
+        { scale: 1.04, opacity: 0.85 },
+        { scale: 1.0, opacity: 1, duration: 1.2, ease: 'power2.out' }
+      );
+
+      const items = [badge, title, subtitle, actions].filter(Boolean);
+      gsap.fromTo(items,
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: 'power2.out', clearProps: 'transform' }
+      );
+    });
+
+    // Reduced motion fallback (both desktop & mobile)
+    mm.add('(prefers-reduced-motion: reduce)', () => {
+      gsap.set(imageFrame, {
+        width: '100%',
+        height: '100vh',
+        borderRadius: '0rem',
+      });
+      gsap.set(image, { scale: 1, y: 0 });
+      if (indicator) gsap.set(indicator, { opacity: 0 });
     });
   };
 
@@ -161,3 +222,4 @@ import { ArrowRight, Search, ShieldCheck } from '@lucide/astro';
   }
   document.addEventListener('astro:page-load', initHeroAnimation);
 </script>
+

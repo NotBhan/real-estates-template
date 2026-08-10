@@ -2,26 +2,35 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import PropertyCard from '@components/property/PropertyCard.astro';
 import PropertyCategories from '@components/property/PropertyCategories.astro';
+import PropertySearchForm from '@components/search/PropertySearchForm.astro';
 import { getAllProperties } from '@/data/demo-properties';
-import type { PropertyType } from '@/types/property';
-import { PROPERTY_TYPES } from '@/types/property';
+import { parseFilterParams, filterProperties } from '@/lib/property-filters';
+import { X, SlidersHorizontal } from '@lucide/astro';
 
-// Capture the type parameter from URL
-const typeFilter = Astro.url.searchParams.get('type');
-
-// Ensure the filter is a valid PropertyType (or undefined if null/invalid)
-const activeFilter =
-  typeFilter && PROPERTY_TYPES.includes(typeFilter as PropertyType)
-    ? (typeFilter as PropertyType)
-    : undefined;
-
-// Fetch and filter
+// Parse query params and filter
+const filters = parseFilterParams(Astro.url);
 const allProperties = getAllProperties();
-const filteredProperties = activeFilter
-  ? allProperties.filter((p) => p.propertyType === activeFilter)
-  : allProperties;
-
+const filteredProperties = filterProperties(allProperties, filters);
 const count = filteredProperties.length;
+
+// Compute active filters for the summary
+const activeFilters = [];
+if (filters.q) activeFilters.push({ label: `"${filters.q}"`, key: 'q' });
+if (filters.listing) activeFilters.push({ label: `For ${filters.listing}`, key: 'listing' });
+if (filters.minPrice && !filters.maxPrice) activeFilters.push({ label: `₹${filters.minPrice.toLocaleString('en-IN')}+`, key: 'minPrice' });
+if (!filters.minPrice && filters.maxPrice) activeFilters.push({ label: `Up to ₹${filters.maxPrice.toLocaleString('en-IN')}`, key: 'maxPrice' });
+if (filters.minPrice && filters.maxPrice) activeFilters.push({ label: `₹${filters.minPrice.toLocaleString('en-IN')} - ₹${filters.maxPrice.toLocaleString('en-IN')}`, key: 'price' });
+
+function getRemoveFilterUrl(keyToRemove: string) {
+  const params = new URLSearchParams(Astro.url.searchParams);
+  if (keyToRemove === 'price') {
+    params.delete('minPrice');
+    params.delete('maxPrice');
+  } else {
+    params.delete(keyToRemove);
+  }
+  return `/properties?${params.toString()}`;
+}
 ---
 
 <BaseLayout title="Properties" description="Browse residential, commercial, land, and rental properties.">
@@ -38,11 +47,51 @@ const count = filteredProperties.length;
       {/* Categories / Tabs */}
       <PropertyCategories variant="filter" />
 
-      {/* Meta Bar */}
-      <div class="flex items-center justify-between mb-8">
-        <p class="text-text-light text-sm font-medium">
-          Showing {count} {count === 1 ? 'property' : 'properties'}
-        </p>
+      {/* Filter & Meta Bar */}
+      <div class="mb-8 space-y-4">
+        {/* Advanced Search Toggle (Details/Summary) */}
+        <details class="group bg-bg-dark border border-border rounded-xl">
+          <summary class="flex justify-between items-center p-4 cursor-pointer list-none focus-visible:outline-accent">
+            <div class="flex items-center gap-3">
+              <SlidersHorizontal size={20} class="text-accent" />
+              <span class="font-medium text-white">Filter Properties</span>
+            </div>
+            <span class="text-text-light transition-transform duration-300 group-open:rotate-180">
+              ▼
+            </span>
+          </summary>
+          <div class="p-4 border-t border-border">
+            <PropertySearchForm variant="default" />
+          </div>
+        </details>
+
+        {/* Active Filters & Count */}
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <p class="text-text-light text-sm font-medium whitespace-nowrap">
+            Showing {count} {count === 1 ? 'property' : 'properties'}
+          </p>
+
+          {activeFilters.length > 0 && (
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="text-xs text-text-light uppercase tracking-wider font-semibold mr-1">Active Filters:</span>
+              {activeFilters.map((filter) => (
+                <a
+                  href={getRemoveFilterUrl(filter.key)}
+                  class="flex items-center gap-1.5 px-3 py-1 bg-white/5 border border-border rounded-full text-sm text-white hover:bg-white/10 hover:border-accent transition-colors focus-visible:outline-accent no-underline"
+                >
+                  {filter.label}
+                  <X size={14} class="text-text-light" />
+                </a>
+              ))}
+              <a
+                href="/properties"
+                class="text-sm text-accent hover:text-white underline-offset-4 hover:underline ml-2 transition-colors"
+              >
+                Clear all
+              </a>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Grid */}
@@ -54,12 +103,12 @@ const count = filteredProperties.length;
         </div>
       ) : (
         <div class="text-center py-24 border border-border border-dashed rounded-xl bg-bg-dark/30">
-          <p class="text-white text-lg font-medium mb-2">No properties found</p>
+          <p class="text-white text-lg font-medium mb-2">No matching properties found</p>
           <p class="text-text-light mb-6">
-            We couldn't find any {activeFilter ? `${activeFilter.toLowerCase()} ` : ''}properties at the moment.
+            We couldn't find any properties matching your current search criteria.
           </p>
           <a href="/properties" class="btn btn-outline px-6 py-2">
-            Clear Filters
+            Clear all filters
           </a>
         </div>
       )}

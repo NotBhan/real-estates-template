@@ -1,0 +1,126 @@
+---
+import { PROPERTY_TYPES } from '@/types/property';
+import { Search } from '@lucide/astro';
+
+interface Props {
+  variant?: 'default' | 'hero';
+}
+
+const { variant = 'default' } = Astro.props;
+
+const url = Astro.url;
+const currentQ = url.searchParams.get('q') || '';
+const currentType = url.searchParams.get('type') || '';
+const currentListing = url.searchParams.get('listing') || '';
+const currentMinPrice = url.searchParams.get('minPrice') || '';
+const currentMaxPrice = url.searchParams.get('maxPrice') || '';
+
+const isHero = variant === 'hero';
+
+// Hero variant uses a more elevated, contained style. Default variant is flatter.
+const formContainerClasses = isHero
+  ? 'bg-bg-dark border border-border p-4 md:p-6 rounded-2xl shadow-2xl relative z-10 w-full max-w-5xl mx-auto -mt-16 mb-16'
+  : 'bg-bg-dark border border-border p-4 rounded-xl w-full';
+
+const gridClasses = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 items-end';
+---
+
+<form method="GET" action="/properties" class={formContainerClasses}>
+  <div class={gridClasses}>
+    {/* Keyword Search */}
+    <div class="lg:col-span-2">
+      <label for={`q-${variant}`} class="block text-sm font-medium text-text-light mb-1.5">
+        Location or Keyword
+      </label>
+      <div class="relative">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-text-light">
+          <Search size={18} />
+        </div>
+        <input
+          type="text"
+          id={`q-${variant}`}
+          name="q"
+          value={currentQ}
+          placeholder="e.g. Goa, Villa, 4BHK..."
+          class="w-full bg-bg-primary border border-border rounded-lg py-2.5 pl-10 pr-4 text-white placeholder:text-text-light/50 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors"
+        />
+      </div>
+    </div>
+
+    {/* Property Type */}
+    <div>
+      <label for={`type-${variant}`} class="block text-sm font-medium text-text-light mb-1.5">
+        Property Type
+      </label>
+      <select
+        id={`type-${variant}`}
+        name="type"
+        class="w-full bg-bg-primary border border-border rounded-lg py-2.5 px-4 text-white focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors appearance-none"
+      >
+        <option value="">All Types</option>
+        {PROPERTY_TYPES.map((type) => (
+          <option value={type} selected={currentType === type}>
+            {type}
+          </option>
+        ))}
+      </select>
+    </div>
+
+    {/* Listing Type */}
+    <div>
+      <label for={`listing-${variant}`} class="block text-sm font-medium text-text-light mb-1.5">
+        Status
+      </label>
+      <select
+        id={`listing-${variant}`}
+        name="listing"
+        class="w-full bg-bg-primary border border-border rounded-lg py-2.5 px-4 text-white focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors appearance-none"
+      >
+        <option value="">Any</option>
+        <option value="Sale" selected={currentListing === 'Sale'}>For Sale</option>
+        <option value="Rent" selected={currentListing === 'Rent'}>For Rent</option>
+      </select>
+    </div>
+
+    {/* Price Range */}
+    <div class="grid grid-cols-2 gap-2 lg:col-span-1">
+      <div>
+        <label for={`minPrice-${variant}`} class="block text-sm font-medium text-text-light mb-1.5">
+          Min Price
+        </label>
+        <input
+          type="number"
+          id={`minPrice-${variant}`}
+          name="minPrice"
+          value={currentMinPrice}
+          placeholder="₹ Min"
+          min="0"
+          step="100000"
+          class="w-full bg-bg-primary border border-border rounded-lg py-2.5 px-3 text-white placeholder:text-text-light/50 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors"
+        />
+      </div>
+      <div>
+        <label for={`maxPrice-${variant}`} class="block text-sm font-medium text-text-light mb-1.5">
+          Max Price
+        </label>
+        <input
+          type="number"
+          id={`maxPrice-${variant}`}
+          name="maxPrice"
+          value={currentMaxPrice}
+          placeholder="₹ Max"
+          min="0"
+          step="100000"
+          class="w-full bg-bg-primary border border-border rounded-lg py-2.5 px-3 text-white placeholder:text-text-light/50 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors"
+        />
+      </div>
+    </div>
+
+    {/* Submit Button */}
+    <div class="lg:col-span-1 h-full flex items-end pt-4 lg:pt-0">
+      <button type="submit" class="btn btn-primary w-full py-2.5 h-[42px] flex items-center justify-center">
+        Search
+      </button>
+    </div>
+  </div>
+</form>

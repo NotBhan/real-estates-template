@@ -26,6 +26,16 @@ const categoryIcons: Record<string, any> = {
   Flat: Key,
   Villa: Building,
 };
+
+function getCategoryUrl(type?: string) {
+  const params = new URLSearchParams(Astro.url.searchParams);
+  if (type) {
+    params.set('type', type);
+  } else {
+    params.delete('type');
+  }
+  return `/properties?${params.toString()}`;
+}
 ---
 
 {variant === 'homepage' ? (
@@ -45,7 +55,7 @@ const categoryIcons: Record<string, any> = {
           const Icon = categoryIcons[type];
           return (
             <a
-              href={`/properties?type=${type}`}
+              href={getCategoryUrl(type)}
               class="flex flex-col items-center justify-center p-6 rounded-xl bg-bg-dark border border-border transition-all duration-300 hover:border-accent hover:shadow-lg hover:shadow-accent/5 group text-center no-underline focus-visible:outline-accent"
             >
               {Icon && <Icon size={32} class="text-accent/80 mb-4 transition-transform duration-300 group-hover:scale-110" />}
@@ -60,7 +70,7 @@ const categoryIcons: Record<string, any> = {
   <div class="w-full border-b border-border mb-8 overflow-x-auto snap-x hide-scrollbar">
     <div class="flex items-center gap-2 pb-px min-w-max">
       <a
-        href="/properties"
+        href={getCategoryUrl()}
         class:list={[
           'px-4 py-2 text-sm font-medium transition-colors border-b-2 whitespace-nowrap snap-start focus-visible:outline-none focus-visible:bg-white/[0.02]',
           !activeCategory
@@ -75,7 +85,7 @@ const categoryIcons: Record<string, any> = {
         const isActive = activeCategory === type;
         return (
           <a
-            href={`/properties?type=${type}`}
+            href={getCategoryUrl(type)}
             class:list={[
               'px-4 py-2 text-sm font-medium transition-colors border-b-2 whitespace-nowrap snap-start focus-visible:outline-none focus-visible:bg-white/[0.02]',
               isActive

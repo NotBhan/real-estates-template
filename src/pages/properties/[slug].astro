@@ -8,6 +8,7 @@ import PropertyInfo from '@components/property/PropertyInfo.astro';
 import PropertyOverview from '@components/property/PropertyOverview.astro';
 import PropertyGallery from '@components/property/PropertyGallery.astro';
 import PropertyEnquiry from '@components/property/PropertyEnquiry.astro';
+import PropertyMap from '@components/property/PropertyMap.astro';
 
 const { slug } = Astro.params;
 
@@ -54,6 +55,14 @@ const description = property?.description?.slice(0, 155) + '...';
       <PropertyHero property={property} />
       <PropertyInfo property={property} />
       <PropertyOverview property={property} />
+      <PropertyMap
+        title={property.title}
+        address={property.location.address}
+        locality={property.location.locality}
+        city={property.location.city}
+        latitude={property.location.latitude}
+        longitude={property.location.longitude}
+      />
       {property.images && property.images.length > 1 && (
         <PropertyGallery images={property.images} propertyTitle={property.title} />
       )}

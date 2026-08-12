@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Shell(cgc:*)",
+      "Shell(npx astro check 2 >& 1)",
+      "Shell(timeout 20 npx astro check --yes 2 >& 1)",
+      "Shell(npm:*)",
+      "Shell(node -e  const { check } = require('@astrojs/check'); check({ tsconfig: '/home/chandrabhan/Documents/maa-laxmi-real-estates/tsconfig.json', srcDir: '/home/chandrabhan/Documents/maa-laxmi-real-estates/src' }).then(r => { console.log('errors:', r.errors.length); r.errors.forEach(e => console.log('---', e.fullText)); process.exit(r.errors.length ? 1 : 0); }).catch(e => { console.error('FAIL', e.message); process.exit(2); });  2 >& 1)",
+      "Shell(node dist/server/entry.mjs > /tmp/commandcode-1000/-home-chandrabhan-Documents-maa-laxmi-real-estates/a5d7efe3-f7a2-421b-b027-612064af7210/scratchpad/preview.log 2 >& 1)",
+      "Shell(sleep:*)",
+      "Shell(curl -s http://localhost:4321/properties/sunrise-garden-villa -o /tmp/commandcode-1000/-home-chandrabhan-Documents-maa-laxmi-real-estates/a5d7efe3-f7a2-421b-b027-612064af7210/scratchpad/detail.html)",
+      "Shell(MAPCSS=$(grep -o 'href=\"[^\"]*leaflet[^\"]*\"' /tmp/commandcode-1000/-home-chandrabhan-Documents-maa-laxmi-real-estates/a5d7efe3-f7a2-421b-b027-612064af7210/scratchpad/detail.html | head -1 | sed 's/href=\"//;s/\"//'); echo \"CSS: $MAPCSS\"; curl -s -o /dev/null -w \"%{http_code}\\n\" \"http://localhost:4321$MAPCSS\" 2>/dev/null || echo \"css-check-failed\"; echo \"---JS bundles:\"; grep -o 'src=\"/_astro/[^\"]*\"' /tmp/commandcode-1000/-home-chandrabhan-Documents-maa-laxmi-real-estates/a5d7efe3-f7a2-421b-b027-612064af7210/scratchpad/detail.html | sort -u | head -10)",
+      "Shell(curl -s http://localhost:4321/_astro/BaseLayout.RzRb37pP.css)",
+      "Shell(grep:*)",
+      "Shell(curl -s -H Host: localhost:4321 http://localhost:4321/properties/sunrise-garden-villa -o /tmp/commandcode-1000/-home-chandrabhan-Documents-maa-laxmi-real-estates/a5d7efe3-f7a2-421b-b027-612064af7210/scratchpad/detail2.html)",
+      "Shell(curl -s -H Host: localhost:4321 http://localhost:4321/properties/sunrise-garden-villa -o /tmp/commandcode-1000/-home-chandrabhan-Documents-maa-laxmi-real-estates/a5d7efe3-f7a2-421b-b027-612064af7210/scratchpad/detail3.html)",
+      "Shell(cd /home/chandrabhan/Documents/maa-laxmi-real-estates && grep -o 'PropertyMap[^\"]*\\.css' /tmp/commandcode-1000/-home-chandrabhan-Documents-maa-laxmi-real-estates/a5d7efe3-f7a2-421b-b027-612064af7210/scratchpad/detail3.html | head -2; echo \"---kill old server, restart:\"; pkill -f \"node dist/server/entry.mjs\" 2>/dev/null; sleep 1; (node dist/server/entry.mjs > /tmp/commandcode-1000/-home-chandrabhan-Documents-maa-laxmi-real-estates/a5d7efe3-f7a2-421b-b027-612064af7210/scratchpad/preview2.log 2>&1 &); sleep 2; curl -s http://localhost:4321/properties/sunrise-garden-villa -o /tmp/commandcode-1000/-home-chandrabhan-Documents-maa-laxmi-real-estates/a5d7efe3-f7a2-421b-b027-612064af7210/scratchpad/detail4.html && echo \"---raw import count:\" && grep -c '@import \"leaflet' /tmp/commandcode-1000/-home-chandrabhan-Documents-maa-laxmi-real-estates/a5d7efe3-f7a2-421b-b027-612064af7210/scratchpad/detail4.html; echo \"---css link:\"; grep -o 'href=\"/_astro/PropertyMap[^\"]*\"' /tmp/commandcode-1000/-home-chandrabhan-Documents-maa-laxmi-real-estates/a5d7efe3-f7a2-421b-b027-612064af7210/scratchpad/detail4.html | head -1)",
+      "Shell(pkill -f \"dist/server/entry.mjs\" 2>/dev/null; sleep 1; echo \"killed\")",
+      "Shell(pgrep:*)",
+      "Shell(kill 65099 2>/dev/null; sleep 1; pgrep -f \"dist/server/entry.mjs\" || echo \"dead\")",
+      "Shell(cd /home/chandrabhan/Documents/maa-laxmi-real-estates && nohup node dist/server/entry.mjs > /tmp/commandcode-1000/-home-chandrabhan-Documents-maa-laxmi-real-estates/a5d7efe3-f7a2-421b-b027-612064af7210/scratchpad/preview3.log 2>&1 & echo \"started pid $!\"; sleep 2; curl -s http://localhost:4321/properties/sunrise-garden-villa -o /tmp/commandcode-1000/-home-chandrabhan-Documents-maa-laxmi-real-estates/a5d7efe3-f7a2-421b-b027-612064af7210/scratchpad/detail4.html && echo \"---raw leaflet import count:\" && grep -c '@import \"leaflet' /tmp/commandcode-1000/-home-chandrabhan-Documents-maa-laxmi-real-estates/a5d7efe3-f7a2-421b-b027-612064af7210/scratchpad/detail4.html; echo \"---css link:\"; grep -o 'href=\"/_astro/PropertyMap[^\"]*\"' /tmp/commandcode-1000/-home-chandrabhan-Documents-maa-laxmi-real-estates/a5d7efe3-f7a2-421b-b027-612064af7210/scratchpad/detail4.html | head -1; echo \"---map section:\"; grep -c \"leaflet-map\" /tmp/commandcode-1000/-home-chandrabhan-Documents-maa-laxmi-real-estates/a5d7efe3-f7a2-421b-b027-612064af7210/scratchpad/detail4.html)",
+      "Shell(curl -s -o /dev/null -w css http: %{http_code}\\n http://localhost:4321/_astro/PropertyMap.CHtXxHHg.css)",
+      "Shell(curl -s http://localhost:4321/_astro/PropertyMap.CHtXxHHg.css)",
+      "Shell(PID=$(pgrep -f \"dist/server/entry.mjs\" | head -1); [ -n \"$PID\" ] && kill $PID && echo \"killed $PID\"; sleep 1; pgrep -f \"dist/server/entry.mjs\" || echo \"server stopped\")",
+      "Shell(pgrep -af \"entry.mjs\" | awk '{print $1}'; for p in $(pgrep -f \"dist/server/entry.mjs\"); do kill $p 2>/dev/null; done; sleep 1; pgrep -f \"dist/server/entry.mjs\" || echo \"all stopped\")",
+      "Shell(for p in $(pgrep -f \"entry.mjs\"); do kill -9 $p 2>/dev/null; done; sleep 1; pgrep -f \"entry.mjs\" >/dev/null && echo \"STILL RUNNING\" || echo \"all stopped\")",
+      "Shell(curl -s -o /dev/null -w %{http_code} --max-time 2 http://localhost:4321/ 2 > /dev/null)"
+    ],
+    "deny": [],
+    "defaultMode": "default"
+  }
+}

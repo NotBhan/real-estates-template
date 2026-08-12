@@ -17,6 +17,7 @@
     "astro": "^7.2.0",
     "cloudflared": "^0.7.1",
     "gsap": "^3.15.0",
+    "leaflet": "^1.9.4",
     "tailwindcss": "^4.3.3"
   },
   "allowScripts": {
@@ -24,6 +25,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "@types/leaflet": "^1.9.22",
     "typescript": "^6.0.3"
   }
 }

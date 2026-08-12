@@ -24,22 +24,52 @@ if (!images || images.length <= 1) {
     </div>
 
     <div class="flex flex-col gap-5 max-w-5xl">
-      {/* Primary Image Display */}
-      <div class="relative w-full aspect-[4/3] md:aspect-[16/10] overflow-hidden rounded-3xl bg-white border border-stone-200 shadow-sm" id="property-gallery-primary">
-        <img 
-          id="gallery-main-img"
-          src={images[0].url} 
-          alt={images[0].alt || `${propertyTitle} — main image`}
-          class="w-full h-full object-cover object-center transition-opacity duration-300 filter brightness-[0.95]"
-          loading="lazy"
-        />
+      {/* Carousel Primary Display */}
+      <div
+        class="relative w-full aspect-[4/3] md:aspect-[16/10] overflow-hidden rounded-3xl bg-white border border-stone-200 shadow-sm group/carousel"
+        id="property-gallery-primary"
+      >
+        {images.map((img, index) => (
+          <img
+            class:list={[
+              'absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-500 filter brightness-[0.95]',
+              index === 0 ? 'opacity-100' : 'opacity-0',
+            ]}
+            data-slide={index}
+            src={img.url}
+            alt={img.alt || `${propertyTitle} — image ${index + 1}`}
+            loading={index === 0 ? 'eager' : 'lazy'}
+            decoding="async"
+          />
+        ))}
+
+        {/* Prev / Next Arrows */}
+        <button
+          type="button"
+          class="gallery-prev absolute left-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 md:w-11 md:h-11 rounded-full bg-white/90 backdrop-blur border border-stone-200 shadow-md flex items-center justify-center text-ink hover:bg-white hover:scale-105 active:scale-95 transition-all cursor-pointer"
+          aria-label="Previous image"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button
+          type="button"
+          class="gallery-next absolute right-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 md:w-11 md:h-11 rounded-full bg-white/90 backdrop-blur border border-stone-200 shadow-md flex items-center justify-center text-ink hover:bg-white hover:scale-105 active:scale-95 transition-all cursor-pointer"
+          aria-label="Next image"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+
+        {/* Counter Badge */}
+        <div class="absolute top-3 right-3 z-10 rounded-full bg-stone-900/70 backdrop-blur text-white text-xs font-bold px-3 py-1.5 tracking-wide" id="gallery-counter">
+          1 / {images.length}
+        </div>
       </div>
 
       {/* Thumbnails Strip */}
-      <div 
-        class="flex items-center gap-3.5 overflow-x-auto snap-x hide-scrollbar pb-2 pt-1" 
+      <div
+        class="flex items-center gap-3.5 overflow-x-auto snap-x hide-scrollbar pb-2 pt-1"
         id="property-gallery-thumbs"
-        role="group" 
+        role="group"
         aria-label="Image gallery thumbnails"
       >
         {images.map((img, index) => (
@@ -49,19 +79,18 @@ if (!images || images.length <= 1) {
             class:list={[
               index === 0 ? 'border-action-blue shadow-sm scale-102' : 'border-stone-200 hover:border-action-blue/50'
             ]}
-            data-src={img.url}
-            data-alt={img.alt || `${propertyTitle} — image ${index + 1}`}
+            data-index={index}
             aria-current={index === 0 ? 'true' : 'false'}
             aria-label={`View image ${index + 1}`}
           >
-            <img 
-              src={img.url} 
+            <img
+              src={img.url}
               alt=""
               class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
               loading="lazy"
             />
             {/* Overlay for inactive state */}
-            <div 
+            <div
               class="thumb-overlay absolute inset-0 bg-stone-900/30 transition-opacity duration-300 pointer-events-none"
               class:list={[index === 0 ? 'opacity-0' : 'opacity-100 group-hover:opacity-10']}
             ></div>
@@ -74,45 +103,106 @@ if (!images || images.length <= 1) {
 
 <script>
   function setupGallery() {
-    const mainImg = document.getElementById('gallery-main-img') as HTMLImageElement;
-    const thumbs = document.querySelectorAll('.gallery-thumb');
+    const slides = Array.from(document.querySelectorAll<HTMLImageElement>('[data-slide]'));
+    const thumbs = Array.from(document.querySelectorAll<HTMLButtonElement>('.gallery-thumb'));
+    const prevBtn = document.querySelector<HTMLButtonElement>('.gallery-prev');
+    const nextBtn = document.querySelector<HTMLButtonElement>('.gallery-next');
+    const counter = document.getElementById('gallery-counter');
 
-    if (!mainImg || thumbs.length === 0) return;
+    if (slides.length === 0 || thumbs.length === 0 || !counter) return;
+
+    let current = 0;
+    let timer: number | undefined;
+    const AUTOPLAY_MS = 5000;
+
+    const show = (index: number) => {
+      current = (index + slides.length) % slides.length;
+
+      slides.forEach((slide, i) => {
+        slide.classList.toggle('opacity-100', i === current);
+        slide.classList.toggle('opacity-0', i !== current);
+      });
+
+      thumbs.forEach((thumb, i) => {
+        const active = i === current;
+        thumb.setAttribute('aria-current', active ? 'true' : 'false');
+        thumb.classList.toggle('border-action-blue', active);
+        thumb.classList.toggle('shadow-sm', active);
+        thumb.classList.toggle('scale-102', active);
+        thumb.classList.toggle('border-stone-200', !active);
+
+        const overlay = thumb.querySelector('.thumb-overlay');
+        if (overlay) {
+          overlay.classList.toggle('opacity-0', active);
+          overlay.classList.toggle('opacity-100', !active);
+        }
+      });
+
+      counter.textContent = `${current + 1} / ${slides.length}`;
+
+      // Scroll thumbnail into view within its own scroll container only —
+      // scrollIntoView would also scroll the page, stealing viewport
+      const thumbStrip = document.getElementById('property-gallery-thumbs');
+      const activeThumb = thumbs[current];
+      if (thumbStrip && activeThumb) {
+        const stripRect = thumbStrip.getBoundingClientRect();
+        const thumbRect = activeThumb.getBoundingClientRect();
+        const left = thumbRect.left - stripRect.left + thumbStrip.scrollLeft - 8;
+        thumbStrip.scrollTo({ left, behavior: 'smooth' });
+      }
+    };
+
+    const stopAutoplay = () => {
+      if (timer) {
+        window.clearInterval(timer);
+        timer = undefined;
+      }
+    };
+
+    const startAutoplay = () => {
+      stopAutoplay();
+      timer = window.setInterval(() => show(current + 1), AUTOPLAY_MS);
+    };
 
     thumbs.forEach((thumb) => {
-      thumb.addEventListener('click', (e) => {
-        const target = e.currentTarget as HTMLButtonElement;
-        const newSrc = target.getAttribute('data-src');
-        const newAlt = target.getAttribute('data-alt');
-
-        if (newSrc && newAlt) {
-          mainImg.src = newSrc;
-          mainImg.alt = newAlt;
-
-          thumbs.forEach((t) => {
-            t.setAttribute('aria-current', 'false');
-            t.classList.remove('border-action-blue', 'shadow-sm', 'scale-102');
-            t.classList.add('border-stone-200');
-            
-            const overlay = t.querySelector('.thumb-overlay');
-            if (overlay) {
-              overlay.classList.remove('opacity-0');
-              overlay.classList.add('opacity-100');
-            }
-          });
-
-          target.setAttribute('aria-current', 'true');
-          target.classList.remove('border-stone-200', 'hover:border-action-blue/50');
-          target.classList.add('border-action-blue', 'shadow-sm', 'scale-102');
-          
-          const targetOverlay = target.querySelector('.thumb-overlay');
-          if (targetOverlay) {
-            targetOverlay.classList.remove('opacity-100', 'group-hover:opacity-10');
-            targetOverlay.classList.add('opacity-0');
-          }
+      thumb.addEventListener('click', () => {
+        const index = Number(thumb.dataset.index);
+        if (!Number.isNaN(index)) {
+          show(index);
+          startAutoplay();
         }
       });
     });
+
+    prevBtn?.addEventListener('click', () => {
+      show(current - 1);
+      startAutoplay();
+    });
+
+    nextBtn?.addEventListener('click', () => {
+      show(current + 1);
+      startAutoplay();
+    });
+
+    // Keyboard navigation
+    const primary = document.getElementById('property-gallery-primary');
+    primary?.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        show(current - 1);
+        startAutoplay();
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        show(current + 1);
+        startAutoplay();
+      }
+    });
+
+    // Pause on hover
+    primary?.addEventListener('mouseenter', stopAutoplay);
+    primary?.addEventListener('mouseleave', startAutoplay);
+
+    startAutoplay();
   }
 
   document.addEventListener('astro:page-load', setupGallery);

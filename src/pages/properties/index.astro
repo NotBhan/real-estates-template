@@ -58,20 +58,24 @@ function getRemoveFilterUrl(keyToRemove: string) {
       {/* Filter & Meta Bar */}
       <div class="mb-10 space-y-4">
         {/* Advanced Search Toggle */}
-        <details class="group bg-white rounded-2xl border border-stone-200 overflow-hidden shadow-xs">
-          <summary class="flex justify-between items-center p-5 cursor-pointer list-none focus-visible:outline-action-blue">
+        <details class="group bg-white rounded-2xl border border-stone-200 overflow-hidden shadow-xs" id="filter-details">
+          <summary class="flex justify-between items-center p-5 cursor-pointer list-none focus-visible:outline-action-blue select-none" id="filter-summary">
             <div class="flex items-center gap-3">
               <div class="w-8 h-8 rounded-lg bg-stone-100 border border-stone-200 flex items-center justify-center text-action-blue">
                 <SlidersHorizontal size={17} />
               </div>
               <span class="font-bold text-ink text-base">Filter & Refine Catalogue</span>
             </div>
-            <span class="text-muted transition-transform duration-300 group-open:rotate-180 text-xs">
+            <span class="text-muted transition-transform duration-300 group-open:rotate-180 text-xs" id="filter-chevron">
               ▼
             </span>
           </summary>
-          <div class="p-6 border-t border-stone-200 bg-stone-50">
-            <PropertySearchForm variant="default" />
+          <div class="filter-panel" id="filter-panel">
+            <div class="overflow-hidden min-h-0">
+              <div class="p-6 border-t border-stone-200 bg-stone-50">
+                <PropertySearchForm variant="default" />
+              </div>
+            </div>
           </div>
         </details>
 
@@ -157,10 +161,95 @@ function getRemoveFilterUrl(keyToRemove: string) {
     });
   };
 
+  const initFilterToggle = () => {
+    const details = document.getElementById('filter-details') as HTMLDetailsElement | null;
+    const summary = document.getElementById('filter-summary');
+    const panel = document.getElementById('filter-panel');
+    const chevron = document.getElementById('filter-chevron');
+
+    if (!details || !summary || !panel || !chevron) return;
+
+    // Avoid double-binding when init runs more than once
+    if (details.dataset.toggleBound) return;
+    details.dataset.toggleBound = 'true';
+
+    let animating = false;
+
+    const setChevron = (open: boolean) => {
+      chevron.style.transform = open ? 'rotate(180deg)' : 'rotate(0deg)';
+    };
+
+    const toggle = () => {
+      if (animating) return;
+      animating = true;
+
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const duration = reduced ? 0 : 0.35;
+
+      if (details.open) {
+        // Close
+        gsap.to(panel, {
+          height: 0,
+          opacity: 0,
+          duration,
+          ease: 'power2.in',
+          onComplete: () => {
+            details.open = false;
+            setChevron(false);
+            animating = false;
+          },
+        });
+      } else {
+        // Open
+        details.open = true;
+        gsap.fromTo(
+          panel,
+          { height: 0, opacity: 0 },
+          {
+            height: 'auto',
+            opacity: 1,
+            duration,
+            ease: 'power2.out',
+            onComplete: () => {
+              animating = false;
+            },
+          }
+        );
+        setChevron(true);
+      }
+    };
+
+    summary.addEventListener('click', (e) => {
+      e.preventDefault();
+      toggle();
+    });
+  };
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initCatalogueAnimation);
+    document.addEventListener('DOMContentLoaded', initFilterToggle);
   } else {
     initCatalogueAnimation();
+    initFilterToggle();
   }
   document.addEventListener('astro:page-load', initCatalogueAnimation);
+  document.addEventListener('astro:page-load', initFilterToggle);
 </script>
+
+<style>
+  /* Filter & Refine panel. Height/opacity animated by JS (GSAP) for
+     reliable open/close both directions — CSS transitions on <details>
+     content only run once (closed content unmounts, so the reverse
+     transition and subsequent opens have no starting state).
+     These rules are the static fallback; GSAP overrides inline. */
+  .filter-panel {
+    overflow: hidden;
+    height: 0;
+    opacity: 0;
+  }
+
+  details[open] .filter-panel {
+    height: auto;
+    opacity: 1;
+  }
+</style>

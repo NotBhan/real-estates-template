@@ -1,0 +1,1 @@
+- Prefers the assistant to index the codebase with /codegraphcontext and reuse that index to traverse the repository in subsequent conversations, rather than re-scanning files from scratch. Confidence: 0.8

@@ -1,8 +1,95 @@
 ---
+/**
+ * Services — Overview of the advisory services offered.
+ * Demo scope: four representative categories (buying, selling, renting,
+ * consultation). Content is neutral/demo until client confirms messaging.
+ */
 import BaseLayout from '@layouts/BaseLayout.astro';
+import { config } from '@/lib/config';
+import {
+  House,
+  BadgeCheck,
+  Key,
+  MessagesSquare,
+  Check,
+  ArrowRight,
+  Phone,
+  Sparkles,
+} from '@lucide/astro';
+
+const services = [
+  {
+    icon: House,
+    title: 'Property Buying',
+    description:
+      'Guided acquisition support — shortlisting, site verification, price comparison, and negotiation assistance for residential and commercial purchases.',
+    points: [
+      'Requirement-based shortlisting',
+      'Document & title verification support',
+      'Negotiation assistance',
+    ],
+  },
+  {
+    icon: BadgeCheck,
+    title: 'Property Selling',
+    description:
+      'Listing and marketing support to help you position your property and connect with genuine, pre-qualified buyers across Delhi NCR.',
+    points: [
+      'Property valuation guidance',
+      'Buyer connect & showings',
+      'Paperwork coordination support',
+    ],
+  },
+  {
+    icon: Key,
+    title: 'Property Renting',
+    description:
+      'Tenant and landlord matching for residential and commercial leases — from property search to agreement formalities.',
+    points: [
+      'Tenant / landlord matching',
+      'Rent negotiation support',
+      'Lease agreement guidance',
+    ],
+  },
+  {
+    icon: MessagesSquare,
+    title: 'Property Consultation',
+    description:
+      'Advisory on market trends, investment suitability, and portfolio planning for individuals and families evaluating property decisions.',
+    points: [
+      'Market overview briefings',
+      'Investment suitability analysis',
+      'One-on-one advisory sessions',
+    ],
+  },
+];
+
+const processSteps = [
+  {
+    step: '01',
+    title: 'Share Requirements',
+    description: 'Tell us what you are looking for — location, budget, and purpose.',
+  },
+  {
+    step: '02',
+    title: 'Curated Shortlist',
+    description: 'We present verified options matched to your criteria.',
+  },
+  {
+    step: '03',
+    title: 'Site Visit & Review',
+    description: 'Inspect shortlisted properties with our assistance.',
+  },
+  {
+    step: '04',
+    title: 'Deal Support',
+    description: 'We assist through negotiation, paperwork, and handover.',
+  },
+];
 ---
 
-<BaseLayout title="Services" description="Property buying, selling, renting, and consultation services.">
+<BaseLayout title="Services" description="Property buying, selling, renting, and consultation services by Maa Laxmi Property Consultant.">
+  {/* ---- Page header ---- */}
   <div class="pt-28 sm:pt-32 pb-12 sm:pb-16 bg-canvas border-b border-stone-200/80">
     <div class="container-site">
       <div class="eyebrow-label mb-3">
@@ -10,23 +97,184 @@ import BaseLayout from '@layouts/BaseLayout.astro';
         <span>What We Do</span>
       </div>
       <h1 class="heading-editorial text-4xl sm:text-5xl md:text-6xl tracking-tight mb-4 text-ink">
-        Our Services
+        Our <span class="font-normal italic text-stone-500">Services</span>
       </h1>
       <p class="text-muted text-base md:text-lg max-w-2xl font-light">
         End-to-end real estate advisory across acquisition, disposition, leasing, and strategic land investments.
       </p>
     </div>
   </div>
-  <div class="bg-canvas section-padding">
-    <div class="container-site">
-      <div class="bg-white border border-stone-200 rounded-3xl p-8 sm:p-12 max-w-3xl shadow-sm">
-        <p class="text-muted text-lg leading-relaxed font-light mb-6">
-          Detailed service specifications will be finalized with client confirmation.
-        </p>
-        <p class="text-muted text-base leading-relaxed font-light">
-          Scope covers luxury residential sales, commercial leasing, land parcel acquisitions, and investment portfolio consultation in Gurugram & Delhi NCR.
+
+  {/* ---- Services grid ---- */}
+  <section class="bg-white section-padding relative overflow-hidden z-10 border-b border-stone-200/80" aria-labelledby="services-heading">
+    <div class="container-site relative z-10">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-14 gap-6" id="services-header">
+        <div>
+          <div class="eyebrow-label mb-3">
+            <Sparkles size={13} class="text-brand-gold" />
+            <span>Advisory Offerings</span>
+          </div>
+          <h2 class="heading-section text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-ink" id="services-heading">
+            Services Built Around <span class="font-normal italic text-stone-500">Your Goals</span>
+          </h2>
+        </div>
+        <p class="text-muted text-base md:text-lg max-w-md leading-relaxed font-light">
+          Whether you are buying your first home, selling an asset, or planning an investment — we support the full journey.
         </p>
       </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="services-grid">
+        {services.map((service) => {
+          const Icon = service.icon;
+          return (
+            <article class="service-card group bg-white border border-stone-200 rounded-3xl p-8 sm:p-10 shadow-sm transition-all duration-400 hover:-translate-y-1.5 hover:shadow-editorial hover:border-action-blue/40 flex flex-col">
+              <div class="w-14 h-14 rounded-2xl bg-stone-100 border border-stone-200 flex items-center justify-center mb-6 group-hover:bg-action-blue group-hover:text-white group-hover:border-action-blue transition-all duration-300">
+                <Icon size={26} class="text-ink group-hover:text-white transition-colors duration-300" />
+              </div>
+              <h3 class="text-xl sm:text-2xl font-bold text-ink mb-3">{service.title}</h3>
+              <p class="text-muted text-sm sm:text-base leading-relaxed font-light mb-6">
+                {service.description}
+              </p>
+              <ul class="space-y-3 mt-auto">
+                {service.points.map((point) => (
+                  <li class="flex items-start gap-3">
+                    <span class="w-5 h-5 rounded-full bg-action-blue/10 text-action-blue flex items-center justify-center shrink-0 mt-0.5">
+                      <Check size={12} stroke-width={3} />
+                    </span>
+                    <span class="text-sm text-ink font-medium">{point}</span>
+                  </li>
+                ))}
+              </ul>
+            </article>
+          );
+        })}
+      </div>
     </div>
-  </div>
+  </section>
+
+  {/* ---- Process strip ---- */}
+  <section class="bg-canvas section-padding relative overflow-hidden z-10 border-b border-stone-200/80" aria-labelledby="process-heading">
+    <div class="container-site relative z-10">
+      <div class="text-center mb-14" id="process-header">
+        <div class="eyebrow-label mb-3 justify-center">
+          <span class="w-1.5 h-1.5 rounded-full bg-brand-gold"></span>
+          <span>How We Work</span>
+        </div>
+        <h2 class="heading-section text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4 text-ink" id="process-heading">
+          A Simple, <span class="font-normal italic text-stone-500">Step-by-Step</span> Process
+        </h2>
+        <p class="text-muted text-base md:text-lg max-w-2xl mx-auto font-light leading-relaxed">
+          A transparent working rhythm from first conversation to final handover.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="process-grid">
+        {processSteps.map((item) => (
+          <div class="process-card bg-white border border-stone-200 rounded-2xl p-6 shadow-xs transition-all duration-400 hover:-translate-y-1 hover:shadow-editorial hover:border-action-blue/40">
+            <span class="block text-brand-gold font-bold text-3xl tracking-tight mb-3">{item.step}</span>
+            <h3 class="text-base font-bold text-ink mb-2">{item.title}</h3>
+            <p class="text-muted text-sm leading-relaxed font-light">{item.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {/* ---- Dark CTA band ---- */}
+  <section class="bg-surface-dark text-white section-padding relative overflow-hidden z-10 border-b border-stone-800" aria-label="Service consultation call to action">
+    <div class="container-site relative z-10">
+      <div class="max-w-4xl mx-auto text-center" id="services-cta">
+        <div class="eyebrow-label mb-6 justify-center">
+          <span class="w-2 h-2 rounded-full bg-brand-gold"></span>
+          <span class="text-brand-gold">Start a Conversation</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-[1.15] mb-5 text-white">
+          Not Sure Where to Begin? <span class="font-normal italic text-brand-gold">Let's Talk It Through.</span>
+        </h2>
+        <p class="text-stone-300 text-base md:text-lg max-w-2xl mx-auto mb-10 font-light leading-relaxed">
+          Share your property goals and our advisors will help you map the right path forward — at no obligation.
+        </p>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a href="/contact" class="btn btn-action-blue text-base px-8 py-3.5 rounded-full w-full sm:w-auto font-semibold">
+            Book a Consultation
+            <ArrowRight size={18} />
+          </a>
+          {config.contactPhone ? (
+            <a href={`tel:${config.contactPhone}`} class="btn btn-dark-outline text-base px-8 py-3.5 rounded-full w-full sm:w-auto font-semibold">
+              <Phone size={16} class="text-brand-gold" />
+              Speak With Consultant
+            </a>
+          ) : (
+            <a href="/properties" class="btn btn-dark-outline text-base px-8 py-3.5 rounded-full w-full sm:w-auto font-semibold">
+              Explore Property Portfolio
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
+  </section>
 </BaseLayout>
+
+<script>
+  import gsap from 'gsap';
+  import ScrollTrigger from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const initServicesAnimation = () => {
+    // Single init — DOMContentLoaded and astro:page-load both fire on
+    // initial load; re-running gsap.from on the same elements creates
+    // conflicting ScrollTriggers that leave cards stuck hidden.
+    if (document.documentElement.dataset.servicesAnimated) return;
+    document.documentElement.dataset.servicesAnimated = 'true';
+
+    const sections = [
+      { trigger: 'services-grid', targets: '.service-card', y: 45 },
+      { trigger: 'process-grid', targets: '.process-card', y: 35 },
+      { trigger: 'services-cta', targets: '#services-cta', y: 40 },
+    ];
+
+    let mm = gsap.matchMedia();
+
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      // Section header reveals
+      ['services-header', 'process-header'].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) {
+          gsap.from(el, {
+            scrollTrigger: { trigger: el, start: 'top 85%' },
+            opacity: 0,
+            y: 35,
+            duration: 0.8,
+            ease: 'power3.out',
+          });
+        }
+      });
+
+      sections.forEach(({ trigger, targets, y }) => {
+        const grid = document.getElementById(trigger);
+        const items = document.querySelectorAll(targets);
+        if (!grid || items.length === 0) return;
+        gsap.fromTo(
+          items,
+          { opacity: 0, y },
+          {
+            scrollTrigger: { trigger: grid, start: 'top 82%' },
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.12,
+            ease: 'power3.out',
+          }
+        );
+      });
+    });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initServicesAnimation);
+  } else {
+    initServicesAnimation();
+  }
+  document.addEventListener('astro:page-load', initServicesAnimation);
+</script>

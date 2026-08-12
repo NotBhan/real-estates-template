@@ -1,0 +1,197 @@
+---
+/**
+ * PropertyMap — Map abstraction for property location.
+ *
+ * Uses Google Maps embed when GOOGLE_MAPS_API_KEY is set,
+ * otherwise falls back to Leaflet with OpenStreetMap tiles.
+ * Component boundary stays independent of provider.
+ */
+import { config } from '@/lib/config';
+import { MapPin, ExternalLink } from '@lucide/astro';
+
+interface Props {
+  title: string;
+  address: string;
+  locality: string;
+  city: string;
+  latitude?: number;
+  longitude?: number;
+}
+
+const { title, address, locality, city, latitude, longitude } = Astro.props;
+
+const hasCoords = typeof latitude === 'number' && typeof longitude === 'number';
+
+const googleMapsKey = config.googleMapsApiKey;
+
+const query = encodeURIComponent(`${address}, ${locality}, ${city}`);
+
+// Static map image (Google) — shown when key present
+const googleStaticUrl = googleMapsKey && hasCoords
+  ? `https://maps.googleapis.com/maps/api/staticmap?center=${latitude},${longitude}&zoom=15&size=1200x500&scale=2&markers=color:red%7C${latitude},${longitude}&key=${googleMapsKey}`
+  : undefined;
+
+const directionsUrl = hasCoords
+  ? `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`
+  : `https://www.google.com/maps/search/?api=1&query=${query}`;
+
+const mapsLink = hasCoords
+  ? `https://www.google.com/maps?q=${latitude},${longitude}`
+  : `https://www.google.com/maps?q=${query}`;
+---
+
+<section
+  class="section-padding border-t border-stone-200/80 bg-canvas relative overflow-hidden"
+  aria-labelledby="map-heading"
+  id="property-location"
+>
+  <div class="container-site relative z-10">
+    <div class="max-w-5xl">
+      <div class="mb-8">
+        <div class="eyebrow-label mb-3">
+          <span class="w-1.5 h-1.5 rounded-full bg-brand-gold"></span>
+          <span>Location</span>
+        </div>
+        <h2 class="heading-section text-3xl font-bold tracking-tight text-ink" id="map-heading">
+          Where This Property Sits
+        </h2>
+        <p class="text-muted mt-3 font-light">
+          {locality}, {city}
+        </p>
+      </div>
+
+      <div class="relative rounded-3xl overflow-hidden bg-white border border-stone-200 shadow-sm">
+        {googleStaticUrl ? (
+          <a href={mapsLink} target="_blank" rel="noopener noreferrer" aria-label="Open map in Google Maps">
+            <img
+              src={googleStaticUrl}
+              alt={`Map showing location of ${title} at ${address}, ${locality}, ${city}`}
+              class="w-full h-[320px] sm:h-[420px] object-cover"
+              loading="lazy"
+              decoding="async"
+            />
+          </a>
+        ) : hasCoords ? (
+          <div
+            id="leaflet-map"
+            class="w-full h-[320px] sm:h-[420px] z-0"
+            data-lat={latitude}
+            data-lng={longitude}
+            data-title={title}
+            data-address={`${address}, ${locality}, ${city}`}
+          ></div>
+        ) : (
+          <div class="w-full h-[320px] sm:h-[420px] flex flex-col items-center justify-center text-center p-8 bg-stone-50">
+            <div class="w-12 h-12 rounded-2xl bg-stone-100 border border-stone-200 flex items-center justify-center text-action-blue mb-4">
+              <MapPin size={24} />
+            </div>
+            <p class="text-ink font-bold mb-2">Location Preview</p>
+            <p class="text-muted text-sm font-light max-w-sm">
+              Map will render here once location coordinates are added for this property.
+            </p>
+          </div>
+        )}
+
+        <!-- Location overlay card -->
+        <div class="absolute bottom-4 left-4 right-4 sm:left-4 sm:right-auto z-[400]">
+          <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 bg-white/95 backdrop-blur-md border border-stone-200 rounded-2xl px-5 py-4 shadow-editorial">
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-9 h-9 rounded-xl bg-action-blue/10 border border-action-blue/20 flex items-center justify-center text-action-blue shrink-0">
+                <MapPin size={18} />
+              </div>
+              <div class="min-w-0">
+                <p class="text-ink font-bold text-sm truncate">{title}</p>
+                <p class="text-muted text-xs truncate">{address}, {locality}, {city}</p>
+              </div>
+            </div>
+            <a
+              href={directionsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn-action-blue shrink-0 ml-auto rounded-full px-5 py-2.5 text-xs font-bold uppercase tracking-wider"
+            >
+              <ExternalLink size={14} />
+              Get Directions
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{!googleStaticUrl && hasCoords && (
+  <style>
+    #leaflet-map {
+      z-index: 0;
+    }
+
+    #leaflet-map .leaflet-container {
+      font-family: inherit;
+    }
+
+    #leaflet-map .leaflet-popup-content-wrapper,
+    #leaflet-map .leaflet-popup-tip {
+      background: #ffffff;
+      color: #171817;
+      box-shadow: 0 10px 30px -10px rgba(23, 24, 23, 0.2);
+    }
+  </style>
+)}
+
+<script>
+  import L from 'leaflet';
+  import 'leaflet/dist/leaflet.css';
+
+  // Marker icons served from unpkg CDN. Icon.Default concatenates imagePath
+  // with the default filenames (marker-icon.png, marker-icon-2x.png,
+  // marker-shadow.png). Setting imagePath to the CDN directory is the only
+  // reliable way — overriding iconUrl directly produces a broken path because
+  // imagePath gets prepended to it.
+  L.Icon.Default.imagePath = 'https://unpkg.com/leaflet@1.9.4/dist/images/';
+
+  const instances = new WeakMap<HTMLElement, L.Map>();
+
+  const mountMap = () => {
+    const container = document.getElementById('leaflet-map');
+    if (!container) return;
+
+    // Clean up any previous instance (view transitions / re-renders)
+    const previous = instances.get(container);
+    if (previous) {
+      previous.remove();
+      instances.delete(container);
+    }
+
+    const lat = Number(container.dataset.lat);
+    const lng = Number(container.dataset.lng);
+
+    if (!isFinite(lat) || !isFinite(lng)) return;
+
+    const map = L.map(container, {
+      scrollWheelZoom: false,
+    }).setView([lat, lng], 15);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(map);
+
+    const title = container.dataset.title || 'Property';
+    const address = container.dataset.address || '';
+
+    L.marker([lat, lng]).addTo(map).bindPopup(`<strong>${title}</strong><br>${address}`).openPopup();
+
+    instances.set(container, map);
+
+    // Ensure correct size after layout settles
+    setTimeout(() => map.invalidateSize(), 200);
+  };
+
+  document.addEventListener('astro:page-load', mountMap);
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    mountMap();
+  } else {
+    document.addEventListener('DOMContentLoaded', mountMap);
+  }
+</script>

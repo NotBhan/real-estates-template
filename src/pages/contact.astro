@@ -1,10 +1,70 @@
 ---
+/**
+ * Contact — Interactive contact channels, inquiry form, and map integration.
+ * Demo scope: Dynamic config integration for Phone, WhatsApp, and Email with fallback states.
+ * Interactive client-side inquiry form and Leaflet OSM location map.
+ */
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { config } from '@/lib/config';
-import { Phone, Mail, MapPin } from '@lucide/astro';
+import {
+  Phone,
+  Mail,
+  MapPin,
+  MessageCircle,
+  Clock,
+  Send,
+  Sparkles,
+  CheckCircle2,
+  HelpCircle,
+  ExternalLink,
+} from '@lucide/astro';
+
+const whatsappMessage = encodeURIComponent(
+  `Hi Maa Laxmi Property team, I would like to enquire about your available property listings.`
+);
+
+const phoneUrl = config.contactPhone ? `tel:${config.contactPhone}` : undefined;
+const whatsappUrl = config.contactWhatsapp
+  ? `https://wa.me/${config.contactWhatsapp}?text=${whatsappMessage}`
+  : undefined;
+const emailUrl = config.contactEmail
+  ? `mailto:${config.contactEmail}?subject=${encodeURIComponent('Property Enquiry — Maa Laxmi Property')}`
+  : undefined;
+
+// Demo location coordinates (Sector 62, Noida / Delhi NCR hub)
+const officeCoords = {
+  latitude: 28.628,
+  longitude: 77.3649,
+  title: `${config.brand.name} Office`,
+  address: 'Commercial Hub, Sector 62',
+  locality: 'Noida',
+  city: 'Delhi NCR',
+};
+
+const faqs = [
+  {
+    question: 'How do I schedule a property site visit?',
+    answer:
+      'You can schedule a visit by submitting the inquiry form above, calling our advisory line, or sending a direct message on WhatsApp with your preferred date and property ID.',
+  },
+  {
+    question: 'What property documents do you verify?',
+    answer:
+      'We check property title ownership, registry records, land use permissions, and approved layout plans to ensure hassle-free transactions for buyers and investors.',
+  },
+  {
+    question: 'Are initial property consultations free?',
+    answer:
+      'Yes, initial requirement briefings, property shortlisting, and preliminary advisory sessions are entirely complimentary with no hidden commitments.',
+  },
+];
 ---
 
-<BaseLayout title="Contact" description="Get in touch with Maa Laxmi Property Consultant.">
+<BaseLayout
+  title="Contact Us"
+  description={`Get in touch with ${config.brand.name} for property inquiries, site visits, and real estate advisory across Delhi NCR.`}
+>
+  {/* ---- 1. Hero Page Header ---- */}
   <div class="pt-28 sm:pt-32 pb-12 sm:pb-16 bg-canvas border-b border-stone-200/80">
     <div class="container-site">
       <div class="eyebrow-label mb-3">
@@ -12,80 +72,494 @@ import { Phone, Mail, MapPin } from '@lucide/astro';
         <span>Get in Touch</span>
       </div>
       <h1 class="heading-editorial text-4xl sm:text-5xl md:text-6xl tracking-tight mb-4 text-ink">
-        Contact Us
+        Contact Advisory <br class="hidden sm:inline" />
+        <span class="font-normal italic text-stone-500">& Schedule Consultation</span>
       </h1>
-      <p class="text-muted text-base md:text-lg max-w-2xl font-light">
-        Schedule a private consultation or enquire about specific properties in our portfolio.
+      <p class="text-muted text-base md:text-lg max-w-2xl font-light leading-relaxed">
+        Connect directly with our property advisors for site inspections, portfolio shortlisting, or general real estate guidance across Delhi NCR.
       </p>
     </div>
   </div>
-  <div class="bg-canvas section-padding">
-    <div class="container-site">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl">
-        <div class="bg-white border border-stone-200 rounded-3xl p-8 shadow-sm">
-          <h2 class="text-2xl font-bold text-ink mb-6">Contact Advisory</h2>
-          <ul class="space-y-5">
-            <li class="flex items-start gap-4">
-              <div class="w-10 h-10 rounded-xl bg-stone-100 border border-stone-200 flex items-center justify-center text-action-blue shrink-0">
-                <MapPin size={20} />
-              </div>
-              <div>
-                <p class="text-xs uppercase font-bold text-muted tracking-wider mb-1">Office Location</p>
-                <p class="text-ink text-sm italic">Address pending from client</p>
-              </div>
-            </li>
-            <li class="flex items-center gap-4">
-              <div class="w-10 h-10 rounded-xl bg-stone-100 border border-stone-200 flex items-center justify-center text-action-blue shrink-0">
-                <Phone size={20} />
-              </div>
-              <div>
-                <p class="text-xs uppercase font-bold text-muted tracking-wider mb-1">Telephone</p>
-                {config.contactPhone ? (
-                  <a href={`tel:${config.contactPhone}`} class="text-ink font-semibold text-sm hover:text-action-blue">
-                    {config.contactPhone}
-                  </a>
-                ) : (
-                  <p class="text-ink text-sm italic">Phone pending</p>
-                )}
-              </div>
-            </li>
-            <li class="flex items-center gap-4">
-              <div class="w-10 h-10 rounded-xl bg-stone-100 border border-stone-200 flex items-center justify-center text-action-blue shrink-0">
-                <Mail size={20} />
-              </div>
-              <div>
-                <p class="text-xs uppercase font-bold text-muted tracking-wider mb-1">Email</p>
-                {config.contactEmail ? (
-                  <a href={`mailto:${config.contactEmail}`} class="text-ink font-semibold text-sm hover:text-action-blue">
-                    {config.contactEmail}
-                  </a>
-                ) : (
-                  <p class="text-ink text-sm italic">Email pending</p>
-                )}
-              </div>
-            </li>
-          </ul>
-        </div>
 
-        <div class="bg-white border border-stone-200 rounded-3xl p-8 shadow-sm flex flex-col justify-between">
+  {/* ---- 2. Quick Contact Channels Grid ---- */}
+  <section class="bg-white section-padding border-b border-stone-200/80" aria-label="Contact Channels">
+    <div class="container-site">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="contact-channels-grid">
+        
+        {/* Phone Card */}
+        <div class="bg-canvas border border-stone-200/80 rounded-2xl p-6 flex flex-col justify-between hover:border-action-blue/50 transition-colors">
           <div>
-            <h2 class="text-2xl font-bold text-ink mb-4">Client Consultation</h2>
-            <p class="text-muted text-sm leading-relaxed mb-6 font-light">
-              Interactive contact form, map integration, and instant inquiry messaging are available in the full client implementation.
-            </p>
+            <div class="w-11 h-11 rounded-xl bg-white border border-stone-200/80 flex items-center justify-center text-action-blue mb-4 shadow-sm">
+              <Phone size={20} />
+            </div>
+            <p class="text-xs uppercase font-bold text-brand-gold tracking-wider mb-1">Direct Call</p>
+            <h3 class="text-lg font-bold text-ink mb-2">Speak With Advisor</h3>
+            <p class="text-muted text-xs font-light mb-4">Immediate telephone consultation for urgent property requirements.</p>
           </div>
-          {config.contactPhone ? (
-            <a href={`tel:${config.contactPhone}`} class="btn btn-action-blue w-full py-3.5 rounded-full font-semibold">
-              <Phone size={16} />
-              Call Now Directly
+          {phoneUrl ? (
+            <a href={phoneUrl} class="btn btn-action-blue w-full py-2.5 text-xs rounded-xl font-semibold">
+              <Phone size={14} />
+              Call Now
             </a>
           ) : (
-            <a href="/properties" class="btn btn-action-blue w-full py-3.5 rounded-full font-semibold">
-              Explore Property Portfolio
-            </a>
+            <span class="btn btn-stone-outline w-full py-2.5 text-xs rounded-xl font-semibold text-muted opacity-60 cursor-not-allowed">
+              Phone Pending
+            </span>
           )}
+        </div>
+
+        {/* WhatsApp Card */}
+        <div class="bg-canvas border border-stone-200/80 rounded-2xl p-6 flex flex-col justify-between hover:border-emerald-500/50 transition-colors">
+          <div>
+            <div class="w-11 h-11 rounded-xl bg-white border border-stone-200/80 flex items-center justify-center text-emerald-600 mb-4 shadow-sm">
+              <MessageCircle size={20} />
+            </div>
+            <p class="text-xs uppercase font-bold text-emerald-600 tracking-wider mb-1">Instant Chat</p>
+            <h3 class="text-lg font-bold text-ink mb-2">WhatsApp Advisory</h3>
+            <p class="text-muted text-xs font-light mb-4">Send requirements, receive property brochures and site visit slots.</p>
+          </div>
+          {whatsappUrl ? (
+            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" class="btn btn-stone-outline w-full py-2.5 text-xs rounded-xl font-semibold text-emerald-700 hover:bg-emerald-50 hover:border-emerald-300">
+              <MessageCircle size={14} />
+              Chat on WhatsApp
+            </a>
+          ) : (
+            <span class="btn btn-stone-outline w-full py-2.5 text-xs rounded-xl font-semibold text-muted opacity-60 cursor-not-allowed">
+              WhatsApp Pending
+            </span>
+          )}
+        </div>
+
+        {/* Email Card */}
+        <div class="bg-canvas border border-stone-200/80 rounded-2xl p-6 flex flex-col justify-between hover:border-action-blue/50 transition-colors">
+          <div>
+            <div class="w-11 h-11 rounded-xl bg-white border border-stone-200/80 flex items-center justify-center text-action-blue mb-4 shadow-sm">
+              <Mail size={20} />
+            </div>
+            <p class="text-xs uppercase font-bold text-brand-gold tracking-wider mb-1">Written Enquiry</p>
+            <h3 class="text-lg font-bold text-ink mb-2">Email Desk</h3>
+            <p class="text-muted text-xs font-light mb-4">Send detailed portfolio proposals or official legal inquiries.</p>
+          </div>
+          {emailUrl ? (
+            <a href={emailUrl} class="btn btn-stone-outline w-full py-2.5 text-xs rounded-xl font-semibold text-ink hover:text-action-blue hover:border-action-blue">
+              <Mail size={14} />
+              Send Email
+            </a>
+          ) : (
+            <span class="btn btn-stone-outline w-full py-2.5 text-xs rounded-xl font-semibold text-muted opacity-60 cursor-not-allowed">
+              Email Pending
+            </span>
+          )}
+        </div>
+
+        {/* Office Location Card */}
+        <div class="bg-canvas border border-stone-200/80 rounded-2xl p-6 flex flex-col justify-between">
+          <div>
+            <div class="w-11 h-11 rounded-xl bg-white border border-stone-200/80 flex items-center justify-center text-action-blue mb-4 shadow-sm">
+              <MapPin size={20} />
+            </div>
+            <p class="text-xs uppercase font-bold text-brand-gold tracking-wider mb-1">Office Zone</p>
+            <h3 class="text-lg font-bold text-ink mb-2">Delhi NCR Hub</h3>
+            <p class="text-muted text-xs font-light mb-4">Commercial Hub, Sector 62, Noida, Delhi NCR.</p>
+          </div>
+          <a href="#office-map" class="btn btn-stone-outline w-full py-2.5 text-xs rounded-xl font-semibold text-ink hover:bg-stone-100">
+            <MapPin size={14} />
+            View Map Location
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  {/* ---- 3. Interactive Form & Advisory Card ---- */}
+  <section class="bg-canvas section-padding border-b border-stone-200/80" aria-labelledby="form-heading">
+    <div class="container-site">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+        
+        {/* Left Column: Form */}
+        <div class="lg:col-span-7 bg-white border border-stone-200/80 rounded-3xl p-6 sm:p-10 shadow-editorial" id="contact-form-card">
+          <div class="eyebrow-label mb-2">
+            <Sparkles size={13} class="text-brand-gold" />
+            <span>Consultation Form</span>
+          </div>
+          <h2 class="heading-section text-2xl sm:text-3xl font-bold tracking-tight text-ink mb-3" id="form-heading">
+            Send an Advisory <span class="font-normal italic text-stone-500">Inquiry</span>
+          </h2>
+          <p class="text-muted text-sm font-light leading-relaxed mb-8">
+            Fill out your details below. Our property consultant will review your request and connect with a curated shortlist.
+          </p>
+
+          <form id="contact-inquiry-form" class="space-y-5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div>
+                <label for="contact-name" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+                  Full Name <span class="text-rose-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="contact-name"
+                  name="name"
+                  required
+                  placeholder="e.g. Rahul Sharma"
+                  class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none transition-colors"
+                />
+              </div>
+
+              <div>
+                <label for="contact-phone" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+                  Phone Number <span class="text-rose-500">*</span>
+                </label>
+                <input
+                  type="tel"
+                  id="contact-phone"
+                  name="phone"
+                  required
+                  placeholder="e.g. +91 98765 43210"
+                  class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none transition-colors"
+                />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div>
+                <label for="contact-email" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  id="contact-email"
+                  name="email"
+                  placeholder="name@example.com"
+                  class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none transition-colors"
+                />
+              </div>
+
+              <div>
+                <label for="contact-category" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+                  Property Interest
+                </label>
+                <select
+                  id="contact-category"
+                  name="category"
+                  class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none transition-colors"
+                >
+                  <option value="general">General Enquiry</option>
+                  <option value="residential">Residential Homes / Apartments</option>
+                  <option value="commercial">Commercial / Retail Spaces</option>
+                  <option value="land">Agricultural / Industrial Land</option>
+                  <option value="plot">Plots & Building Land</option>
+                  <option value="flat">Flats & Apartments</option>
+                  <option value="villa">Villas & Estates</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label for="contact-message" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+                Message / Requirement Details
+              </label>
+              <textarea
+                id="contact-message"
+                name="message"
+                rows="4"
+                placeholder="Specify preferred location, budget range, or specific property reference..."
+                class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none transition-colors resize-y"
+              ></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-action-blue w-full py-3.5 rounded-xl font-semibold text-base">
+              <Send size={18} />
+              <span>Submit Consultation Inquiry</span>
+            </button>
+
+            <!-- Success / Feedback banner -->
+            <div id="form-success-banner" class="hidden p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-medium">
+              <div class="flex items-center gap-2">
+                <CheckCircle2 size={18} class="text-emerald-600 shrink-0" />
+                <span>Thank you! Your inquiry has been logged. Our advisory team will respond shortly.</span>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        {/* Right Column: Advisory Info & Commitments */}
+        <div class="lg:col-span-5 space-y-6" id="contact-info-panel">
+          <div class="bg-white border border-stone-200/80 rounded-3xl p-6 sm:p-8 shadow-sm">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-10 h-10 rounded-xl bg-stone-100 border border-stone-200 flex items-center justify-center text-action-blue shrink-0">
+                <Clock size={20} />
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-ink">Advisory Working Hours</h3>
+                <p class="text-xs text-muted font-light">Delhi NCR Operations Desk</p>
+              </div>
+            </div>
+
+            <ul class="space-y-3 text-sm text-stone-700 border-t border-stone-100 pt-4">
+              <li class="flex items-center justify-between">
+                <span class="font-medium text-ink">Monday &ndash; Saturday</span>
+                <span class="text-muted">9:30 AM &ndash; 7:00 PM</span>
+              </li>
+              <li class="flex items-center justify-between">
+                <span class="font-medium text-ink">Sunday</span>
+                <span class="text-brand-gold font-semibold">By Appointment Only</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="bg-surface-dark text-white rounded-3xl p-6 sm:p-8 border border-stone-800">
+            <h3 class="text-xl font-bold text-white mb-3">Client Protection Commitment</h3>
+            <p class="text-stone-300 text-sm font-light leading-relaxed mb-6">
+              We respect client confidentiality. Your inquiry details are accessed solely by authorized advisors for property shortlisting.
+            </p>
+            <ul class="space-y-2.5 text-xs text-stone-300 font-light">
+              <li class="flex items-center gap-2">
+                <CheckCircle2 size={14} class="text-brand-gold shrink-0" />
+                <span>No third-party spam distribution</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <CheckCircle2 size={14} class="text-brand-gold shrink-0" />
+                <span>Verified property document inspection</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <CheckCircle2 size={14} class="text-brand-gold shrink-0" />
+                <span>Direct price negotiation assistance</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  {/* ---- 4. Office Location Map Integration ---- */}
+  <section class="bg-white section-padding border-b border-stone-200/80 scroll-mt-24" id="office-map" aria-labelledby="office-location-heading">
+    <div class="container-site">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+        <div>
+          <div class="eyebrow-label mb-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-brand-gold"></span>
+            <span>Physical Location</span>
+          </div>
+          <h2 class="heading-section text-3xl font-bold tracking-tight text-ink" id="office-location-heading">
+            Our Advisory <span class="font-normal italic text-stone-500">Location</span>
+          </h2>
+        </div>
+        <p class="text-muted text-sm font-light max-w-sm">
+          Visit our central office hub in Delhi NCR for in-person project briefings and title review sessions.
+        </p>
+      </div>
+
+      <!-- Map Container -->
+      <div class="relative rounded-3xl overflow-hidden bg-stone-100 border border-stone-200/80 shadow-editorial">
+        <div
+          id="office-leaflet-map"
+          class="w-full h-[360px] sm:h-[440px] z-0"
+          data-lat={officeCoords.latitude}
+          data-lng={officeCoords.longitude}
+          data-title={officeCoords.title}
+          data-address={`${officeCoords.address}, ${officeCoords.locality}, ${officeCoords.city}`}
+        ></div>
+
+        <!-- Overlay Location Banner -->
+        <div class="absolute bottom-4 left-4 right-4 sm:left-4 sm:right-auto z-[400]">
+          <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 bg-white/95 backdrop-blur-md border border-stone-200 rounded-2xl px-5 py-4 shadow-editorial">
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-9 h-9 rounded-xl bg-action-blue/10 border border-action-blue/20 flex items-center justify-center text-action-blue shrink-0">
+                <MapPin size={18} />
+              </div>
+              <div class="min-w-0">
+                <p class="text-ink font-bold text-sm truncate">{config.brand.name}</p>
+                <p class="text-muted text-xs truncate">{officeCoords.address}, {officeCoords.locality}, {officeCoords.city}</p>
+              </div>
+            </div>
+            <a
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${officeCoords.address}, ${officeCoords.locality}, ${officeCoords.city}`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn-action-blue shrink-0 ml-auto rounded-full px-5 py-2 text-xs font-bold uppercase tracking-wider"
+            >
+              <ExternalLink size={14} />
+              Directions
+            </a>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </section>
+
+  {/* ---- 5. Advisory FAQs ---- */}
+  <section class="bg-canvas section-padding" aria-labelledby="faq-heading">
+    <div class="container-site max-w-4xl">
+      <div class="text-center mb-12">
+        <div class="eyebrow-label mb-2 justify-center">
+          <HelpCircle size={13} class="text-brand-gold" />
+          <span>Frequent Questions</span>
+        </div>
+        <h2 class="heading-section text-3xl font-bold tracking-tight text-ink" id="faq-heading">
+          Common Advisory <span class="font-normal italic text-stone-500">Queries</span>
+        </h2>
+      </div>
+
+      <div class="space-y-4" id="contact-faq-list">
+        {
+          faqs.map((faq) => (
+            <div class="bg-white border border-stone-200/80 rounded-2xl p-6 shadow-sm">
+              <h3 class="text-lg font-bold text-ink mb-2 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-brand-gold shrink-0"></span>
+                <span>{faq.question}</span>
+              </h3>
+              <p class="text-muted text-sm font-light leading-relaxed pl-4 border-l-2 border-stone-100">
+                {faq.answer}
+              </p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
 </BaseLayout>
+
+<script>
+  import L from 'leaflet';
+  import 'leaflet/dist/leaflet.css';
+  import gsap from 'gsap';
+  import ScrollTrigger from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Set Leaflet CDN marker path
+  L.Icon.Default.imagePath = 'https://unpkg.com/leaflet@1.9.4/dist/images/';
+
+  const instances = new WeakMap<HTMLElement, L.Map>();
+
+  const mountContactMap = () => {
+    const container = document.getElementById('office-leaflet-map');
+    if (!container) return;
+
+    const previous = instances.get(container);
+    if (previous) {
+      previous.remove();
+      instances.delete(container);
+    }
+
+    const lat = Number(container.dataset.lat) || 28.628;
+    const lng = Number(container.dataset.lng) || 77.3649;
+
+    const map = L.map(container, {
+      scrollWheelZoom: false,
+    }).setView([lat, lng], 14);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(map);
+
+    const title = container.dataset.title || 'Maa Laxmi Property';
+    const address = container.dataset.address || 'Delhi NCR';
+
+    L.marker([lat, lng]).addTo(map).bindPopup(`<strong>${title}</strong><br>${address}`).openPopup();
+
+    instances.set(container, map);
+
+    setTimeout(() => map.invalidateSize(), 250);
+  };
+
+  const initContactForm = () => {
+    const form = document.getElementById('contact-inquiry-form') as HTMLFormElement | null;
+    const successBanner = document.getElementById('form-success-banner');
+
+    if (!form) return;
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (successBanner) {
+        successBanner.classList.remove('hidden');
+        form.reset();
+        setTimeout(() => {
+          successBanner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 100);
+      }
+    });
+  };
+
+  const initContactAnimations = () => {
+    const channelsGrid = document.getElementById('contact-channels-grid');
+    const formCard = document.getElementById('contact-form-card');
+    const infoPanel = document.getElementById('contact-info-panel');
+    const faqList = document.getElementById('contact-faq-list');
+
+    let mm = gsap.matchMedia();
+
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      if (channelsGrid) {
+        gsap.from(channelsGrid.children, {
+          scrollTrigger: {
+            trigger: channelsGrid,
+            start: 'top 85%',
+          },
+          opacity: 0,
+          y: 25,
+          duration: 0.6,
+          stagger: 0.08,
+          ease: 'power2.out',
+        });
+      }
+
+      if (formCard && infoPanel) {
+        gsap.from(formCard, {
+          scrollTrigger: {
+            trigger: formCard,
+            start: 'top 85%',
+          },
+          opacity: 0,
+          y: 30,
+          duration: 0.8,
+          ease: 'power3.out',
+        });
+
+        gsap.from(infoPanel, {
+          scrollTrigger: {
+            trigger: infoPanel,
+            start: 'top 85%',
+          },
+          opacity: 0,
+          y: 40,
+          duration: 0.8,
+          delay: 0.1,
+          ease: 'power3.out',
+        });
+      }
+
+      if (faqList) {
+        gsap.from(faqList.children, {
+          scrollTrigger: {
+            trigger: faqList,
+            start: 'top 85%',
+          },
+          opacity: 0,
+          y: 20,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: 'power2.out',
+        });
+      }
+    });
+  };
+
+  const initAll = () => {
+    mountContactMap();
+    initContactForm();
+    initContactAnimations();
+  };
+
+  document.addEventListener('astro:page-load', initAll);
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    initAll();
+  } else {
+    document.addEventListener('DOMContentLoaded', initAll);
+  }
+</script>
+

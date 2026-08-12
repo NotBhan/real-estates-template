@@ -1,9 +1,123 @@
 ---
+/**
+ * About — Company overview and core advisory philosophy.
+ * Demo scope: Neutral, professional advisory messaging for Maa Laxmi Property Consultant.
+ * Respects strict rule against fabricating client statistics, history, or real-estate claims.
+ */
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { config } from '@/lib/config';
+import {
+  ShieldCheck,
+  Compass,
+  Handshake,
+  MapPin,
+  Home,
+  Building2,
+  Trees,
+  Landmark,
+  Building,
+  Warehouse,
+  ArrowRight,
+  Phone,
+  Sparkles,
+  CheckCircle2,
+} from '@lucide/astro';
+
+const corePillars = [
+  {
+    icon: ShieldCheck,
+    title: 'Transparent Guidance',
+    description:
+      'Unbiased evaluation of property titles, valuation benchmarks, and document verification to protect your investments.',
+  },
+  {
+    icon: Compass,
+    title: 'Client-Centric Discovery',
+    description:
+      'Tailored property shortlists aligned strictly with your budget parameters, spatial needs, and long-term utility goals.',
+  },
+  {
+    icon: Handshake,
+    title: 'End-to-End Assistance',
+    description:
+      'Hands-on support from initial site visits to negotiations, agreement formalities, and final possession handover.',
+  },
+  {
+    icon: MapPin,
+    title: 'NCR Market Specialization',
+    description:
+      'In-depth local intelligence covering key growth corridors across Delhi, Noida, Gurgaon, and emerging regional zones.',
+  },
+];
+
+const assetClasses = [
+  {
+    type: 'residential',
+    title: 'Residential',
+    icon: Home,
+    description: 'Independent houses, floors, and family residences across top localities.',
+  },
+  {
+    type: 'commercial',
+    title: 'Commercial',
+    icon: Building2,
+    description: 'Prime retail units, office spaces, and commercial investment properties.',
+  },
+  {
+    type: 'land',
+    title: 'Land',
+    icon: Trees,
+    description: 'Agricultural land, strategic parcels, and multi-purpose land investments.',
+  },
+  {
+    type: 'plot',
+    title: 'Plots',
+    icon: Landmark,
+    description: 'Approved residential and industrial plots ready for development.',
+  },
+  {
+    type: 'flat',
+    title: 'Flats',
+    icon: Building,
+    description: 'Modern apartments in gated communities and high-rise developments.',
+  },
+  {
+    type: 'villa',
+    title: 'Villas',
+    icon: Warehouse,
+    description: 'Luxury independent villas and gated estate properties.',
+  },
+];
+
+const workflowSteps = [
+  {
+    step: '01',
+    title: 'Requirement Briefing',
+    description: 'We understand your investment capacity, location preferences, and functional needs.',
+  },
+  {
+    step: '02',
+    title: 'Curated Shortlisting',
+    description: 'We filter properties with clear documentation and genuine market value.',
+  },
+  {
+    step: '03',
+    title: 'Guided Site Inspections',
+    description: 'Conduct organized property visits with detailed micro-market insights.',
+  },
+  {
+    step: '04',
+    title: 'Transaction & Closing',
+    description: 'Receive assistance through negotiations, legal checks, and agreement execution.',
+  },
+];
 ---
 
-<BaseLayout title="About" description="Learn about Maa Laxmi Property Consultant.">
+<BaseLayout
+  title="About Us"
+  description={`Learn about ${config.brand.name} — dedicated property advisors for residential, commercial, and land investments.`}
+>
+  {/* ---- 1. Hero Page Header ---- */}
   <div class="pt-28 sm:pt-32 pb-12 sm:pb-16 bg-canvas border-b border-stone-200/80">
     <div class="container-site">
       <div class="eyebrow-label mb-3">
@@ -11,23 +125,324 @@ import { config } from '@/lib/config';
         <span>About Us</span>
       </div>
       <h1 class="heading-editorial text-4xl sm:text-5xl md:text-6xl tracking-tight mb-4 text-ink">
-        About {config.brand.name}
+        Dedicated Property Advisors <br class="hidden sm:inline" />
+        <span class="font-normal italic text-stone-500">Across Delhi NCR</span>
       </h1>
-      <p class="text-muted text-base md:text-lg max-w-2xl font-light">
-        Dedicated property advisors for high-value residential, commercial, and land investments across Delhi NCR.
+      <p class="text-muted text-base md:text-lg max-w-2xl font-light leading-relaxed">
+        Bridging property buyers, sellers, and investors with verified listings, strategic land intelligence, and transparent advisory services.
       </p>
     </div>
   </div>
-  <div class="bg-canvas section-padding">
-    <div class="container-site">
-      <div class="bg-white border border-stone-200 rounded-3xl p-8 sm:p-12 max-w-3xl shadow-sm">
-        <p class="text-muted text-lg leading-relaxed font-light mb-6">
-          Company background and history will be populated with actual client content once supplied.
-        </p>
-        <p class="text-muted text-base leading-relaxed font-light">
-          This demonstration platform exhibits the property catalogue, search discovery engine, and enquiry flow for Maa Laxmi Property Consultant.
-        </p>
+
+  {/* ---- 2. Mission & Story Section ---- */}
+  <section class="bg-white section-padding border-b border-stone-200/80 relative overflow-hidden z-10" aria-labelledby="mission-heading">
+    <div class="container-site relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+        <!-- Text Column -->
+        <div class="lg:col-span-7" id="about-story-text">
+          <div class="eyebrow-label mb-3">
+            <Sparkles size={13} class="text-brand-gold" />
+            <span>Our Approach</span>
+          </div>
+          <h2 class="heading-section text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-ink mb-6" id="mission-heading">
+            Rooted in Trust, Driven by <span class="font-normal italic text-stone-500">Local Knowledge</span>
+          </h2>
+          <div class="space-y-4 text-muted text-base md:text-lg font-light leading-relaxed mb-8">
+            <p>
+              At <strong class="font-semibold text-ink">{config.brand.name}</strong>, we view real estate as a foundational life and capital decision. Whether searching for a residential home, expanding a commercial venture, or evaluating land plots, our objective is to provide clarity and peace of mind.
+            </p>
+            <p>
+              We bring structure to real estate discovery by pairing curated property options with personalized advisory. From title check assistance to negotiation guidance, we ensure every transaction proceeds smoothly.
+            </p>
+          </div>
+
+          <!-- Key Commitments -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-stone-100">
+            <div class="flex items-center gap-2.5 text-sm font-medium text-ink">
+              <CheckCircle2 size={16} class="text-brand-gold shrink-0" />
+              <span>Verified Title Checks</span>
+            </div>
+            <div class="flex items-center gap-2.5 text-sm font-medium text-ink">
+              <CheckCircle2 size={16} class="text-brand-gold shrink-0" />
+              <span>Direct Seller Negotiation</span>
+            </div>
+            <div class="flex items-center gap-2.5 text-sm font-medium text-ink">
+              <CheckCircle2 size={16} class="text-brand-gold shrink-0" />
+              <span>Transparent Price Benchmarking</span>
+            </div>
+            <div class="flex items-center gap-2.5 text-sm font-medium text-ink">
+              <CheckCircle2 size={16} class="text-brand-gold shrink-0" />
+              <span>Multi-Category Expertise</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visual Image Card Column -->
+        <div class="lg:col-span-5" id="about-story-media">
+          <div class="relative rounded-2xl overflow-hidden border border-stone-200/80 shadow-editorial group">
+            <img
+              src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=85"
+              alt="Modern real estate development showcase"
+              class="w-full h-[380px] sm:h-[460px] object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-stone-900/70 via-stone-900/20 to-transparent"></div>
+            <div class="absolute bottom-6 left-6 right-6 text-white p-4 rounded-xl bg-stone-900/60 backdrop-blur-md border border-white/10">
+              <p class="text-xs uppercase tracking-widest text-brand-gold font-bold mb-1">Advisory Standards</p>
+              <p class="text-sm font-light text-stone-200 leading-snug">
+                Helping individuals, families, and businesses secure high-value property across NCR.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
+  </section>
+
+  {/* ---- 3. Core Principles Grid ---- */}
+  <section class="bg-canvas section-padding border-b border-stone-200/80" aria-labelledby="pillars-heading">
+    <div class="container-site">
+      <div class="max-w-2xl mb-12">
+        <div class="eyebrow-label mb-3">
+          <span class="w-1.5 h-1.5 rounded-full bg-brand-gold"></span>
+          <span>Core Values</span>
+        </div>
+        <h2 class="heading-section text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-ink" id="pillars-heading">
+          Our Guiding Principles <span class="font-normal italic text-stone-500">of Practice</span>
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="about-pillars-grid">
+        {
+          corePillars.map((pillar) => {
+            const Icon = pillar.icon;
+            return (
+              <div class="bg-white border border-stone-200/80 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between group">
+                <div>
+                  <div class="w-12 h-12 rounded-xl bg-stone-100 border border-stone-200/80 flex items-center justify-center text-action-blue mb-5 group-hover:bg-action-blue group-hover:text-white transition-colors duration-300">
+                    <Icon size={22} />
+                  </div>
+                  <h3 class="text-xl font-bold text-ink mb-3 tracking-tight">{pillar.title}</h3>
+                  <p class="text-muted text-sm leading-relaxed font-light">{pillar.description}</p>
+                </div>
+              </div>
+            );
+          })
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* ---- 4. Asset Class Coverage (Dark Section) ---- */}
+  <section class="bg-surface-dark text-white section-padding border-b border-stone-800 relative overflow-hidden" aria-labelledby="asset-classes-heading">
+    <div class="container-site relative z-10">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-14 gap-6">
+        <div>
+          <div class="eyebrow-label mb-3">
+            <span class="w-1.5 h-1.5 rounded-full bg-brand-gold"></span>
+            <span class="text-brand-gold">Portfolio Scope</span>
+          </div>
+          <h2 class="heading-section text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white" id="asset-classes-heading">
+            Comprehensive Asset <span class="font-normal italic text-stone-400">Class Expertise</span>
+          </h2>
+        </div>
+        <p class="text-stone-400 text-sm sm:text-base max-w-md font-light">
+          Dedicated discovery and advisory across six core property domains tailored to diverse investment profiles.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="asset-classes-grid">
+        {
+          assetClasses.map((item) => {
+            const Icon = item.icon;
+            return (
+              <a
+                href={`/properties?type=${item.type}`}
+                class="bg-stone-900/80 border border-stone-800 hover:border-brand-gold/50 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 group flex flex-col justify-between"
+              >
+                <div>
+                  <div class="flex items-center justify-between mb-4">
+                    <div class="w-10 h-10 rounded-lg bg-stone-800 border border-stone-700 flex items-center justify-center text-brand-gold group-hover:bg-brand-gold group-hover:text-stone-900 transition-colors">
+                      <Icon size={20} />
+                    </div>
+                    <ArrowRight size={16} class="text-stone-500 group-hover:text-brand-gold transition-colors group-hover:translate-x-1 duration-200" />
+                  </div>
+                  <h3 class="text-xl font-bold text-white mb-2">{item.title}</h3>
+                  <p class="text-stone-400 text-sm font-light leading-relaxed">{item.description}</p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-stone-800 text-xs font-semibold uppercase tracking-wider text-stone-500 group-hover:text-brand-gold transition-colors">
+                  Explore {item.title} &rarr;
+                </div>
+              </a>
+            );
+          })
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* ---- 5. Advisory Workflow ---- */}
+  <section class="bg-white section-padding border-b border-stone-200/80" aria-labelledby="workflow-heading">
+    <div class="container-site">
+      <div class="text-center max-w-2xl mx-auto mb-14">
+        <div class="eyebrow-label mb-3 justify-center">
+          <span class="w-1.5 h-1.5 rounded-full bg-brand-gold"></span>
+          <span>Structured Process</span>
+        </div>
+        <h2 class="heading-section text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-ink mb-4" id="workflow-heading">
+          How We Work <span class="font-normal italic text-stone-500">With You</span>
+        </h2>
+        <p class="text-muted text-base font-light">
+          A disciplined, step-by-step methodology ensuring complete clarity from initial inquiry to final possession.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="about-workflow-grid">
+        {
+          workflowSteps.map((step) => (
+            <div class="bg-canvas border border-stone-200/80 rounded-2xl p-6 relative flex flex-col justify-between">
+              <div>
+                <span class="text-3xl font-extrabold text-brand-gold/60 tracking-tight block mb-3 font-mono">
+                  {step.step}
+                </span>
+                <h3 class="text-lg font-bold text-ink mb-2">{step.title}</h3>
+                <p class="text-muted text-sm font-light leading-relaxed">{step.description}</p>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* ---- 6. Call to Action ---- */}
+  <section class="bg-canvas section-padding relative overflow-hidden" aria-labelledby="cta-heading">
+    <div class="container-site relative z-10">
+      <div class="bg-white border border-stone-200/80 rounded-3xl p-8 sm:p-12 md:p-16 text-center max-w-4xl mx-auto shadow-editorial">
+        <div class="eyebrow-label mb-4 justify-center">
+          <Sparkles size={13} class="text-brand-gold" />
+          <span>Start Your Discovery</span>
+        </div>
+        <h2 class="heading-section text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-ink mb-6" id="cta-heading">
+          Ready to Find Your <span class="font-normal italic text-stone-500">Next Property?</span>
+        </h2>
+        <p class="text-muted text-base sm:text-lg max-w-2xl mx-auto mb-8 font-light leading-relaxed">
+          Browse our active portfolio across residential, commercial, and land investments, or connect directly with our advisory team.
+        </p>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a href="/properties" class="btn btn-action-blue text-base px-8 py-3.5 rounded-full w-full sm:w-auto font-semibold">
+            Explore Properties
+            <ArrowRight size={18} />
+          </a>
+          {config.contactPhone ? (
+            <a href={`tel:${config.contactPhone}`} class="btn btn-stone-outline text-base px-8 py-3.5 rounded-full w-full sm:w-auto font-semibold">
+              <Phone size={16} class="text-action-blue" />
+              Call Advisory
+            </a>
+          ) : (
+            <a href="/contact" class="btn btn-stone-outline text-base px-8 py-3.5 rounded-full w-full sm:w-auto font-semibold">
+              Contact Advisory
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
+  </section>
 </BaseLayout>
+
+<script>
+  import gsap from 'gsap';
+  import ScrollTrigger from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const initAboutAnimations = () => {
+    const storyText = document.getElementById('about-story-text');
+    const storyMedia = document.getElementById('about-story-media');
+    const pillarsGrid = document.getElementById('about-pillars-grid');
+    const assetClassesGrid = document.getElementById('asset-classes-grid');
+    const workflowGrid = document.getElementById('about-workflow-grid');
+
+    let mm = gsap.matchMedia();
+
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      // Story section entrance
+      if (storyText && storyMedia) {
+        gsap.from(storyText, {
+          scrollTrigger: {
+            trigger: storyText,
+            start: 'top 85%',
+          },
+          opacity: 0,
+          y: 30,
+          duration: 0.8,
+          ease: 'power3.out',
+        });
+
+        gsap.from(storyMedia, {
+          scrollTrigger: {
+            trigger: storyMedia,
+            start: 'top 85%',
+          },
+          opacity: 0,
+          y: 40,
+          duration: 0.9,
+          delay: 0.1,
+          ease: 'power3.out',
+        });
+      }
+
+      // Pillars staggered reveal
+      if (pillarsGrid) {
+        gsap.from(pillarsGrid.children, {
+          scrollTrigger: {
+            trigger: pillarsGrid,
+            start: 'top 85%',
+          },
+          opacity: 0,
+          y: 25,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: 'power2.out',
+        });
+      }
+
+      // Asset classes staggered reveal
+      if (assetClassesGrid) {
+        gsap.from(assetClassesGrid.children, {
+          scrollTrigger: {
+            trigger: assetClassesGrid,
+            start: 'top 85%',
+          },
+          opacity: 0,
+          y: 30,
+          duration: 0.6,
+          stagger: 0.08,
+          ease: 'power2.out',
+        });
+      }
+
+      // Workflow staggered reveal
+      if (workflowGrid) {
+        gsap.from(workflowGrid.children, {
+          scrollTrigger: {
+            trigger: workflowGrid,
+            start: 'top 85%',
+          },
+          opacity: 0,
+          y: 25,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: 'power2.out',
+        });
+      }
+    });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAboutAnimations);
+  } else {
+    initAboutAnimations();
+  }
+  document.addEventListener('astro:page-load', initAboutAnimations);
+</script>
+

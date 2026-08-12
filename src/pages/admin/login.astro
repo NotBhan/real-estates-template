@@ -1,0 +1,128 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { config } from '@/lib/config';
+import { validateCredentials, setSession, clearSession, isAuthenticated } from '@/lib/auth';
+import { ShieldCheck, Lock, User, AlertCircle, ArrowRight } from '@lucide/astro';
+
+// Check logout request
+const logoutParam = Astro.url.searchParams.get('logout');
+if (logoutParam === '1') {
+  clearSession(Astro.cookies);
+}
+
+// Redirect if already authenticated
+if (isAuthenticated(Astro.cookies) && logoutParam !== '1') {
+  return Astro.redirect('/admin');
+}
+
+let errorMessage = '';
+
+if (Astro.request.method === 'POST') {
+  try {
+    const formData = await Astro.request.formData();
+    const username = formData.get('username')?.toString() || '';
+    const password = formData.get('password')?.toString() || '';
+
+    if (validateCredentials(username, password)) {
+      setSession(Astro.cookies);
+      return Astro.redirect('/admin');
+    } else {
+      errorMessage = 'Invalid username or password. Use demo credentials (admin / admin123).';
+    }
+  } catch (err) {
+    errorMessage = 'An error occurred during sign in. Please try again.';
+  }
+}
+---
+
+<BaseLayout title="Admin Login" description="Secure Admin CMS Login for Maa Laxmi Property Consultant.">
+  <div class="min-h-[80vh] flex items-center justify-center pt-28 pb-16 px-4 bg-canvas">
+    <div class="w-full max-w-md bg-white border border-stone-200/80 rounded-3xl p-8 shadow-editorial relative">
+      
+      <!-- Brand Header -->
+      <div class="text-center mb-8">
+        <div class="w-12 h-12 rounded-2xl bg-surface-dark text-brand-gold flex items-center justify-center font-extrabold text-lg mx-auto mb-4 shadow-sm">
+          ML
+        </div>
+        <div class="eyebrow-label mb-2 justify-center">
+          <ShieldCheck size={13} class="text-brand-gold" />
+          <span>Management Portal</span>
+        </div>
+        <h1 class="heading-editorial text-2xl font-bold text-ink">
+          Admin CMS Login
+        </h1>
+        <p class="text-muted text-xs font-light mt-1">
+          {config.brand.name} Content Management System
+        </p>
+      </div>
+
+      <!-- Error Alert -->
+      {errorMessage && (
+        <div class="mb-6 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-medium flex items-start gap-2.5">
+          <AlertCircle size={16} class="text-rose-600 shrink-0 mt-0.5" />
+          <span>{errorMessage}</span>
+        </div>
+      )}
+
+      <!-- Form -->
+      <form method="POST" class="space-y-5">
+        <div>
+          <label for="username" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+            Username
+          </label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-muted">
+              <User size={16} />
+            </div>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              required
+              placeholder="admin"
+              value="admin"
+              class="w-full pl-10 pr-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none transition-colors"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label for="password" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+            Password
+          </label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-muted">
+              <Lock size={16} />
+            </div>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              required
+              placeholder="••••••••"
+              value="admin123"
+              class="w-full pl-10 pr-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none transition-colors"
+            />
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-action-blue w-full py-3.5 rounded-xl font-semibold text-sm justify-center"
+        >
+          <span>Sign In to Admin CMS</span>
+          <ArrowRight size={16} />
+        </button>
+      </form>
+
+      <!-- Pre-contract demo notice -->
+      <div class="mt-8 pt-6 border-t border-stone-100 text-center">
+        <p class="text-[11px] text-muted font-light">
+          Pre-contract demo credentials pre-filled above: <br />
+          <strong class="font-mono text-ink">admin</strong> / <strong class="font-mono text-ink">admin123</strong>
+        </p>
+      </div>
+
+    </div>
+  </div>
+</BaseLayout>

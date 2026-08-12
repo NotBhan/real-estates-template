@@ -1,0 +1,205 @@
+---
+import AdminLayout from '@layouts/AdminLayout.astro';
+import { isAuthenticated } from '@/lib/auth';
+import { getAllStoreProperties, deleteStoreProperty } from '@/lib/admin-store';
+import { formatPrice } from '@/lib/format';
+import {
+  PlusCircle,
+  Search,
+  ExternalLink,
+  Edit3,
+  Trash2,
+  Sparkles,
+  CheckCircle2,
+} from '@lucide/astro';
+
+if (!isAuthenticated(Astro.cookies)) {
+  return Astro.redirect('/admin/login');
+}
+
+// Handle delete operation
+let deleteNotice = '';
+if (Astro.request.method === 'POST') {
+  try {
+    const formData = await Astro.request.formData();
+    const action = formData.get('action')?.toString();
+    const targetId = formData.get('id')?.toString();
+
+    if (action === 'delete' && targetId) {
+      const deleted = deleteStoreProperty(targetId);
+      if (deleted) {
+        deleteNotice = 'Property successfully deleted from database.';
+      }
+    }
+  } catch (err) {
+    console.error('Delete property error:', err);
+  }
+}
+
+const properties = getAllStoreProperties();
+---
+
+<AdminLayout title="Property Catalogue" activeNav="properties">
+  <div class="space-y-6">
+    
+    {/* Page Header */}
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone-200/80 pb-5">
+      <div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-ink tracking-tight">Property Catalogue</h1>
+        <p class="text-muted text-xs sm:text-sm font-light mt-1">
+          Manage all properties in your database ({properties.length} active).
+        </p>
+      </div>
+
+      <a href="/admin/properties/new" class="btn btn-action-blue text-xs py-2.5 px-4 rounded-xl">
+        <PlusCircle size={16} />
+        <span>Add New Property</span>
+      </a>
+    </div>
+
+    {/* Delete Notice Banner */}
+    {deleteNotice && (
+      <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-medium flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <CheckCircle2 size={16} class="text-emerald-600" />
+          <span>{deleteNotice}</span>
+        </div>
+      </div>
+    )}
+
+    {/* Table Card */}
+    <div class="bg-white border border-stone-200/80 rounded-2xl p-6 shadow-xs space-y-4">
+      
+      {/* Search & Filter Bar */}
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="relative w-full sm:w-80">
+          <Search size={16} class="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted" />
+          <input
+            type="text"
+            id="admin-search-input"
+            placeholder="Search property title, locality..."
+            class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-canvas border border-stone-200 text-ink text-xs focus:bg-white focus:border-action-blue focus:outline-none"
+          />
+        </div>
+
+        <p class="text-xs text-muted font-light whitespace-nowrap">
+          Total: <span class="font-bold text-ink">{properties.length}</span> properties
+        </p>
+      </div>
+
+      {/* Property Table */}
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs text-ink" id="admin-properties-table">
+          <thead class="bg-canvas border-y border-stone-200 text-[11px] uppercase tracking-wider text-muted font-bold">
+            <tr>
+              <th class="py-3.5 px-4">Property</th>
+              <th class="py-3.5 px-4">Category</th>
+              <th class="py-3.5 px-4">Listing</th>
+              <th class="py-3.5 px-4">Price</th>
+              <th class="py-3.5 px-4">Status</th>
+              <th class="py-3.5 px-4">Featured</th>
+              <th class="py-3.5 px-4 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-stone-100">
+            {properties.map((p) => (
+              <tr class="property-row hover:bg-stone-50/80 transition-colors" data-title={p.title.toLowerCase()} data-locality={p.location.locality.toLowerCase()}>
+                <td class="py-3.5 px-4 font-semibold text-ink">
+                  <div class="flex items-center gap-3">
+                    <img
+                      src={p.images[0]?.url || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=300&q=80'}
+                      alt=""
+                      class="w-12 h-12 rounded-xl object-cover border border-stone-200 shrink-0"
+                    />
+                    <div class="min-w-0">
+                      <p class="font-bold text-ink truncate text-sm">{p.title}</p>
+                      <p class="text-[11px] text-muted font-light truncate">{p.location.locality}, {p.location.city}</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-3.5 px-4 font-medium">{p.propertyType}</td>
+                <td class="py-3.5 px-4">
+                  <span class={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                    p.listingType === 'Sale' ? 'bg-blue-50 text-blue-700' : 'bg-purple-50 text-purple-700'
+                  }`}>
+                    For {p.listingType}
+                  </span>
+                </td>
+                <td class="py-3.5 px-4 font-bold text-ink">{formatPrice(p.price)}</td>
+                <td class="py-3.5 px-4">
+                  <span class={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                    p.status === 'Available' ? 'bg-emerald-50 text-emerald-700' : 'bg-stone-100 text-stone-600'
+                  }`}>
+                    {p.status}
+                  </span>
+                </td>
+                <td class="py-3.5 px-4">
+                  {p.featured ? (
+                    <span class="inline-flex items-center gap-1 text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                      <Sparkles size={11} /> Featured
+                    </span>
+                  ) : (
+                    <span class="text-muted text-[11px] font-light">&mdash;</span>
+                  )}
+                </td>
+                <td class="py-3.5 px-4 text-right">
+                  <div class="flex items-center justify-end gap-2">
+                    <a
+                      href={`/properties/${p.slug}`}
+                      target="_blank"
+                      class="p-2 rounded-lg text-muted hover:text-ink hover:bg-stone-100"
+                      title="View public property page"
+                    >
+                      <ExternalLink size={15} />
+                    </a>
+                    <a
+                      href={`/admin/properties/${p.id}/edit`}
+                      class="btn btn-stone-outline px-3 py-1.5 text-xs rounded-xl font-semibold"
+                    >
+                      <Edit3 size={13} />
+                      <span>Edit</span>
+                    </a>
+                    
+                    {/* Delete Form */}
+                    <form method="POST" onsubmit="return confirm('Are you sure you want to delete this property from CMS?');" class="inline">
+                      <input type="hidden" name="action" value="delete" />
+                      <input type="hidden" name="id" value={p.id} />
+                      <button
+                        type="submit"
+                        class="p-2 rounded-lg text-rose-500 hover:text-rose-700 hover:bg-rose-50 border-0 bg-transparent cursor-pointer"
+                        title="Delete property"
+                      >
+                        <Trash2 size={15} />
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const searchInput = document.getElementById('admin-search-input') as HTMLInputElement | null;
+    const rows = document.querySelectorAll('.property-row');
+
+    if (searchInput && rows.length > 0) {
+      searchInput.addEventListener('input', () => {
+        const query = searchInput.value.toLowerCase().trim();
+        rows.forEach((row) => {
+          const title = row.getAttribute('data-title') || '';
+          const locality = row.getAttribute('data-locality') || '';
+          if (title.includes(query) || locality.includes(query)) {
+            (row as HTMLElement).style.display = '';
+          } else {
+            (row as HTMLElement).style.display = 'none';
+          }
+        });
+      });
+    }
+  </script>
+</AdminLayout>

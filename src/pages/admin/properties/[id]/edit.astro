@@ -1,0 +1,404 @@
+---
+import AdminLayout from '@layouts/AdminLayout.astro';
+import { isAuthenticated } from '@/lib/auth';
+import { getStorePropertyById, updateStoreProperty } from '@/lib/admin-store';
+import { saveUploadedImage } from '@/lib/upload';
+import type { PropertyType, ListingType, PropertyStatus } from '@/types/property';
+import { ArrowLeft, Save, Upload, Link, AlertCircle, CheckCircle2 } from '@lucide/astro';
+
+if (!isAuthenticated(Astro.cookies)) {
+  return Astro.redirect('/admin/login');
+}
+
+const { id } = Astro.params;
+const property = id ? getStorePropertyById(id) : undefined;
+
+if (!property) {
+  return Astro.redirect('/admin/properties');
+}
+
+let successNotice = '';
+let errorMessage = '';
+
+if (Astro.request.method === 'POST') {
+  try {
+    const formData = await Astro.request.formData();
+
+    const title = formData.get('title')?.toString().trim() || property.title;
+    const description = formData.get('description')?.toString().trim() || property.description;
+    const propertyType = (formData.get('propertyType')?.toString() || property.propertyType) as PropertyType;
+    const listingType = (formData.get('listingType')?.toString() || property.listingType) as ListingType;
+    const status = (formData.get('status')?.toString() || property.status) as PropertyStatus;
+    const price = Number(formData.get('price')) || property.price;
+
+    const address = formData.get('address')?.toString().trim() || property.location.address;
+    const locality = formData.get('locality')?.toString().trim() || property.location.locality;
+    const city = formData.get('city')?.toString().trim() || property.location.city;
+
+    const areaValue = Number(formData.get('areaValue')) || property.area.value;
+    const areaUnit = formData.get('areaUnit')?.toString() || property.area.unit;
+
+    const bedrooms = Number(formData.get('bedrooms')) || (property as any).bedrooms || 0;
+    const bathrooms = Number(formData.get('bathrooms')) || (property as any).bathrooms || 0;
+    const parking = Number(formData.get('parking')) || (property as any).parking || 0;
+
+    const featured = formData.get('featured') === 'on';
+
+    // Handle Image upload or URL update
+    let updatedImages = [...property.images];
+    const imageFile = formData.get('imageFile') as File | null;
+    const externalUrl = formData.get('imageUrl')?.toString().trim();
+
+    if (imageFile && imageFile.size > 0) {
+      const uploadedUrl = await saveUploadedImage(imageFile);
+      if (uploadedUrl) {
+        updatedImages = [{ url: uploadedUrl, alt: `${title} photograph`, order: 1 }];
+      }
+    } else if (externalUrl) {
+      updatedImages = [{ url: externalUrl, alt: `${title} photograph`, order: 1 }];
+    }
+
+    const updated = updateStoreProperty(property.id, {
+      title,
+      description,
+      propertyType,
+      listingType,
+      status,
+      price,
+      location: {
+        ...property.location,
+        address,
+        locality,
+        city,
+      },
+      area: {
+        value: areaValue,
+        unit: areaUnit,
+      },
+      featured,
+      images: updatedImages,
+      bedrooms,
+      bathrooms,
+      parking,
+    } as any);
+
+    if (updated) {
+      successNotice = 'Property changes saved successfully!';
+    }
+  } catch (err) {
+    console.error('Error updating property:', err);
+    errorMessage = 'Failed to update property details.';
+  }
+}
+---
+
+<AdminLayout title={`Edit ${property.title}`} activeNav="properties">
+  <div class="max-w-4xl mx-auto space-y-6">
+    
+    {/* Page Header */}
+    <div class="flex items-center justify-between border-b border-stone-200/80 pb-4">
+      <div class="flex items-center gap-3">
+        <a href="/admin/properties" class="p-2 rounded-xl text-muted hover:text-ink hover:bg-white border border-stone-200 shadow-2xs">
+          <ArrowLeft size={18} />
+        </a>
+        <div>
+          <h1 class="text-2xl font-extrabold text-ink tracking-tight">Edit Property</h1>
+          <p class="text-muted text-xs font-light">Updating #{property.id} &mdash; {property.title}</p>
+        </div>
+      </div>
+
+      <a href={`/properties/${property.slug}`} target="_blank" class="btn btn-stone-outline text-xs px-4 py-2 rounded-xl font-semibold">
+        View Live Page
+      </a>
+    </div>
+
+    {/* Success / Error Banners */}
+    {successNotice && (
+      <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-medium flex items-center gap-2">
+        <CheckCircle2 size={16} class="text-emerald-600 shrink-0" />
+        <span>{successNotice}</span>
+      </div>
+    )}
+
+    {errorMessage && (
+      <div class="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-medium flex items-center gap-2">
+        <AlertCircle size={16} class="text-rose-600 shrink-0" />
+        <span>{errorMessage}</span>
+      </div>
+    )}
+
+    {/* Form */}
+    <form method="POST" enctype="multipart/form-data" class="bg-white border border-stone-200/80 rounded-3xl p-6 sm:p-8 shadow-editorial space-y-8">
+      
+      {/* 1. Basic Details */}
+      <div class="space-y-4">
+        <h2 class="text-base font-bold text-ink border-b border-stone-100 pb-2">1. Basic Information</h2>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div class="sm:col-span-2">
+            <label for="title" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+              Property Title
+            </label>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              required
+              value={property.title}
+              class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label for="propertyType" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+              Property Category
+            </label>
+            <select
+              id="propertyType"
+              name="propertyType"
+              class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none"
+            >
+              {['Residential', 'Commercial', 'Land', 'Plot', 'Flat', 'Villa'].map((t) => (
+                <option value={t} selected={property.propertyType === t}>{t}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label for="listingType" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+              Listing Type
+            </label>
+            <select
+              id="listingType"
+              name="listingType"
+              class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none"
+            >
+              <option value="Sale" selected={property.listingType === 'Sale'}>For Sale</option>
+              <option value="Rent" selected={property.listingType === 'Rent'}>For Rent</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="price" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+              Price (INR)
+            </label>
+            <input
+              type="number"
+              id="price"
+              name="price"
+              required
+              value={property.price}
+              class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label for="status" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+              Listing Status
+            </label>
+            <select
+              id="status"
+              name="status"
+              class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none"
+            >
+              <option value="Available" selected={property.status === 'Available'}>Available</option>
+              <option value="Sold" selected={property.status === 'Sold'}>Sold</option>
+              <option value="Rented" selected={property.status === 'Rented'}>Rented</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label for="description" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+            Property Description
+          </label>
+          <textarea
+            id="description"
+            name="description"
+            rows="4"
+            class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none resize-y"
+          >{property.description}</textarea>
+        </div>
+      </div>
+
+      {/* 2. Image Selection: Local Upload OR External URL */}
+      <div class="space-y-4">
+        <h2 class="text-base font-bold text-ink border-b border-stone-100 pb-2">2. Property Photograph</h2>
+        
+        {/* Current Image Preview */}
+        {property.images[0] && (
+          <div class="flex items-center gap-4 p-3 bg-stone-50 border border-stone-200 rounded-2xl">
+            <img src={property.images[0].url} alt="" class="w-16 h-16 rounded-xl object-cover border border-stone-200 shrink-0" />
+            <div>
+              <p class="text-xs font-bold text-ink">Current Image URL:</p>
+              <p class="text-[11px] text-muted font-mono truncate max-w-md">{property.images[0].url}</p>
+            </div>
+          </div>
+        )}
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 bg-canvas p-5 rounded-2xl border border-stone-200/80">
+          
+          {/* Local File Upload */}
+          <div class="space-y-2">
+            <label for="imageFile" class="block text-xs font-bold uppercase tracking-wider text-ink flex items-center gap-1.5">
+              <Upload size={14} class="text-action-blue" />
+              <span>Replace via Local Upload</span>
+            </label>
+            <input
+              type="file"
+              id="imageFile"
+              name="imageFile"
+              accept="image/png, image/jpeg, image/webp, image/gif"
+              class="w-full text-xs text-stone-600 file:mr-4 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-action-blue file:text-white hover:file:bg-action-blue-hover cursor-pointer"
+            />
+          </div>
+
+          {/* External URL */}
+          <div class="space-y-2">
+            <label for="imageUrl" class="block text-xs font-bold uppercase tracking-wider text-ink flex items-center gap-1.5">
+              <Link size={14} class="text-brand-gold" />
+              <span>Or Replace External URL</span>
+            </label>
+            <input
+              type="url"
+              id="imageUrl"
+              name="imageUrl"
+              placeholder="https://..."
+              value={property.images[0]?.url || ''}
+              class="w-full px-4 py-2 rounded-xl bg-white border border-stone-200 text-ink text-xs focus:border-action-blue focus:outline-none"
+            />
+          </div>
+
+        </div>
+      </div>
+
+      {/* 3. Location & Specs */}
+      <div class="space-y-4">
+        <h2 class="text-base font-bold text-ink border-b border-stone-100 pb-2">3. Location & Specifications</h2>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+          <div>
+            <label for="locality" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+              Locality
+            </label>
+            <input
+              type="text"
+              id="locality"
+              name="locality"
+              value={property.location.locality}
+              class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label for="city" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+              City
+            </label>
+            <input
+              type="text"
+              id="city"
+              name="city"
+              value={property.location.city}
+              class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label for="address" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+              Address
+            </label>
+            <input
+              type="text"
+              id="address"
+              name="address"
+              value={property.location.address}
+              class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none"
+            />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-5">
+          <div>
+            <label for="areaValue" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+              Area Value
+            </label>
+            <input
+              type="number"
+              id="areaValue"
+              name="areaValue"
+              value={property.area.value}
+              class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label for="areaUnit" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+              Area Unit
+            </label>
+            <input
+              type="text"
+              id="areaUnit"
+              name="areaUnit"
+              value={property.area.unit}
+              class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label for="bedrooms" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+              Bedrooms
+            </label>
+            <input
+              type="number"
+              id="bedrooms"
+              name="bedrooms"
+              value={(property as any).bedrooms || 0}
+              class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label for="bathrooms" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+              Bathrooms
+            </label>
+            <input
+              type="number"
+              id="bathrooms"
+              name="bathrooms"
+              value={(property as any).bathrooms || 0}
+              class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* 4. Display Flags */}
+      <div class="pt-2 border-t border-stone-100 flex items-center justify-between">
+        <label class="flex items-center gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            name="featured"
+            checked={property.featured}
+            class="w-5 h-5 accent-action-blue rounded cursor-pointer"
+          />
+          <div>
+            <p class="text-xs font-bold text-ink">Mark as Featured Property</p>
+            <p class="text-[11px] text-muted font-light">Showcase on homepage featured section</p>
+          </div>
+        </label>
+      </div>
+
+      {/* Submit Actions */}
+      <div class="pt-4 border-t border-stone-200 flex items-center justify-end gap-4">
+        <a href="/admin/properties" class="btn btn-stone-outline text-xs px-5 py-3 rounded-xl">
+          Back to Catalogue
+        </a>
+        <button type="submit" class="btn btn-action-blue text-xs px-7 py-3 rounded-xl font-semibold">
+          <Save size={16} />
+          <span>Save Changes</span>
+        </button>
+      </div>
+
+    </form>
+  </div>
+</AdminLayout>

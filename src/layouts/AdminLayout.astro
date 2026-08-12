@@ -1,23 +1,174 @@
 ---
-import '@/styles/global.css';
 import { config } from '@/lib/config';
+import {
+  LayoutDashboard,
+  Building2,
+  PlusCircle,
+  ExternalLink,
+  LogOut,
+  ShieldCheck,
+  Menu,
+  X,
+} from '@lucide/astro';
 
 interface Props {
   title: string;
+  activeNav?: 'dashboard' | 'properties' | 'new-property';
 }
 
-const { title } = Astro.props;
+const { title, activeNav = 'dashboard' } = Astro.props;
+const pageTitle = `${title} — CMS Admin | ${config.brand.name}`;
 ---
 
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" class="h-full bg-canvas">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title} | Admin — {config.brand.name}</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{pageTitle}</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
   </head>
-  <body class="bg-bg-dark text-text-on-dark min-h-screen">
-    <slot />
+
+  <body class="h-full font-sans text-ink bg-canvas antialiased flex flex-col">
+    {/* Admin Header / Top Bar */}
+    <header class="bg-surface-dark text-white border-b border-stone-800 sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        
+        {/* Brand */}
+        <div class="flex items-center gap-3">
+          <a href="/admin" class="flex items-center gap-2.5 text-white font-bold text-lg tracking-tight no-underline">
+            <span class="w-8 h-8 rounded-lg bg-brand-gold text-stone-950 flex items-center justify-center font-extrabold text-sm">
+              ML
+            </span>
+            <span>{config.brand.name} <span class="text-brand-gold text-xs font-normal uppercase tracking-wider ml-1">CMS</span></span>
+          </a>
+        </div>
+
+        {/* Desktop Admin Quick Actions */}
+        <div class="hidden md:flex items-center gap-4">
+          <a
+            href="/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-xs font-medium text-stone-300 hover:text-white flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-stone-800 hover:border-stone-700 transition-colors"
+          >
+            <ExternalLink size={14} class="text-brand-gold" />
+            <span>Public Site</span>
+          </a>
+
+          <div class="flex items-center gap-2 pl-3 border-l border-stone-800 text-xs">
+            <ShieldCheck size={16} class="text-emerald-400" />
+            <span class="text-stone-300">Admin</span>
+          </div>
+
+          <form action="/admin/login" method="GET">
+            <input type="hidden" name="logout" value="1" />
+            <button
+              type="submit"
+              class="text-xs font-medium text-rose-400 hover:text-rose-300 flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-stone-900 transition-colors cursor-pointer border-0 bg-transparent"
+            >
+              <LogOut size={14} />
+              <span>Logout</span>
+            </button>
+          </form>
+        </div>
+
+        {/* Mobile Menu Toggle Button */}
+        <button
+          id="admin-mobile-toggle"
+          class="md:hidden text-stone-300 hover:text-white p-2 rounded-lg bg-stone-900 border border-stone-800"
+          aria-label="Toggle Navigation Menu"
+        >
+          <Menu size={20} />
+        </button>
+      </div>
+    </header>
+
+    <div class="flex-1 flex max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 gap-8">
+      {/* Sidebar Navigation */}
+      <aside id="admin-sidebar" class="w-64 shrink-0 hidden md:block">
+        <div class="bg-white border border-stone-200/80 rounded-2xl p-4 shadow-sm sticky top-24 space-y-1">
+          <p class="text-[10px] font-bold uppercase tracking-wider text-muted px-3 mb-2">Management</p>
+
+          <a
+            href="/admin"
+            class={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
+              activeNav === 'dashboard'
+                ? 'bg-action-blue text-white shadow-xs'
+                : 'text-stone-700 hover:bg-stone-100 hover:text-ink'
+            }`}
+          >
+            <LayoutDashboard size={18} />
+            <span>Dashboard</span>
+          </a>
+
+          <a
+            href="/admin/properties"
+            class={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
+              activeNav === 'properties'
+                ? 'bg-action-blue text-white shadow-xs'
+                : 'text-stone-700 hover:bg-stone-100 hover:text-ink'
+            }`}
+          >
+            <Building2 size={18} />
+            <span>Property Catalogue</span>
+          </a>
+
+          <a
+            href="/admin/properties/new"
+            class={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
+              activeNav === 'new-property'
+                ? 'bg-action-blue text-white shadow-xs'
+                : 'text-stone-700 hover:bg-stone-100 hover:text-ink'
+            }`}
+          >
+            <PlusCircle size={18} />
+            <span>Add New Property</span>
+          </a>
+
+          <div class="pt-4 border-t border-stone-100 mt-4">
+            <p class="text-[10px] font-bold uppercase tracking-wider text-muted px-3 mb-2">Public Links</p>
+            <a
+              href="/"
+              target="_blank"
+              class="flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs font-medium text-muted hover:text-ink hover:bg-stone-100"
+            >
+              <ExternalLink size={14} />
+              <span>Public Homepage</span>
+            </a>
+            <a
+              href="/properties"
+              target="_blank"
+              class="flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs font-medium text-muted hover:text-ink hover:bg-stone-100"
+            >
+              <ExternalLink size={14} />
+              <span>Public Listings</span>
+            </a>
+          </div>
+        </div>
+      </aside>
+
+      {/* Main Content View */}
+      <main class="flex-1 min-w-0">
+        <slot />
+      </main>
+    </div>
+
+    <script>
+      const toggle = document.getElementById('admin-mobile-toggle');
+      const sidebar = document.getElementById('admin-sidebar');
+
+      if (toggle && sidebar) {
+        toggle.addEventListener('click', () => {
+          sidebar.classList.toggle('hidden');
+        });
+      }
+    </script>
   </body>
 </html>

@@ -369,22 +369,25 @@ export const demoProperties: Property[] = [
   } satisfies ResidentialProperty,
 ];
 
+import { getAllStoreProperties, getStorePropertyBySlug } from '@/lib/admin-store';
+
 // ---------------------------------------------------------------------------
 // Query Helpers
-// (These will be replaced by Drizzle queries in Phase 3)
+// Connected to admin-store for dynamic CMS mutations across public pages
 // ---------------------------------------------------------------------------
 
 /** Return all properties marked as featured */
 export function getFeaturedProperties(): Property[] {
-  return demoProperties.filter((p) => p.featured);
+  return getAllStoreProperties().filter((p) => p.featured);
 }
 
 /** Find a single property by slug, or undefined if not found */
 export function getPropertyBySlug(slug: string): Property | undefined {
-  return demoProperties.find((p) => p.slug === slug);
+  return getStorePropertyBySlug(slug);
 }
 
 /** Return all properties (unfiltered) */
 export function getAllProperties(): Property[] {
-  return demoProperties;
+  return getAllStoreProperties();
 }
+

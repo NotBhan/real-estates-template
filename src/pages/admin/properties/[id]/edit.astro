@@ -4,7 +4,7 @@ import { isAuthenticated } from '@/lib/auth';
 import { getStorePropertyById, updateStoreProperty } from '@/lib/admin-store';
 import { saveUploadedImage } from '@/lib/upload';
 import type { PropertyType, ListingType, PropertyStatus } from '@/types/property';
-import { ArrowLeft, Save, Upload, Link, AlertCircle, CheckCircle2 } from '@lucide/astro';
+import { ArrowLeft, Save, Upload, Link, AlertCircle, CheckCircle2, MapPin } from '@lucide/astro';
 
 if (!isAuthenticated(Astro.cookies)) {
   return Astro.redirect('/admin/login');
@@ -34,6 +34,8 @@ if (Astro.request.method === 'POST') {
     const address = formData.get('address')?.toString().trim() || property.location.address;
     const locality = formData.get('locality')?.toString().trim() || property.location.locality;
     const city = formData.get('city')?.toString().trim() || property.location.city;
+    const latitude = formData.get('latitude') ? Number(formData.get('latitude')) : property.location.latitude;
+    const longitude = formData.get('longitude') ? Number(formData.get('longitude')) : property.location.longitude;
 
     const areaValue = Number(formData.get('areaValue')) || property.area.value;
     const areaUnit = formData.get('areaUnit')?.toString() || property.area.unit;
@@ -70,6 +72,8 @@ if (Astro.request.method === 'POST') {
         address,
         locality,
         city,
+        latitude,
+        longitude,
       },
       area: {
         value: areaValue,
@@ -317,6 +321,48 @@ if (Astro.request.method === 'POST') {
           </div>
         </div>
 
+        {/* Map Coordinates & Interactive Picker */}
+        <div class="bg-canvas p-5 rounded-2xl border border-stone-200/80 space-y-4">
+          <div class="flex items-center justify-between">
+            <p class="text-xs font-bold text-ink flex items-center gap-1.5">
+              <MapPin size={15} class="text-rose-500" />
+              <span>Map GPS Location Coordinates</span>
+            </p>
+            <span class="text-[11px] text-muted font-medium">Click on map or drag pin to update location</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="latitude" class="block text-[11px] font-semibold text-muted mb-1">Latitude</label>
+              <input
+                type="number"
+                step="any"
+                id="latitude"
+                name="latitude"
+                value={property.location.latitude ?? 28.628}
+                placeholder="e.g. 28.628"
+                class="w-full px-3 py-2 rounded-xl bg-white border border-stone-200 text-xs text-ink focus:border-action-blue focus:outline-none"
+              />
+            </div>
+            <div>
+              <label for="longitude" class="block text-[11px] font-semibold text-muted mb-1">Longitude</label>
+              <input
+                type="number"
+                step="any"
+                id="longitude"
+                name="longitude"
+                value={property.location.longitude ?? 77.3649}
+                placeholder="e.g. 77.3649"
+                class="w-full px-3 py-2 rounded-xl bg-white border border-stone-200 text-xs text-ink focus:border-action-blue focus:outline-none"
+              />
+            </div>
+          </div>
+
+          {/* Leaflet OSM Map Container */}
+          <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+          <div id="admin-map-picker" class="h-60 w-full rounded-xl border border-stone-200/80 overflow-hidden relative z-0"></div>
+        </div>
+
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-5">
           <div>
             <label for="areaValue" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
@@ -402,3 +448,64 @@ if (Astro.request.method === 'POST') {
     </form>
   </div>
 </AdminLayout>
+
+<script>
+  import L from 'leaflet';
+
+  L.Icon.Default.imagePath = 'https://unpkg.com/leaflet@1.9.4/dist/images/';
+
+  const initMapPicker = () => {
+    const mapEl = document.getElementById('admin-map-picker');
+    const latInput = document.getElementById('latitude') as HTMLInputElement | null;
+    const lngInput = document.getElementById('longitude') as HTMLInputElement | null;
+
+    if (!mapEl || !latInput || !lngInput) return;
+    if ((mapEl as any)._leaflet_id) return;
+
+    const initialLat = parseFloat(latInput.value) || 28.628;
+    const initialLng = parseFloat(lngInput.value) || 77.3649;
+
+    const map = L.map(mapEl).setView([initialLat, initialLng], 14);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap',
+    }).addTo(map);
+
+    const marker = L.marker([initialLat, initialLng], { draggable: true }).addTo(map);
+
+    const updateInputs = (lat: number, lng: number) => {
+      latInput.value = lat.toFixed(6);
+      lngInput.value = lng.toFixed(6);
+    };
+
+    marker.on('dragend', (e) => {
+      const position = e.target.getLatLng();
+      updateInputs(position.lat, position.lng);
+    });
+
+    map.on('click', (e) => {
+      marker.setLatLng(e.latlng);
+      updateInputs(e.latlng.lat, e.latlng.lng);
+    });
+
+    const onInputChange = () => {
+      const lat = parseFloat(latInput.value);
+      const lng = parseFloat(lngInput.value);
+      if (!isNaN(lat) && !isNaN(lng)) {
+        const newLatLng = L.latLng(lat, lng);
+        marker.setLatLng(newLatLng);
+        map.panTo(newLatLng);
+      }
+    };
+
+    latInput.addEventListener('change', onInputChange);
+    lngInput.addEventListener('change', onInputChange);
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMapPicker);
+  } else {
+    initMapPicker();
+  }
+</script>

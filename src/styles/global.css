@@ -39,8 +39,10 @@
   --spacing-section-sm: 4rem;
 
   /* --- Container --------------------------------------------- */
-  --container-max: 80rem; /* 1280px */
-  --container-narrow: 64rem; /* 1024px */
+  --container-max: 80rem;
+  /* 1280px */
+  --container-narrow: 64rem;
+  /* 1024px */
   --container-padding: 1.5rem;
 
   /* --- Border radius ----------------------------------------- */
@@ -62,6 +64,7 @@
    ============================================================ */
 
 @layer base {
+
   *,
   *::before,
   *::after {
@@ -301,8 +304,13 @@
 
 /* Marquee continuous scroll */
 @keyframes marquee {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(-50%); }
+  0% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 .animate-marquee {

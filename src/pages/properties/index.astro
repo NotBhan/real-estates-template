@@ -3,6 +3,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import PropertyCard from '@components/property/PropertyCard.astro';
 import PropertyCategories from '@components/property/PropertyCategories.astro';
 import PropertySearchForm from '@components/search/PropertySearchForm.astro';
+import Pagination from '@components/common/Pagination.astro';
 import { getAllProperties } from '@/data/demo-properties';
 import { parseFilterParams, filterProperties } from '@/lib/property-filters';
 import { X, SlidersHorizontal } from '@lucide/astro';
@@ -12,6 +13,16 @@ const filters = parseFilterParams(Astro.url);
 const allProperties = getAllProperties();
 const filteredProperties = filterProperties(allProperties, filters);
 const count = filteredProperties.length;
+
+// Pagination calculations
+const ITEMS_PER_PAGE = 6;
+const rawPage = Astro.url.searchParams.get('page');
+const totalPages = Math.ceil(count / ITEMS_PER_PAGE) || 1;
+const currentPage = Math.min(Math.max(1, Number(rawPage) || 1), totalPages);
+const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, count);
+
+const paginatedProperties = filteredProperties.slice(startIndex, endIndex);
 
 // Compute active filters for the summary
 const activeFilters = [];
@@ -23,13 +34,15 @@ if (filters.minPrice && filters.maxPrice) activeFilters.push({ label: `₹${filt
 
 function getRemoveFilterUrl(keyToRemove: string) {
   const params = new URLSearchParams(Astro.url.searchParams);
+  params.delete('page'); // Reset to page 1 on filter removal
   if (keyToRemove === 'price') {
     params.delete('minPrice');
     params.delete('maxPrice');
   } else {
     params.delete(keyToRemove);
   }
-  return `/properties?${params.toString()}`;
+  const queryString = params.toString();
+  return queryString ? `/properties?${queryString}` : '/properties';
 }
 ---
 
@@ -82,7 +95,7 @@ function getRemoveFilterUrl(keyToRemove: string) {
         {/* Active Filters & Count */}
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
           <p class="text-muted text-sm font-medium whitespace-nowrap">
-            Showing <span class="text-ink font-bold">{count}</span> {count === 1 ? 'property' : 'properties'}
+            Showing <span class="text-ink font-bold">{count === 0 ? 0 : `${startIndex + 1}–${endIndex}`}</span> of <span class="text-ink font-bold">{count}</span> {count === 1 ? 'property' : 'properties'}
           </p>
 
           {activeFilters.length > 0 && (
@@ -110,13 +123,23 @@ function getRemoveFilterUrl(keyToRemove: string) {
 
       {/* Grid */}
       {count > 0 ? (
-        <div id="catalogue-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-          {filteredProperties.map((property) => (
-            <div class="catalogue-card-wrapper h-full flex flex-col">
-              <PropertyCard property={property} />
-            </div>
-          ))}
-        </div>
+        <>
+          <div id="catalogue-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+            {paginatedProperties.map((property) => (
+              <div class="catalogue-card-wrapper h-full flex flex-col">
+                <PropertyCard property={property} />
+              </div>
+            ))}
+          </div>
+
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={count}
+            itemsPerPage={ITEMS_PER_PAGE}
+            currentUrl={Astro.url}
+          />
+        </>
       ) : (
         <div class="text-center py-24 border border-stone-300 border-dashed rounded-3xl bg-white p-8">
           <p class="text-ink text-xl font-bold mb-2">No matching properties found</p>

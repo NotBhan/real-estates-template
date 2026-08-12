@@ -1,0 +1,126 @@
+---
+import { ChevronLeft, ChevronRight } from '@lucide/astro';
+
+interface Props {
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  itemsPerPage: number;
+  baseUrl?: string;
+  currentUrl: URL;
+}
+
+const {
+  currentPage,
+  totalPages,
+  totalItems,
+  itemsPerPage,
+  baseUrl = '/properties',
+  currentUrl,
+} = Astro.props;
+
+function getPageUrl(pageNumber: number): string {
+  const params = new URLSearchParams(currentUrl.searchParams);
+  if (pageNumber <= 1) {
+    params.delete('page');
+  } else {
+    params.set('page', pageNumber.toString());
+  }
+  const queryString = params.toString();
+  return queryString ? `${baseUrl}?${queryString}` : baseUrl;
+}
+
+const startIndex = totalItems === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
+const endIndex = Math.min(currentPage * itemsPerPage, totalItems);
+
+// Calculate page numbers to display
+const pageNumbers: (number | string)[] = [];
+for (let i = 1; i <= totalPages; i++) {
+  if (
+    i === 1 ||
+    i === totalPages ||
+    (i >= currentPage - 1 && i <= currentPage + 1)
+  ) {
+    pageNumbers.push(i);
+  } else if (
+    pageNumbers[pageNumbers.length - 1] !== '...' &&
+    (i === 2 || i === totalPages - 1)
+  ) {
+    pageNumbers.push('...');
+  }
+}
+---
+
+{totalPages > 1 && (
+  <nav
+    class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-10 border-t border-stone-200/80 mt-12"
+    aria-label="Pagination"
+  >
+    <!-- Range Summary Text -->
+    <p class="text-xs text-muted font-medium">
+      Showing <span class="font-bold text-ink">{startIndex}–{endIndex}</span> of{' '}
+      <span class="font-bold text-ink">{totalItems}</span> properties
+    </p>
+
+    <!-- Page Number Controls -->
+    <div class="flex items-center gap-1.5">
+      <!-- Previous Button -->
+      {currentPage > 1 ? (
+        <a
+          href={getPageUrl(currentPage - 1)}
+          class="w-9 h-9 rounded-xl border border-stone-300 bg-white text-ink flex items-center justify-center hover:border-action-blue hover:text-action-blue transition-colors shadow-2xs"
+          aria-label="Previous Page"
+        >
+          <ChevronLeft size={18} />
+        </a>
+      ) : (
+        <span
+          class="w-9 h-9 rounded-xl border border-stone-200 bg-stone-100/60 text-stone-300 flex items-center justify-center cursor-not-allowed"
+          aria-disabled="true"
+        >
+          <ChevronLeft size={18} />
+        </span>
+      )}
+
+      <!-- Number Buttons -->
+      {pageNumbers.map((p) =>
+        typeof p === 'number' ? (
+          <a
+            href={getPageUrl(p)}
+            class:list={[
+              'w-9 h-9 rounded-xl text-xs font-bold flex items-center justify-center transition-all shadow-2xs',
+              p === currentPage
+                ? 'bg-action-blue text-white shadow-xs'
+                : 'bg-white border border-stone-300 text-stone-700 hover:border-action-blue hover:text-action-blue',
+            ]}
+            aria-current={p === currentPage ? 'page' : undefined}
+          >
+            {p}
+          </a>
+        ) : (
+          <span class="w-7 h-9 flex items-center justify-center text-xs text-muted font-semibold">
+            ...
+          </span>
+        )
+      )}
+
+      <!-- Next Button -->
+      {currentPage < totalPages ? (
+        <a
+          href={getPageUrl(currentPage + 1)}
+          class="w-9 h-9 rounded-xl border border-stone-300 bg-white text-ink flex items-center justify-center hover:border-action-blue hover:text-action-blue transition-colors shadow-2xs"
+          aria-label="Next Page"
+        >
+          <ChevronRight size={18} />
+        </a>
+      ) : (
+        <span
+          class="w-9 h-9 rounded-xl border border-stone-200 bg-stone-100/60 text-stone-300 flex items-center justify-center cursor-not-allowed"
+          aria-disabled="true"
+        >
+          <ChevronRight size={18} />
+        </span>
+      )}
+    </div>
+  </nav>
+)}

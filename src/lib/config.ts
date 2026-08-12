@@ -1,8 +1,4 @@
-/**
- * Centralized configuration reader.
- * All environment variable access goes through this module.
- * Never import process.env directly in components or pages.
- */
+import { getSiteSettings } from './site-settings-store';
 
 function env(key: string, fallback?: string): string {
   const value = import.meta.env[key] ?? process.env[key] ?? fallback;
@@ -18,19 +14,40 @@ function envOptional(key: string): string | undefined {
 
 export const config = {
   /** Site URL for canonical links, sitemap, OG tags */
-  siteUrl: env('SITE_URL', 'http://localhost:4321'),
+  get siteUrl() {
+    return env('SITE_URL', 'http://localhost:4321');
+  },
 
-  /** Contact details — all optional, buttons disabled when absent */
-  contactPhone: envOptional('CONTACT_PHONE'),
-  contactWhatsapp: envOptional('CONTACT_WHATSAPP'),
-  contactEmail: envOptional('CONTACT_EMAIL'),
+  /** Contact details — CMS settings override env variables */
+  get contactPhone() {
+    const cmsPhone = getSiteSettings().contact.phone;
+    return cmsPhone || envOptional('CONTACT_PHONE');
+  },
+
+  get contactWhatsapp() {
+    const cmsWhatsapp = getSiteSettings().contact.whatsapp;
+    return cmsWhatsapp || envOptional('CONTACT_WHATSAPP');
+  },
+
+  get contactEmail() {
+    const cmsEmail = getSiteSettings().contact.email;
+    return cmsEmail || envOptional('CONTACT_EMAIL');
+  },
 
   /** Google Maps — Leaflet/OSM fallback when absent */
-  googleMapsApiKey: envOptional('GOOGLE_MAPS_API_KEY'),
-
-  /** Brand — temporary demo values until client supplies real content */
-  brand: {
-    name: 'Maa Laxmi Property',
-    tagline: 'Find a Place Worth Calling Home', // demo tagline, not a client slogan
+  get googleMapsApiKey() {
+    return envOptional('GOOGLE_MAPS_API_KEY');
   },
-} as const;
+
+  /** Brand — Dynamic CMS brand settings */
+  get brand() {
+    const settings = getSiteSettings();
+    return {
+      name: settings.brand.name || 'Maa Laxmi Property',
+      tagline: settings.brand.tagline || 'Find a Place Worth Calling Home',
+      logoUrl: settings.brand.logoUrl,
+      faviconUrl: settings.brand.faviconUrl || '/favicon.svg',
+    };
+  },
+};
+

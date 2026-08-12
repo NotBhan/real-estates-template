@@ -6,6 +6,7 @@
  */
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { config } from '@/lib/config';
+import { getSiteSettings } from '@/lib/site-settings-store';
 import {
   Phone,
   Mail,
@@ -31,14 +32,16 @@ const emailUrl = config.contactEmail
   ? `mailto:${config.contactEmail}?subject=${encodeURIComponent('Property Enquiry — Maa Laxmi Property')}`
   : undefined;
 
-// Demo location coordinates (Sector 62, Noida / Delhi NCR hub)
+const siteMap = getSiteSettings().map;
+const siteContact = getSiteSettings().contact;
+
 const officeCoords = {
-  latitude: 28.628,
-  longitude: 77.3649,
-  title: `${config.brand.name} Office`,
-  address: 'Commercial Hub, Sector 62',
-  locality: 'Noida',
-  city: 'Delhi NCR',
+  latitude: siteMap.latitude,
+  longitude: siteMap.longitude,
+  title: siteMap.title || `${config.brand.name} Office`,
+  address: siteMap.address || siteContact.address,
+  locality: siteContact.locality,
+  city: siteContact.city,
 };
 
 const faqs = [

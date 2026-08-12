@@ -44,7 +44,7 @@ const fullTitle = title === 'Home'
     {ogImage && <meta property="og:image" content={ogImage} />}
 
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href={config.brand.faviconUrl || '/favicon.svg'} />
 
     <!-- Fonts: Outfit & Inter from Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

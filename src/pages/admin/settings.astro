@@ -1,0 +1,553 @@
+---
+import AdminLayout from '@layouts/AdminLayout.astro';
+import { isAuthenticated } from '@/lib/auth';
+import { getSiteSettings, updateSiteSettings } from '@/lib/site-settings-store';
+import { saveUploadedImage } from '@/lib/upload';
+import {
+  Save,
+  Upload,
+  Link,
+  CheckCircle2,
+  AlertCircle,
+  Building,
+  Phone,
+  MapPin,
+  Sparkles,
+  LayoutTemplate,
+} from '@lucide/astro';
+
+if (!isAuthenticated(Astro.cookies)) {
+  return Astro.redirect('/admin/login');
+}
+
+let successNotice = '';
+let errorMessage = '';
+
+const currentSettings = getSiteSettings();
+
+if (Astro.request.method === 'POST') {
+  try {
+    const formData = await Astro.request.formData();
+
+    // 1. Brand & Identity
+    const brandName = formData.get('brandName')?.toString().trim() || currentSettings.brand.name;
+    const brandTagline = formData.get('brandTagline')?.toString().trim() || currentSettings.brand.tagline;
+
+    let logoUrl = currentSettings.brand.logoUrl;
+    const logoFile = formData.get('logoFile') as File | null;
+    const externalLogoUrl = formData.get('logoUrl')?.toString().trim();
+    if (logoFile && logoFile.size > 0) {
+      const uploaded = await saveUploadedImage(logoFile);
+      if (uploaded) logoUrl = uploaded;
+    } else if (externalLogoUrl !== undefined) {
+      logoUrl = externalLogoUrl;
+    }
+
+    let faviconUrl = currentSettings.brand.faviconUrl;
+    const faviconFile = formData.get('faviconFile') as File | null;
+    const externalFaviconUrl = formData.get('faviconUrl')?.toString().trim();
+    if (faviconFile && faviconFile.size > 0) {
+      const uploadedFavicon = await saveUploadedImage(faviconFile);
+      if (uploadedFavicon) faviconUrl = uploadedFavicon;
+    } else if (externalFaviconUrl !== undefined) {
+      faviconUrl = externalFaviconUrl;
+    }
+
+    // 2. Contact Info
+    const phone = formData.get('phone')?.toString().trim() || '';
+    const whatsapp = formData.get('whatsapp')?.toString().trim() || '';
+    const email = formData.get('email')?.toString().trim() || '';
+    const address = formData.get('address')?.toString().trim() || currentSettings.contact.address;
+    const locality = formData.get('locality')?.toString().trim() || currentSettings.contact.locality;
+    const city = formData.get('city')?.toString().trim() || currentSettings.contact.city;
+
+    // 3. Map Location
+    const mapLatitude = Number(formData.get('mapLatitude')) || currentSettings.map.latitude;
+    const mapLongitude = Number(formData.get('mapLongitude')) || currentSettings.map.longitude;
+    const mapTitle = formData.get('mapTitle')?.toString().trim() || currentSettings.map.title;
+    const mapAddress = formData.get('mapAddress')?.toString().trim() || currentSettings.map.address;
+
+    // 4. Hero Banner & Highlights
+    const heroTitle = formData.get('heroTitle')?.toString().trim() || currentSettings.hero.title;
+    const heroSubtitle = formData.get('heroSubtitle')?.toString().trim() || currentSettings.hero.subtitle;
+    const heroCtaText = formData.get('heroCtaText')?.toString().trim() || currentSettings.hero.ctaText;
+
+    let heroBannerImage = currentSettings.hero.bannerImage;
+    const heroBannerFile = formData.get('heroBannerFile') as File | null;
+    const externalHeroBanner = formData.get('heroBannerImage')?.toString().trim();
+    if (heroBannerFile && heroBannerFile.size > 0) {
+      const uploadedHero = await saveUploadedImage(heroBannerFile);
+      if (uploadedHero) heroBannerImage = uploadedHero;
+    } else if (externalHeroBanner) {
+      heroBannerImage = externalHeroBanner;
+    }
+
+    // 5. About & Editorial
+    const aboutHeadline = formData.get('aboutHeadline')?.toString().trim() || currentSettings.about.headline;
+    const aboutSubtitle = formData.get('aboutSubtitle')?.toString().trim() || currentSettings.about.subtitle;
+    const philosophyQuote = formData.get('philosophyQuote')?.toString().trim() || currentSettings.about.philosophyQuote;
+
+    updateSiteSettings({
+      brand: {
+        name: brandName,
+        tagline: brandTagline,
+        logoUrl,
+        faviconUrl,
+      },
+      contact: {
+        phone,
+        whatsapp,
+        email,
+        address,
+        locality,
+        city,
+      },
+      map: {
+        latitude: mapLatitude,
+        longitude: mapLongitude,
+        title: mapTitle,
+        address: mapAddress,
+      },
+      hero: {
+        title: heroTitle,
+        subtitle: heroSubtitle,
+        bannerImage: heroBannerImage,
+        ctaText: heroCtaText,
+      },
+      about: {
+        headline: aboutHeadline,
+        subtitle: aboutSubtitle,
+        philosophyQuote,
+      },
+    });
+
+    successNotice = 'Website content and brand settings updated successfully!';
+  } catch (err) {
+    console.error('Error saving settings:', err);
+    errorMessage = 'Failed to update website content settings.';
+  }
+}
+
+const settings = getSiteSettings();
+---
+
+<AdminLayout title="Site Content & Settings" activeNav="dashboard">
+  <div class="max-w-4xl mx-auto space-y-6">
+    
+    {/* Page Header */}
+    <div class="border-b border-stone-200/80 pb-4">
+      <h1 class="text-2xl font-extrabold text-ink tracking-tight">Website Content & Settings</h1>
+      <p class="text-muted text-xs font-light mt-1">
+        Customize titles, subtitles, contact channels, logo, favicon, banner images, and map locations across your website.
+      </p>
+    </div>
+
+    {/* Banners */}
+    {successNotice && (
+      <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-medium flex items-center gap-2">
+        <CheckCircle2 size={16} class="text-emerald-600 shrink-0" />
+        <span>{successNotice}</span>
+      </div>
+    )}
+
+    {errorMessage && (
+      <div class="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-medium flex items-center gap-2">
+        <AlertCircle size={16} class="text-rose-600 shrink-0" />
+        <span>{errorMessage}</span>
+      </div>
+    )}
+
+    <form method="POST" enctype="multipart/form-data" class="bg-white border border-stone-200/80 rounded-3xl p-6 sm:p-8 shadow-editorial space-y-8">
+      
+      {/* 1. Brand Identity */}
+      <div class="space-y-4">
+        <h2 class="text-base font-bold text-ink border-b border-stone-100 pb-2 flex items-center gap-2">
+          <Building size={18} class="text-brand-gold" />
+          <span>1. Brand Identity & Assets</span>
+        </h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div>
+            <label for="brandName" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+              Brand Name
+            </label>
+            <input
+              type="text"
+              id="brandName"
+              name="brandName"
+              value={settings.brand.name}
+              required
+              class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label for="brandTagline" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+              Brand Tagline
+            </label>
+            <input
+              type="text"
+              id="brandTagline"
+              name="brandTagline"
+              value={settings.brand.tagline}
+              class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none"
+            />
+          </div>
+        </div>
+
+        {/* Logo Selection */}
+        <div class="bg-canvas p-4 rounded-2xl border border-stone-200 space-y-3">
+          <p class="text-xs font-bold text-ink flex items-center gap-1.5">
+            <Upload size={14} class="text-action-blue" />
+            <span>Brand Logo (Upload File or URL)</span>
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="logoFile" class="block text-[11px] font-semibold text-muted mb-1">Local File</label>
+              <input
+                type="file"
+                id="logoFile"
+                name="logoFile"
+                accept="image/*"
+                class="w-full text-xs text-stone-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-action-blue file:text-white hover:file:bg-action-blue-hover cursor-pointer"
+              />
+            </div>
+            <div>
+              <label for="logoUrl" class="block text-[11px] font-semibold text-muted mb-1">External URL</label>
+              <input
+                type="url"
+                id="logoUrl"
+                name="logoUrl"
+                value={settings.brand.logoUrl || ''}
+                placeholder="https://..."
+                class="w-full px-3 py-2 rounded-xl bg-white border border-stone-200 text-xs focus:outline-none"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Favicon Selection */}
+        <div class="bg-canvas p-4 rounded-2xl border border-stone-200 space-y-3">
+          <p class="text-xs font-bold text-ink flex items-center gap-1.5">
+            <Sparkles size={14} class="text-brand-gold" />
+            <span>Site Favicon Icon (Upload File or URL)</span>
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="faviconFile" class="block text-[11px] font-semibold text-muted mb-1">Local File</label>
+              <input
+                type="file"
+                id="faviconFile"
+                name="faviconFile"
+                accept="image/*"
+                class="w-full text-xs text-stone-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-action-blue file:text-white hover:file:bg-action-blue-hover cursor-pointer"
+              />
+            </div>
+            <div>
+              <label for="faviconUrl" class="block text-[11px] font-semibold text-muted mb-1">External URL</label>
+              <input
+                type="text"
+                id="faviconUrl"
+                name="faviconUrl"
+                value={settings.brand.faviconUrl || ''}
+                placeholder="/favicon.svg"
+                class="w-full px-3 py-2 rounded-xl bg-white border border-stone-200 text-xs focus:outline-none"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 2. Contact Information Channels */}
+      <div class="space-y-4">
+        <h2 class="text-base font-bold text-ink border-b border-stone-100 pb-2 flex items-center gap-2">
+          <Phone size={18} class="text-action-blue" />
+          <span>2. Contact Channels & Office Details</span>
+        </h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+          <div>
+            <label for="phone" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+              Telephone Number
+            </label>
+            <input
+              type="text"
+              id="phone"
+              name="phone"
+              value={settings.contact.phone || ''}
+              placeholder="+91 98765 43210"
+              class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label for="whatsapp" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+              WhatsApp Number
+            </label>
+            <input
+              type="text"
+              id="whatsapp"
+              name="whatsapp"
+              value={settings.contact.whatsapp || ''}
+              placeholder="919876543210"
+              class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label for="email" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+              Email Address
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={settings.contact.email || ''}
+              placeholder="info@maalaxmiproperty.com"
+              class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none"
+            />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+          <div>
+            <label for="address" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+              Office Address Line
+            </label>
+            <input
+              type="text"
+              id="address"
+              name="address"
+              value={settings.contact.address}
+              class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label for="locality" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+              Locality / Sector
+            </label>
+            <input
+              type="text"
+              id="locality"
+              name="locality"
+              value={settings.contact.locality}
+              class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label for="city" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+              City / Region
+            </label>
+            <input
+              type="text"
+              id="city"
+              name="city"
+              value={settings.contact.city}
+              class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* 3. Map Location Coordinates */}
+      <div class="space-y-4">
+        <h2 class="text-base font-bold text-ink border-b border-stone-100 pb-2 flex items-center gap-2">
+          <MapPin size={18} class="text-rose-500" />
+          <span>3. Map Location Settings</span>
+        </h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div>
+            <label for="mapLatitude" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+              Latitude
+            </label>
+            <input
+              type="number"
+              step="any"
+              id="mapLatitude"
+              name="mapLatitude"
+              value={settings.map.latitude}
+              class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label for="mapLongitude" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+              Longitude
+            </label>
+            <input
+              type="number"
+              step="any"
+              id="mapLongitude"
+              name="mapLongitude"
+              value={settings.map.longitude}
+              class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label for="mapTitle" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+              Map Location Pin Title
+            </label>
+            <input
+              type="text"
+              id="mapTitle"
+              name="mapTitle"
+              value={settings.map.title}
+              class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label for="mapAddress" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+              Overlay Map Address
+            </label>
+            <input
+              type="text"
+              id="mapAddress"
+              name="mapAddress"
+              value={settings.map.address}
+              class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* 4. Homepage Banner & Hero Highlights */}
+      <div class="space-y-4">
+        <h2 class="text-base font-bold text-ink border-b border-stone-100 pb-2 flex items-center gap-2">
+          <LayoutTemplate size={18} class="text-emerald-600" />
+          <span>4. Homepage Hero Banner & Highlights</span>
+        </h2>
+
+        <div>
+          <label for="heroTitle" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+            Hero Headline
+          </label>
+          <input
+            type="text"
+            id="heroTitle"
+            name="heroTitle"
+            value={settings.hero.title}
+            class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none"
+          />
+        </div>
+
+        <div>
+          <label for="heroSubtitle" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+            Hero Subtitle / Lead Paragraph
+          </label>
+          <textarea
+            id="heroSubtitle"
+            name="heroSubtitle"
+            rows="2"
+            class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none resize-y"
+          >{settings.hero.subtitle}</textarea>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div>
+            <label for="heroCtaText" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+              Primary CTA Button Label
+            </label>
+            <input
+              type="text"
+              id="heroCtaText"
+              name="heroCtaText"
+              value={settings.hero.ctaText}
+              class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none"
+            />
+          </div>
+        </div>
+
+        {/* Hero Banner Image */}
+        <div class="bg-canvas p-4 rounded-2xl border border-stone-200 space-y-3">
+          <p class="text-xs font-bold text-ink flex items-center gap-1.5">
+            <Upload size={14} class="text-action-blue" />
+            <span>Hero Banner Background Image (Local File Upload OR URL)</span>
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="heroBannerFile" class="block text-[11px] font-semibold text-muted mb-1">Local Image File</label>
+              <input
+                type="file"
+                id="heroBannerFile"
+                name="heroBannerFile"
+                accept="image/*"
+                class="w-full text-xs text-stone-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-action-blue file:text-white hover:file:bg-action-blue-hover cursor-pointer"
+              />
+            </div>
+            <div>
+              <label for="heroBannerImage" class="block text-[11px] font-semibold text-muted mb-1">External Banner URL</label>
+              <input
+                type="url"
+                id="heroBannerImage"
+                name="heroBannerImage"
+                value={settings.hero.bannerImage}
+                placeholder="https://..."
+                class="w-full px-3 py-2 rounded-xl bg-white border border-stone-200 text-xs focus:outline-none"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 5. Editorial Quotes & About Story */}
+      <div class="space-y-4">
+        <h2 class="text-base font-bold text-ink border-b border-stone-100 pb-2 flex items-center gap-2">
+          <Sparkles size={18} class="text-purple-600" />
+          <span>5. Editorial Quotes & Headlines</span>
+        </h2>
+
+        <div>
+          <label for="philosophyQuote" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+            Philosophy Quote
+          </label>
+          <input
+            type="text"
+            id="philosophyQuote"
+            name="philosophyQuote"
+            value={settings.about.philosophyQuote}
+            class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none"
+          />
+        </div>
+
+        <div>
+          <label for="aboutHeadline" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+            About Page Main Headline
+          </label>
+          <input
+            type="text"
+            id="aboutHeadline"
+            name="aboutHeadline"
+            value={settings.about.headline}
+            class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none"
+          />
+        </div>
+
+        <div>
+          <label for="aboutSubtitle" class="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+            About Page Subtitle
+          </label>
+          <textarea
+            id="aboutSubtitle"
+            name="aboutSubtitle"
+            rows="2"
+            class="w-full px-4 py-3 rounded-xl bg-canvas border border-stone-200 text-ink text-sm focus:bg-white focus:border-action-blue focus:outline-none resize-y"
+          >{settings.about.subtitle}</textarea>
+        </div>
+      </div>
+
+      {/* Form Submit Button */}
+      <div class="pt-4 border-t border-stone-200 flex items-center justify-end gap-4">
+        <button type="submit" class="btn btn-action-blue text-xs px-8 py-3.5 rounded-xl font-semibold">
+          <Save size={16} />
+          <span>Save Site Content & Settings</span>
+        </button>
+      </div>
+
+    </form>
+  </div>
+</AdminLayout>

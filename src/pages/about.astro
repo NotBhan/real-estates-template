@@ -6,6 +6,7 @@
  */
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { config } from '@/lib/config';
+import { getSiteSettings } from '@/lib/site-settings-store';
 import {
   ShieldCheck,
   Compass,
@@ -111,6 +112,8 @@ const workflowSteps = [
     description: 'Receive assistance through negotiations, legal checks, and agreement execution.',
   },
 ];
+
+const aboutSettings = getSiteSettings().about;
 ---
 
 <BaseLayout
@@ -125,11 +128,10 @@ const workflowSteps = [
         <span>About Us</span>
       </div>
       <h1 class="heading-editorial text-4xl sm:text-5xl md:text-6xl tracking-tight mb-4 text-ink">
-        Dedicated Property Advisors <br class="hidden sm:inline" />
-        <span class="font-normal italic text-stone-500">Across Delhi NCR</span>
+        {aboutSettings.headline}
       </h1>
       <p class="text-muted text-base md:text-lg max-w-2xl font-light leading-relaxed">
-        Bridging property buyers, sellers, and investors with verified listings, strategic land intelligence, and transparent advisory services.
+        {aboutSettings.subtitle}
       </p>
     </div>
   </div>

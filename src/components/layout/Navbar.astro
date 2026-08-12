@@ -28,9 +28,13 @@ const currentPath = Astro.url.pathname;
       class="flex items-center gap-3 text-ink font-bold text-lg sm:text-xl tracking-tight no-underline group"
       aria-label={`${config.brand.name} — Home`}
     >
-      <span class="w-9 h-9 rounded-full bg-ink text-canvas flex items-center justify-center font-black text-xs tracking-widest shadow-sm group-hover:bg-action-blue transition-colors duration-300">
-        ML
-      </span>
+      {config.brand.logoUrl ? (
+        <img src={config.brand.logoUrl} alt={config.brand.name} class="h-9 w-auto max-w-[160px] object-contain rounded-lg" />
+      ) : (
+        <span class="w-9 h-9 rounded-full bg-ink text-canvas flex items-center justify-center font-black text-xs tracking-widest shadow-sm group-hover:bg-action-blue transition-colors duration-300">
+          ML
+        </span>
+      )}
       <span class="font-sans font-semibold tracking-tight text-current group-hover:text-action-blue transition-colors duration-300">
         {config.brand.name}
       </span>

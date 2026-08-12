@@ -1,6 +1,9 @@
 ---
 import { config } from '@/lib/config';
+import { getSiteSettings } from '@/lib/site-settings-store';
 import { ArrowRight, Phone } from '@lucide/astro';
+
+const quote = getSiteSettings().about.philosophyQuote;
 ---
 
 <section
@@ -27,8 +30,7 @@ import { ArrowRight, Phone } from '@lucide/astro';
 
       <!-- Main Statement -->
       <blockquote class="text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-[1.12] mb-8 text-white">
-        "Property is not simply space.<br class="hidden sm:inline" />
-        It is <span class="font-normal italic text-brand-gold">where life takes shape</span>."
+        "{quote}"
       </blockquote>
 
       <p class="text-stone-300 text-base md:text-lg max-w-2xl mx-auto mb-10 font-light leading-relaxed">

@@ -1,6 +1,9 @@
 ---
 import { config } from '@/lib/config';
+import { getSiteSettings } from '@/lib/site-settings-store';
 import { ArrowRight, Search, ShieldCheck } from '@lucide/astro';
+
+const heroSettings = getSiteSettings().hero;
 ---
 
 <section
@@ -14,7 +17,7 @@ import { ArrowRight, Search, ShieldCheck } from '@lucide/astro';
     class="absolute z-0 w-full h-full md:w-[84%] md:h-[76vh] rounded-none md:rounded-[2.5rem] overflow-hidden border-0 md:border md:border-stone-300/40 shadow-none md:shadow-2xl transition-shadow duration-500"
   >
     <img
-      src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=85"
+      src={heroSettings.bannerImage || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=85'}
       alt="Architectural luxury property"
       class="w-full h-full object-cover object-center scale-100 filter brightness-[0.7] contrast-[1.05]"
       id="hero-image"
@@ -42,7 +45,7 @@ import { ArrowRight, Search, ShieldCheck } from '@lucide/astro';
       id="hero-title"
       class="font-sans font-bold text-3xl sm:text-5xl md:text-7xl lg:text-8xl tracking-tight leading-[1.1] sm:leading-[1.05] mb-4 sm:mb-6 text-white max-w-4xl"
     >
-      Spaces Worth <span class="text-stone-200 italic font-normal">Coming Home</span> To.
+      {heroSettings.title}
     </h1>
 
     <!-- Subtitle -->
@@ -50,14 +53,14 @@ import { ArrowRight, Search, ShieldCheck } from '@lucide/astro';
       id="hero-subtitle"
       class="text-stone-200 text-sm sm:text-lg md:text-xl max-w-2xl mx-auto mb-6 sm:mb-10 leading-relaxed font-light px-2"
     >
-      Curated residential residences, commercial headquarters, and strategic land investments across Delhi NCR.
+      {heroSettings.subtitle}
     </p>
 
     <!-- Action Buttons -->
     <div id="hero-actions" class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto px-4 sm:px-0">
       <a href="/properties" class="btn btn-action-blue text-sm sm:text-base px-6 sm:px-8 py-3 sm:py-3.5 rounded-full w-full sm:w-auto font-semibold flex items-center justify-center gap-2 shadow-lg">
         <Search size={18} />
-        Explore Properties
+        {heroSettings.ctaText || 'Explore Properties'}
       </a>
       <a href="/contact" class="btn btn-stone-outline text-sm sm:text-base px-6 sm:px-8 py-3 sm:py-3.5 rounded-full w-full sm:w-auto font-semibold flex items-center justify-center gap-2 shadow-sm hover:border-action-blue">
         Schedule Consultation

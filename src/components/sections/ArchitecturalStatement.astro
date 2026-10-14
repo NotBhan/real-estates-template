@@ -67,6 +67,9 @@ const quote = getSiteSettings().about.philosophyQuote;
   gsap.registerPlugin(ScrollTrigger);
 
   const initStatementAnimation = () => {
+    if (document.documentElement.dataset.statementAnimated) return;
+    document.documentElement.dataset.statementAnimated = 'true';
+
     const bgImg = document.getElementById('statement-bg-img');
     const content = document.getElementById('statement-content');
 
@@ -87,15 +90,24 @@ const quote = getSiteSettings().about.philosophyQuote;
         });
       }
 
-      gsap.from(content, {
-        scrollTrigger: {
-          trigger: content,
-          start: 'top 80%',
-        },
-        opacity: 0,
-        y: 40,
-        duration: 0.9,
-        ease: 'power3.out',
+      gsap.fromTo(
+        content,
+        { opacity: 0, y: 40 },
+        {
+          scrollTrigger: {
+            trigger: content,
+            start: 'top 80%',
+            once: true,
+          },
+          opacity: 1,
+          y: 0,
+          duration: 0.9,
+          ease: 'power3.out',
+        }
+      );
+
+      requestAnimationFrame(() => {
+        ScrollTrigger.refresh();
       });
     });
   };

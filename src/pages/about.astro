@@ -243,7 +243,7 @@ const aboutSettings = getSiteSettings().about;
             <span class="w-1.5 h-1.5 rounded-full bg-brand-gold"></span>
             <span class="text-brand-gold">Portfolio Scope</span>
           </div>
-          <h2 class="heading-section text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white" id="asset-classes-heading">
+          <h2 class="heading-section heading-section--light text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white" id="asset-classes-heading">
             Comprehensive Asset <span class="font-normal italic text-stone-400">Class Expertise</span>
           </h2>
         </div>
@@ -358,6 +358,11 @@ const aboutSettings = getSiteSettings().about;
   gsap.registerPlugin(ScrollTrigger);
 
   const initAboutAnimations = () => {
+    // Single init guard to prevent double-execution when both DOMContentLoaded
+    // and astro:page-load fire, which causes gsap.from to get stuck at opacity: 0
+    if (document.documentElement.dataset.aboutAnimated) return;
+    document.documentElement.dataset.aboutAnimated = 'true';
+
     const storyText = document.getElementById('about-story-text');
     const storyMedia = document.getElementById('about-story-media');
     const pillarsGrid = document.getElementById('about-pillars-grid');
@@ -369,74 +374,104 @@ const aboutSettings = getSiteSettings().about;
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       // Story section entrance
       if (storyText && storyMedia) {
-        gsap.from(storyText, {
-          scrollTrigger: {
-            trigger: storyText,
-            start: 'top 85%',
-          },
-          opacity: 0,
-          y: 30,
-          duration: 0.8,
-          ease: 'power3.out',
-        });
+        gsap.fromTo(
+          storyText,
+          { opacity: 0, y: 30 },
+          {
+            scrollTrigger: {
+              trigger: storyText,
+              start: 'top 85%',
+              once: true,
+            },
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: 'power3.out',
+          }
+        );
 
-        gsap.from(storyMedia, {
-          scrollTrigger: {
-            trigger: storyMedia,
-            start: 'top 85%',
-          },
-          opacity: 0,
-          y: 40,
-          duration: 0.9,
-          delay: 0.1,
-          ease: 'power3.out',
-        });
+        gsap.fromTo(
+          storyMedia,
+          { opacity: 0, y: 40 },
+          {
+            scrollTrigger: {
+              trigger: storyMedia,
+              start: 'top 85%',
+              once: true,
+            },
+            opacity: 1,
+            y: 0,
+            duration: 0.9,
+            delay: 0.1,
+            ease: 'power3.out',
+          }
+        );
       }
 
       // Pillars staggered reveal
-      if (pillarsGrid) {
-        gsap.from(pillarsGrid.children, {
-          scrollTrigger: {
-            trigger: pillarsGrid,
-            start: 'top 85%',
-          },
-          opacity: 0,
-          y: 25,
-          duration: 0.6,
-          stagger: 0.1,
-          ease: 'power2.out',
-        });
+      if (pillarsGrid && pillarsGrid.children.length > 0) {
+        gsap.fromTo(
+          Array.from(pillarsGrid.children),
+          { opacity: 0, y: 25 },
+          {
+            scrollTrigger: {
+              trigger: pillarsGrid,
+              start: 'top 85%',
+              once: true,
+            },
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            stagger: 0.1,
+            ease: 'power2.out',
+          }
+        );
       }
 
       // Asset classes staggered reveal
-      if (assetClassesGrid) {
-        gsap.from(assetClassesGrid.children, {
-          scrollTrigger: {
-            trigger: assetClassesGrid,
-            start: 'top 85%',
-          },
-          opacity: 0,
-          y: 30,
-          duration: 0.6,
-          stagger: 0.08,
-          ease: 'power2.out',
-        });
+      if (assetClassesGrid && assetClassesGrid.children.length > 0) {
+        gsap.fromTo(
+          Array.from(assetClassesGrid.children),
+          { opacity: 0, y: 30 },
+          {
+            scrollTrigger: {
+              trigger: assetClassesGrid,
+              start: 'top 85%',
+              once: true,
+            },
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            stagger: 0.08,
+            ease: 'power2.out',
+          }
+        );
       }
 
       // Workflow staggered reveal
-      if (workflowGrid) {
-        gsap.from(workflowGrid.children, {
-          scrollTrigger: {
-            trigger: workflowGrid,
-            start: 'top 85%',
-          },
-          opacity: 0,
-          y: 25,
-          duration: 0.6,
-          stagger: 0.1,
-          ease: 'power2.out',
-        });
+      if (workflowGrid && workflowGrid.children.length > 0) {
+        gsap.fromTo(
+          Array.from(workflowGrid.children),
+          { opacity: 0, y: 25 },
+          {
+            scrollTrigger: {
+              trigger: workflowGrid,
+              start: 'top 85%',
+              once: true,
+            },
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            stagger: 0.1,
+            ease: 'power2.out',
+          }
+        );
       }
+
+      // Refresh measurements once DOM layout settles
+      requestAnimationFrame(() => {
+        ScrollTrigger.refresh();
+      });
     });
   };
 

@@ -67,6 +67,9 @@ const featured = getFeaturedProperties();
   gsap.registerPlugin(ScrollTrigger);
 
   const initFeaturedSection = () => {
+    if (document.documentElement.dataset.featuredAnimated) return;
+    document.documentElement.dataset.featuredAnimated = 'true';
+
     const grid = document.getElementById('featured-grid');
     const cards = document.querySelectorAll('.featured-card-wrapper');
     const header = document.getElementById('featured-header');
@@ -78,29 +81,43 @@ const featured = getFeaturedProperties();
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       // Header reveal
       if (header) {
-        gsap.from(header, {
-          scrollTrigger: {
-            trigger: header,
-            start: 'top 85%',
-          },
-          opacity: 0,
-          y: 35,
-          duration: 0.8,
-          ease: 'power3.out',
-        });
+        gsap.fromTo(
+          header,
+          { opacity: 0, y: 35 },
+          {
+            scrollTrigger: {
+              trigger: header,
+              start: 'top 85%',
+              once: true,
+            },
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: 'power3.out',
+          }
+        );
       }
 
       // Staggered cards reveal
-      gsap.from(cards, {
-        scrollTrigger: {
-          trigger: grid,
-          start: 'top 82%',
-        },
-        opacity: 0,
-        y: 45,
-        duration: 0.8,
-        stagger: 0.15,
-        ease: 'power3.out',
+      gsap.fromTo(
+        cards,
+        { opacity: 0, y: 45 },
+        {
+          scrollTrigger: {
+            trigger: grid,
+            start: 'top 82%',
+            once: true,
+          },
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          stagger: 0.15,
+          ease: 'power3.out',
+        }
+      );
+
+      requestAnimationFrame(() => {
+        ScrollTrigger.refresh();
       });
     });
   };

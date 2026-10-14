@@ -489,6 +489,9 @@ const faqs = [
   };
 
   const initContactAnimations = () => {
+    if (document.documentElement.dataset.contactAnimated) return;
+    document.documentElement.dataset.contactAnimated = 'true';
+
     const channelsGrid = document.getElementById('contact-channels-grid');
     const formCard = document.getElementById('contact-form-card');
     const infoPanel = document.getElementById('contact-info-panel');
@@ -497,58 +500,82 @@ const faqs = [
     let mm = gsap.matchMedia();
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
-      if (channelsGrid) {
-        gsap.from(channelsGrid.children, {
-          scrollTrigger: {
-            trigger: channelsGrid,
-            start: 'top 85%',
-          },
-          opacity: 0,
-          y: 25,
-          duration: 0.6,
-          stagger: 0.08,
-          ease: 'power2.out',
-        });
+      if (channelsGrid && channelsGrid.children.length > 0) {
+        gsap.fromTo(
+          Array.from(channelsGrid.children),
+          { opacity: 0, y: 25 },
+          {
+            scrollTrigger: {
+              trigger: channelsGrid,
+              start: 'top 85%',
+              once: true,
+            },
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            stagger: 0.08,
+            ease: 'power2.out',
+          }
+        );
       }
 
       if (formCard && infoPanel) {
-        gsap.from(formCard, {
-          scrollTrigger: {
-            trigger: formCard,
-            start: 'top 85%',
-          },
-          opacity: 0,
-          y: 30,
-          duration: 0.8,
-          ease: 'power3.out',
-        });
+        gsap.fromTo(
+          formCard,
+          { opacity: 0, y: 30 },
+          {
+            scrollTrigger: {
+              trigger: formCard,
+              start: 'top 85%',
+              once: true,
+            },
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: 'power3.out',
+          }
+        );
 
-        gsap.from(infoPanel, {
-          scrollTrigger: {
-            trigger: infoPanel,
-            start: 'top 85%',
-          },
-          opacity: 0,
-          y: 40,
-          duration: 0.8,
-          delay: 0.1,
-          ease: 'power3.out',
-        });
+        gsap.fromTo(
+          infoPanel,
+          { opacity: 0, y: 40 },
+          {
+            scrollTrigger: {
+              trigger: infoPanel,
+              start: 'top 85%',
+              once: true,
+            },
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            delay: 0.1,
+            ease: 'power3.out',
+          }
+        );
       }
 
-      if (faqList) {
-        gsap.from(faqList.children, {
-          scrollTrigger: {
-            trigger: faqList,
-            start: 'top 85%',
-          },
-          opacity: 0,
-          y: 20,
-          duration: 0.6,
-          stagger: 0.1,
-          ease: 'power2.out',
-        });
+      if (faqList && faqList.children.length > 0) {
+        gsap.fromTo(
+          Array.from(faqList.children),
+          { opacity: 0, y: 20 },
+          {
+            scrollTrigger: {
+              trigger: faqList,
+              start: 'top 85%',
+              once: true,
+            },
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            stagger: 0.1,
+            ease: 'power2.out',
+          }
+        );
       }
+
+      requestAnimationFrame(() => {
+        ScrollTrigger.refresh();
+      });
     });
   };
 

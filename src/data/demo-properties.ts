@@ -2,7 +2,7 @@
  * Demo Property Dataset
  *
  * All properties in this file are FICTIONAL demonstration data.
- * They do not represent genuine Maa Laxmi Property listings.
+ * They do not represent genuine client listings.
  *
  * This file is the sole data source for Phase 2A.
  * Phase 3 will replace it with PostgreSQL/Drizzle queries

@@ -63,6 +63,13 @@ if (!images || images.length <= 1) {
         <div class="absolute top-3 right-3 z-10 rounded-full bg-stone-900/70 backdrop-blur text-white text-xs font-bold px-3 py-1.5 tracking-wide" id="gallery-counter">
           1 / {images.length}
         </div>
+
+        {/* Gallery Caption Bar */}
+        <div class="absolute bottom-0 inset-x-0 z-10 bg-gradient-to-t from-stone-950/85 via-stone-950/45 to-transparent pt-8 pb-4 px-4 sm:px-6 pointer-events-none">
+          <p class="text-xs sm:text-sm font-medium tracking-wide text-stone-200 drop-shadow-sm truncate" id="gallery-caption">
+            {images[0]?.alt || `${propertyTitle} — View 1`}
+          </p>
+        </div>
       </div>
 
       {/* Thumbnails Strip */}
@@ -108,6 +115,7 @@ if (!images || images.length <= 1) {
     const prevBtn = document.querySelector<HTMLButtonElement>('.gallery-prev');
     const nextBtn = document.querySelector<HTMLButtonElement>('.gallery-next');
     const counter = document.getElementById('gallery-counter');
+    const caption = document.getElementById('gallery-caption');
 
     if (slides.length === 0 || thumbs.length === 0 || !counter) return;
 
@@ -139,6 +147,9 @@ if (!images || images.length <= 1) {
       });
 
       counter.textContent = `${current + 1} / ${slides.length}`;
+      if (caption && slides[current]) {
+        caption.textContent = slides[current].alt || `Property Photograph ${current + 1}`;
+      }
 
       // Scroll thumbnail into view within its own scroll container only —
       // scrollIntoView would also scroll the page, stealing viewport

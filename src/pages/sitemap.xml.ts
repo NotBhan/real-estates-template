@@ -12,6 +12,8 @@ export const GET: APIRoute = async () => {
     { url: '/services', priority: '0.8', changefreq: 'weekly' },
     { url: '/about', priority: '0.7', changefreq: 'monthly' },
     { url: '/contact', priority: '0.7', changefreq: 'monthly' },
+    { url: '/privacy', priority: '0.5', changefreq: 'monthly' },
+    { url: '/terms', priority: '0.5', changefreq: 'monthly' },
   ];
 
   const nowISO = new Date().toISOString();

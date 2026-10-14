@@ -1,17 +1,17 @@
 ---
 import { config } from '@/lib/config';
-import { Phone, MessageCircle, Mail } from '@lucide/astro';
+import { Phone, MessageCircle, Mail, Send, CheckCircle2, Calendar, ShieldCheck } from '@lucide/astro';
 
 interface Props {
   propertyTitle: string;
   propertySlug: string;
 }
 
-const { propertyTitle } = Astro.props;
+const { propertyTitle, propertySlug } = Astro.props;
 
 const whatsappMessage = encodeURIComponent(`Hi, I'm interested in "${propertyTitle}". Could you provide more details?`);
-const emailSubject = encodeURIComponent(`Enquiry: ${propertyTitle}`);
-const emailBody = encodeURIComponent(`Hello,\n\nI would like to know more about the property "${propertyTitle}".\n\nThank you.`);
+const emailSubject = encodeURIComponent(`Property Inquiry: ${propertyTitle}`);
+const emailBody = encodeURIComponent(`Hello,\n\nI would like to enquire about the property "${propertyTitle}".\n\nPlease let me know the available viewing schedules and documentation.\n\nThank you.`);
 
 const whatsappUrl = config.contactWhatsapp ? `https://wa.me/${config.contactWhatsapp}?text=${whatsappMessage}` : undefined;
 const phoneUrl = config.contactPhone ? `tel:${config.contactPhone}` : undefined;
@@ -20,66 +20,198 @@ const emailUrl = config.contactEmail ? `mailto:${config.contactEmail}?subject=${
 
 <section class="section-padding border-t border-stone-200/80 bg-canvas relative overflow-hidden" aria-labelledby="enquiry-heading" id="property-enquiry">
   <div class="container-site relative z-10">
-    <div class="max-w-4xl mx-auto bg-white border border-stone-200 rounded-3xl p-8 md:p-14 text-center shadow-editorial relative overflow-hidden">
+    <div class="max-w-4xl mx-auto bg-white border border-stone-200/80 rounded-3xl p-6 sm:p-10 md:p-14 shadow-editorial relative overflow-hidden">
       
       <div class="relative z-10">
-        <div class="eyebrow-label mb-3 justify-center">
-          <span class="w-1.5 h-1.5 rounded-full bg-brand-gold"></span>
-          <span>Direct Consultation</span>
-        </div>
-        <h2 class="heading-section text-3xl sm:text-4xl font-bold tracking-tight mb-4 text-ink" id="enquiry-heading">Enquire About This Property</h2>
-        <p class="text-muted text-base md:text-lg mb-10 max-w-2xl mx-auto font-light leading-relaxed">
-          Contact our team to schedule a private viewing or request comprehensive investment documentation for 
-          <span class="text-ink font-bold">"{propertyTitle}"</span>.
-        </p>
-
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-4" id="property-enquiry-actions">
-          
-          {/* Call Button */}
-          {phoneUrl ? (
-            <a href={phoneUrl} class="btn btn-action-blue w-full sm:w-auto min-w-[170px] py-3.5 rounded-full font-semibold">
-              <Phone size={18} />
-              <span>Call Now</span>
-            </a>
-          ) : (
-            <span class="btn btn-action-blue w-full sm:w-auto min-w-[170px] py-3.5 rounded-full font-semibold opacity-60 cursor-not-allowed" title="Contact details pending">
-              <Phone size={18} />
-              <span>Call Now</span>
-            </span>
-          )}
-
-          {/* WhatsApp Button */}
-          {whatsappUrl ? (
-            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" class="btn btn-stone-outline w-full sm:w-auto min-w-[170px] py-3.5 rounded-full font-semibold text-emerald-700 hover:bg-emerald-50 hover:border-emerald-300 transition-all">
-              <MessageCircle size={18} />
-              <span>WhatsApp</span>
-            </a>
-          ) : (
-            <span class="btn btn-stone-outline w-full sm:w-auto min-w-[170px] py-3.5 rounded-full font-semibold text-muted opacity-60 cursor-not-allowed" title="WhatsApp details pending">
-              <MessageCircle size={18} />
-              <span>WhatsApp</span>
-            </span>
-          )}
-
-          {/* Email Button */}
-          {emailUrl ? (
-            <a href={emailUrl} class="btn btn-stone-outline w-full sm:w-auto min-w-[170px] py-3.5 rounded-full font-semibold text-ink hover:text-action-blue hover:border-action-blue transition-all">
-              <Mail size={18} />
-              <span>Email Us</span>
-            </a>
-          ) : (
-            <span class="btn btn-stone-outline w-full sm:w-auto min-w-[170px] py-3.5 rounded-full font-semibold text-muted opacity-60 cursor-not-allowed" title="Email details pending">
-              <Mail size={18} />
-              <span>Email Us</span>
-            </span>
-          )}
-
+        <!-- Eyebrow & Title -->
+        <div class="text-center mb-8">
+          <div class="eyebrow-label mb-3 justify-center">
+            <span class="w-1.5 h-1.5 rounded-full bg-brand-gold"></span>
+            <span>Direct Advisory</span>
+          </div>
+          <h2 class="heading-section text-3xl sm:text-4xl font-bold tracking-tight mb-4 text-ink" id="enquiry-heading">
+            Enquire About This <span class="font-normal italic text-stone-500">Property</span>
+          </h2>
+          <p class="text-muted text-base md:text-lg max-w-2xl mx-auto font-light leading-relaxed">
+            Connect with our property advisory team to arrange a private walkthrough, request comprehensive documentation, or discuss terms for 
+            <span class="text-ink font-semibold">"{propertyTitle}"</span>.
+          </p>
         </div>
 
-        <p class="text-xs text-muted-light mt-8">
-          This is a pre-contract demo action surface.
-        </p>
+        <!-- Quick Channel Actions -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 mb-10" id="property-quick-channels">
+          {/* Call Option */}
+          <a
+            href={phoneUrl || '/contact'}
+            class="flex items-center justify-center gap-2.5 p-3.5 rounded-2xl bg-canvas border border-stone-200 text-ink hover:text-action-blue hover:border-action-blue hover:bg-white transition-all text-sm font-semibold group shadow-2xs"
+          >
+            <Phone size={17} class="text-action-blue group-hover:scale-110 transition-transform" />
+            <span>{phoneUrl ? 'Direct Call' : 'Advisory Line'}</span>
+          </a>
+
+          {/* WhatsApp Option */}
+          <a
+            href={whatsappUrl || `/contact?property=${encodeURIComponent(propertySlug)}`}
+            target={whatsappUrl ? '_blank' : undefined}
+            rel={whatsappUrl ? 'noopener noreferrer' : undefined}
+            class="flex items-center justify-center gap-2.5 p-3.5 rounded-2xl bg-canvas border border-stone-200 text-ink hover:text-emerald-700 hover:border-emerald-300 hover:bg-emerald-50/50 transition-all text-sm font-semibold group shadow-2xs"
+          >
+            <MessageCircle size={17} class="text-emerald-600 group-hover:scale-110 transition-transform" />
+            <span>Instant Chat</span>
+          </a>
+
+          {/* Email Option */}
+          <a
+            href={emailUrl || '/contact'}
+            class="flex items-center justify-center gap-2.5 p-3.5 rounded-2xl bg-canvas border border-stone-200 text-ink hover:text-action-blue hover:border-action-blue hover:bg-white transition-all text-sm font-semibold group shadow-2xs"
+          >
+            <Mail size={17} class="text-action-blue group-hover:scale-110 transition-transform" />
+            <span>Email Enquiry</span>
+          </a>
+        </div>
+
+        <!-- Consultation Inquiry Form -->
+        <div class="bg-stone-50/80 border border-stone-200 rounded-2xl p-6 sm:p-8" id="property-enquiry-form-wrapper">
+          <div class="flex items-center gap-2.5 mb-6">
+            <div class="w-8 h-8 rounded-lg bg-white border border-stone-200 flex items-center justify-center text-action-blue">
+              <Calendar size={16} />
+            </div>
+            <div>
+              <h3 class="text-base font-bold text-ink">Schedule a Viewing or Consultation</h3>
+              <p class="text-xs text-muted font-light">Submit your details below and an advisor will coordinate with you.</p>
+            </div>
+          </div>
+
+          <form id="property-inline-inquiry-form" class="space-y-4">
+            <input type="hidden" name="propertyTitle" value={propertyTitle} />
+            <input type="hidden" name="propertySlug" value={propertySlug} />
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="enquiry-name" class="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5">
+                  Full Name <span class="text-rose-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="enquiry-name"
+                  name="name"
+                  required
+                  placeholder="Your Name"
+                  class="w-full px-4 py-2.5 rounded-xl bg-white border border-stone-300 text-ink text-sm focus:border-action-blue focus:outline-none transition-colors"
+                />
+              </div>
+
+              <div>
+                <label for="enquiry-phone" class="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5">
+                  Phone Number <span class="text-rose-500">*</span>
+                </label>
+                <input
+                  type="tel"
+                  id="enquiry-phone"
+                  name="phone"
+                  required
+                  placeholder="Your Phone Number"
+                  class="w-full px-4 py-2.5 rounded-xl bg-white border border-stone-300 text-ink text-sm focus:border-action-blue focus:outline-none transition-colors"
+                />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="enquiry-email" class="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  id="enquiry-email"
+                  name="email"
+                  placeholder="name@example.com"
+                  class="w-full px-4 py-2.5 rounded-xl bg-white border border-stone-300 text-ink text-sm focus:border-action-blue focus:outline-none transition-colors"
+                />
+              </div>
+
+              <div>
+                <label for="enquiry-service-type" class="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5">
+                  Inquiry Purpose
+                </label>
+                <select
+                  id="enquiry-service-type"
+                  name="serviceType"
+                  class="w-full px-4 py-2.5 rounded-xl bg-white border border-stone-300 text-ink text-sm focus:border-action-blue focus:outline-none transition-colors"
+                >
+                  <option value="site-visit">Request Private Site Inspection</option>
+                  <option value="documentation">Request Document Package & Title Deeds</option>
+                  <option value="pricing">Discuss Price Benchmarks & Terms</option>
+                  <option value="general">General Portfolio Consultation</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label for="enquiry-message" class="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5">
+                Message / Requirement Note
+              </label>
+              <textarea
+                id="enquiry-message"
+                name="message"
+                rows="3"
+                class="w-full px-4 py-2.5 rounded-xl bg-white border border-stone-300 text-ink text-sm focus:border-action-blue focus:outline-none transition-colors resize-y"
+              >I would like to enquire about "{propertyTitle}". Please share documentation and available viewing schedules.</textarea>
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-action-blue w-full py-3.5 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <Send size={16} />
+              <span>Submit Property Inquiry</span>
+            </button>
+
+            <!-- Success Feedback Banner -->
+            <div id="enquiry-success-banner" class="hidden p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-medium">
+              <div class="flex items-center gap-2.5">
+                <CheckCircle2 size={18} class="text-emerald-600 shrink-0" />
+                <span>Thank you! Your inquiry regarding <strong>"{propertyTitle}"</strong> has been recorded. Our advisory desk will get in touch shortly.</span>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Privacy & Protection Note -->
+        <div class="flex items-center justify-center gap-2 text-xs text-muted mt-6">
+          <ShieldCheck size={14} class="text-brand-gold shrink-0" />
+          <span>Inquiry details are handled confidentially by our property advisory consultants.</span>
+        </div>
       </div>
     </div>
   </div>
 </section>
+
+<script>
+  function setupPropertyEnquiry() {
+    const form = document.getElementById('property-inline-inquiry-form') as HTMLFormElement | null;
+    const banner = document.getElementById('enquiry-success-banner');
+
+    if (!form || !banner) return;
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      banner.classList.remove('hidden');
+      const submitBtn = form.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+      }
+      setTimeout(() => {
+        banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 100);
+    });
+  }
+
+  document.addEventListener('astro:page-load', setupPropertyEnquiry);
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    setupPropertyEnquiry();
+  } else {
+    document.addEventListener('DOMContentLoaded', setupPropertyEnquiry);
+  }
+</script>

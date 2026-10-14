@@ -1,0 +1,202 @@
+---
+import { ShieldCheck, Compass, CheckCircle2, Building2, Trees, Home, Sparkles, ArrowRight } from '@lucide/astro';
+
+const pillars = [
+  {
+    icon: ShieldCheck,
+    title: 'Verified Title & Documentation',
+    description: 'Every property in our portfolio undergoes rigorous legal due diligence and boundary checks before being presented.',
+  },
+  {
+    icon: Compass,
+    title: 'Transparent Price Benchmarks',
+    description: 'Objective pricing grounded in real micro-market data and comparative valuations, ensuring clarity and confidence.',
+  },
+  {
+    icon: CheckCircle2,
+    title: 'End-to-End Transaction Advisory',
+    description: 'Dedicated support across initial shortlisting, private walkthroughs, documentation reviews, and handover formalities.',
+  },
+  {
+    icon: Sparkles,
+    title: 'Multi-Category Architectural Scope',
+    description: 'Specialized consultation spanning luxury residences, corporate office spaces, retail showrooms, and development land.',
+  },
+];
+
+const servicePreviews = [
+  {
+    title: 'Residential Homes',
+    desc: 'Villas, independent floors, and modern flats.',
+    icon: Home,
+    href: '/properties?type=Residential',
+  },
+  {
+    title: 'Commercial Holdings',
+    desc: 'Prime retail units and executive office floors.',
+    icon: Building2,
+    href: '/properties?type=Commercial',
+  },
+  {
+    title: 'Strategic Land & Plots',
+    desc: 'Approved development plots and acreage.',
+    icon: Trees,
+    href: '/properties?type=Land',
+  },
+];
+---
+
+<section class="section-padding bg-white border-b border-stone-200/80 relative overflow-hidden z-10" aria-labelledby="why-us-heading" id="why-choose-us">
+  <div class="container-site relative z-10">
+    
+    <!-- Section Header -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-14 gap-6" id="why-us-header">
+      <div class="max-w-2xl">
+        <div class="eyebrow-label mb-3">
+          <span class="w-1.5 h-1.5 rounded-full bg-brand-gold"></span>
+          <span>Advisory Excellence</span>
+        </div>
+        <h2 class="heading-section text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-ink" id="why-us-heading">
+          A More Considered Approach <br class="hidden sm:inline" />
+          <span class="font-normal italic text-stone-500">to Real Estate</span>
+        </h2>
+      </div>
+      <p class="text-muted text-base md:text-lg max-w-md font-light leading-relaxed">
+        Guidance designed around your lifestyle, spatial priorities, and capital objectives with complete digital transparency.
+      </p>
+    </div>
+
+    <!-- 4 Pillars Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16" id="why-us-grid">
+      {pillars.map((pillar) => {
+        const Icon = pillar.icon;
+        return (
+          <div class="why-us-card bg-stone-50/80 border border-stone-200 rounded-2xl p-6 sm:p-7 shadow-xs hover:border-action-blue/40 hover:shadow-editorial hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-white border border-stone-200 flex items-center justify-center text-action-blue mb-5 group-hover:bg-action-blue group-hover:text-white transition-colors duration-300 shadow-2xs">
+                <Icon size={22} />
+              </div>
+              <h3 class="text-lg font-bold text-ink mb-2.5 tracking-tight">{pillar.title}</h3>
+              <p class="text-muted text-sm leading-relaxed font-light">{pillar.description}</p>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+
+    <!-- Integrated Services Strip -->
+    <div class="bg-canvas border border-stone-200/80 rounded-3xl p-6 sm:p-10 shadow-xs" id="why-us-services-strip">
+      <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
+        <div>
+          <div class="eyebrow-label mb-2">
+            <Sparkles size={13} class="text-brand-gold" />
+            <span>Portfolio Services</span>
+          </div>
+          <h3 class="text-2xl sm:text-3xl font-bold text-ink tracking-tight mb-2">
+            Specialized Property <span class="font-normal italic text-stone-500">Domains</span>
+          </h3>
+          <p class="text-muted text-sm font-light max-w-lg">
+            Explore dedicated sectors curated by property type and investment utility.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full lg:w-auto">
+          {servicePreviews.map((service) => {
+            const Icon = service.icon;
+            return (
+              <a
+                href={service.href}
+                class="flex flex-col justify-between p-5 rounded-2xl bg-white border border-stone-200 hover:border-action-blue/50 hover:shadow-sm transition-all group min-w-[200px]"
+              >
+                <div>
+                  <div class="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center text-ink group-hover:bg-action-blue group-hover:text-white transition-colors mb-3">
+                    <Icon size={18} />
+                  </div>
+                  <h4 class="font-bold text-ink text-sm mb-1">{service.title}</h4>
+                  <p class="text-muted text-xs font-light">{service.desc}</p>
+                </div>
+                <div class="mt-4 pt-3 border-t border-stone-100 flex items-center justify-between text-xs font-semibold text-action-blue">
+                  <span>Explore</span>
+                  <ArrowRight size={14} class="group-hover:translate-x-1 transition-transform" />
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  import gsap from 'gsap';
+  import ScrollTrigger from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const initWhyUsAnimation = () => {
+    if (document.documentElement.dataset.whyUsAnimated) return;
+    document.documentElement.dataset.whyUsAnimated = 'true';
+
+    const header = document.getElementById('why-us-header');
+    const grid = document.getElementById('why-us-grid');
+    const cards = document.querySelectorAll('.why-us-card');
+    const servicesStrip = document.getElementById('why-us-services-strip');
+
+    if (!grid || cards.length === 0) return;
+
+    let mm = gsap.matchMedia();
+
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      if (header) {
+        gsap.fromTo(
+          header,
+          { opacity: 0, y: 30 },
+          {
+            scrollTrigger: { trigger: header, start: 'top 85%' },
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: 'power3.out',
+          }
+        );
+      }
+
+      gsap.fromTo(
+        cards,
+        { opacity: 0, y: 35 },
+        {
+          scrollTrigger: { trigger: grid, start: 'top 85%' },
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: 'power2.out',
+        }
+      );
+
+      if (servicesStrip) {
+        gsap.fromTo(
+          servicesStrip,
+          { opacity: 0, y: 30 },
+          {
+            scrollTrigger: { trigger: servicesStrip, start: 'top 85%' },
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            delay: 0.1,
+            ease: 'power3.out',
+          }
+        );
+      }
+    });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initWhyUsAnimation);
+  } else {
+    initWhyUsAnimation();
+  }
+  document.addEventListener('astro:page-load', initWhyUsAnimation);
+</script>

@@ -34,8 +34,8 @@ export interface SiteSettings {
 
 const defaultSettings: SiteSettings = {
   brand: {
-    name: 'Maa Laxmi Property',
-    tagline: 'Find a Place Worth Calling Home',
+    name: 'Estate Atelier',
+    tagline: 'A premium digital experience for real estate.',
     logoUrl: '',
     faviconUrl: '/favicon.svg',
   },
@@ -43,25 +43,27 @@ const defaultSettings: SiteSettings = {
     phone: '',
     whatsapp: '',
     email: '',
-    address: 'Commercial Hub, Sector 62',
-    locality: 'Noida',
-    city: 'Delhi NCR',
+    address: 'Atelier Studio Suite, Architecture Boulevard',
+    locality: 'Central Design District',
+    city: 'Metropolitan Area',
   },
   map: {
     latitude: 28.628,
     longitude: 77.3649,
-    title: 'Maa Laxmi Property Office',
-    address: 'Commercial Hub, Sector 62, Noida, Delhi NCR',
+    title: 'Estate Atelier Studio',
+    address: 'Architecture Boulevard, Central Design District',
   },
   hero: {
     title: 'Find a Place Worth Calling Home',
-    subtitle: 'Explore handpicked residential homes, commercial complexes, and investment land holdings across Delhi NCR.',
+    subtitle:
+      'Explore thoughtfully curated residential, commercial, and land opportunities through a property experience designed around your needs.',
     bannerImage: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1920&q=85',
     ctaText: 'Explore Properties',
   },
   about: {
-    headline: 'Dedicated Property Advisors Across Delhi NCR',
-    subtitle: 'Bridging property buyers, sellers, and investors with verified listings, strategic land intelligence, and transparent advisory services.',
+    headline: 'A Thoughtful Approach to Real-Estate Experience',
+    subtitle:
+      'Demonstrating how premium property consultants present listings, highlight architectural quality, and guide discovery through digital clarity.',
     philosophyQuote: 'Property is not simply space. It is where life takes shape.',
   },
 };

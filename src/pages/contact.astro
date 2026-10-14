@@ -21,7 +21,7 @@ import {
 } from '@lucide/astro';
 
 const whatsappMessage = encodeURIComponent(
-  `Hi Maa Laxmi Property team, I would like to enquire about your available property listings.`
+  `Hi ${config.siteName} team, I would like to enquire about your available property listings.`
 );
 
 const phoneUrl = config.contactPhone ? `tel:${config.contactPhone}` : undefined;
@@ -29,7 +29,7 @@ const whatsappUrl = config.contactWhatsapp
   ? `https://wa.me/${config.contactWhatsapp}?text=${whatsappMessage}`
   : undefined;
 const emailUrl = config.contactEmail
-  ? `mailto:${config.contactEmail}?subject=${encodeURIComponent('Property Enquiry — Maa Laxmi Property')}`
+  ? `mailto:${config.contactEmail}?subject=${encodeURIComponent(`Property Enquiry — ${config.siteName}`)}`
   : undefined;
 
 const siteMap = getSiteSettings().map;
@@ -38,7 +38,7 @@ const siteContact = getSiteSettings().contact;
 const officeCoords = {
   latitude: siteMap.latitude,
   longitude: siteMap.longitude,
-  title: siteMap.title || `${config.brand.name} Office`,
+  title: siteMap.title || `${config.siteName} Studio`,
   address: siteMap.address || siteContact.address,
   locality: siteContact.locality,
   city: siteContact.city,
@@ -65,7 +65,7 @@ const faqs = [
 
 <BaseLayout
   title="Contact Us"
-  description={`Get in touch with ${config.brand.name} for property inquiries, site visits, and real estate advisory across Delhi NCR.`}
+  description={`Get in touch with ${config.siteName} for property inquiries, portfolio consultations, and architectural advisory.`}
 >
   {/* ---- 1. Hero Page Header ---- */}
   <div class="pt-28 sm:pt-32 pb-12 sm:pb-16 bg-canvas border-b border-stone-200/80">
@@ -79,7 +79,7 @@ const faqs = [
         <span class="font-normal italic text-stone-500">& Schedule Consultation</span>
       </h1>
       <p class="text-muted text-base md:text-lg max-w-2xl font-light leading-relaxed">
-        Connect directly with our property advisors for site inspections, portfolio shortlisting, or general real estate guidance across Delhi NCR.
+        Connect directly with our property consultants for site inspections, portfolio shortlisting, or general real estate guidance.
       </p>
     </div>
   </div>
@@ -162,8 +162,8 @@ const faqs = [
               <MapPin size={20} />
             </div>
             <p class="text-xs uppercase font-bold text-brand-gold tracking-wider mb-1">Office Zone</p>
-            <h3 class="text-lg font-bold text-ink mb-2">Delhi NCR Hub</h3>
-            <p class="text-muted text-xs font-light mb-4">Commercial Hub, Sector 62, Noida, Delhi NCR.</p>
+            <h3 class="text-lg font-bold text-ink mb-2">Central Studio</h3>
+            <p class="text-muted text-xs font-light mb-4">{config.address}</p>
           </div>
           <a href="#office-map" class="btn btn-stone-outline w-full py-2.5 text-xs rounded-xl font-semibold text-ink hover:bg-stone-100">
             <MapPin size={14} />
@@ -280,7 +280,7 @@ const faqs = [
             <div id="form-success-banner" class="hidden p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-medium">
               <div class="flex items-center gap-2">
                 <CheckCircle2 size={18} class="text-emerald-600 shrink-0" />
-                <span>Thank you! Your inquiry has been logged. Our advisory team will respond shortly.</span>
+                <span>Demo Mode: Your inquiry was captured locally for presentation purposes. In production, this dispatches to your designated CRM.</span>
               </div>
             </div>
           </form>
@@ -295,7 +295,7 @@ const faqs = [
               </div>
               <div>
                 <h3 class="text-lg font-bold text-ink">Advisory Working Hours</h3>
-                <p class="text-xs text-muted font-light">Delhi NCR Operations Desk</p>
+                <p class="text-xs text-muted font-light">Client Advisory Desk</p>
               </div>
             </div>
 
@@ -351,7 +351,7 @@ const faqs = [
           </h2>
         </div>
         <p class="text-muted text-sm font-light max-w-sm">
-          Visit our central office hub in Delhi NCR for in-person project briefings and title review sessions.
+          Visit our central advisory location for in-person project briefings and portfolio review sessions.
         </p>
       </div>
 
@@ -460,8 +460,8 @@ const faqs = [
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(map);
 
-    const title = container.dataset.title || 'Maa Laxmi Property';
-    const address = container.dataset.address || 'Delhi NCR';
+    const title = container.dataset.title || 'Estate Atelier';
+    const address = container.dataset.address || 'Central Design District';
 
     L.marker([lat, lng]).addTo(map).bindPopup(`<strong>${title}</strong><br>${address}`).openPopup();
 

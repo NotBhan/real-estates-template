@@ -1,0 +1,565 @@
+---
+/**
+ * PropertyAssistant — Interactive Mock AI Property Assistant
+ *
+ * Client demonstration conversational assistant for property discovery.
+ * Pure deterministic client-side responses using the demo property dataset.
+ *
+ * Available on all public website routes.
+ */
+import { MessageCircle, X, Send, RotateCcw, Sparkles } from '@lucide/astro';
+import { getAllProperties } from '@/data/demo-properties';
+
+const allProperties = getAllProperties();
+---
+
+{/* Embedded server-side property dataset for zero-network local assistant responses */}
+<script id="property-assistant-dataset" type="application/json" is:inline set:html={JSON.stringify(allProperties)} />
+
+<div id="property-assistant-root" class="relative z-50">
+  {/* Mobile Backdrop */}
+  <div
+    id="assistant-backdrop"
+    class="fixed inset-0 bg-black/40 backdrop-blur-xs z-40 sm:hidden hidden opacity-0 transition-opacity duration-300 pointer-events-none"
+    aria-hidden="true"
+  ></div>
+
+  {/* Floating Chat Launcher Button (Closed State) */}
+  <div class="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-50 flex items-center">
+    <!-- Desktop Tooltip -->
+    <div
+      id="assistant-tooltip"
+      class="hidden md:flex items-center mr-3 px-3.5 py-1.5 rounded-full bg-surface-dark text-white text-xs font-medium tracking-wide shadow-lg opacity-0 translate-x-2 pointer-events-none transition-all duration-300"
+      aria-hidden="true"
+    >
+      <span class="w-1.5 h-1.5 rounded-full bg-brand-gold mr-2 animate-pulse"></span>
+      Find a property · Assistant
+    </div>
+
+    <!-- Launcher Button -->
+    <button
+      id="assistant-launcher"
+      type="button"
+      class="relative w-14 h-14 rounded-full bg-action-blue hover:bg-action-blue-hover text-white shadow-xl shadow-action-blue/30 hover:shadow-2xl hover:shadow-action-blue/40 transition-all duration-300 flex items-center justify-center focus:outline-none focus:ring-4 focus:ring-action-blue/30 active:scale-95 group cursor-pointer"
+      aria-label="Open property assistant"
+      aria-expanded="false"
+      aria-controls="assistant-panel"
+      aria-haspopup="dialog"
+    >
+      <MessageCircle class="w-6 h-6 transition-transform duration-300 group-hover:scale-110" />
+      <span class="sr-only">Open property assistant</span>
+
+      <!-- Subtle online status pip -->
+      <span
+        class="absolute top-1 right-1 w-3 h-3 rounded-full bg-brand-gold border-2 border-white shadow-xs"
+        aria-hidden="true"
+      ></span>
+    </button>
+  </div>
+
+  {/* Floating Chat Panel (Open State) */}
+  <section
+    id="assistant-panel"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="assistant-title"
+    class="fixed inset-x-0 bottom-0 sm:inset-x-auto sm:bottom-24 sm:right-6 w-full sm:w-[400px] h-[88vh] sm:h-[550px] max-h-[640px] bg-white rounded-t-2xl sm:rounded-2xl border border-stone-200/90 shadow-2xl z-50 flex flex-col overflow-hidden hidden opacity-0 translate-y-4 transition-all duration-300 ease-out"
+  >
+    {/* Panel Header */}
+    <header class="px-4 py-3 bg-canvas border-b border-stone-200/80 flex items-center justify-between gap-3 shrink-0">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div class="w-8 h-8 rounded-lg bg-action-blue/10 border border-action-blue/20 flex items-center justify-center text-action-blue shrink-0">
+          <Sparkles class="w-4 h-4 text-action-blue" />
+        </div>
+        <div class="min-w-0">
+          <h2 id="assistant-title" class="text-sm font-bold text-ink truncate leading-tight">
+            Estate Atelier Property Assistant
+          </h2>
+          <div class="flex items-center gap-1.5 text-[11px] text-muted font-medium">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0"></span>
+            <span class="truncate">Interactive demo · Sample property data</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-1 shrink-0">
+        <!-- Start Over / Reset Button -->
+        <button
+          id="assistant-reset"
+          type="button"
+          class="p-2 rounded-lg text-muted hover:text-ink hover:bg-stone-200/70 transition-colors focus:outline-none focus:ring-2 focus:ring-action-blue cursor-pointer"
+          aria-label="Start over"
+          title="Reset conversation"
+        >
+          <RotateCcw class="w-4 h-4" />
+        </button>
+
+        <!-- Close Button -->
+        <button
+          id="assistant-close"
+          type="button"
+          class="p-2 rounded-lg text-muted hover:text-ink hover:bg-stone-200/70 transition-colors focus:outline-none focus:ring-2 focus:ring-action-blue cursor-pointer"
+          aria-label="Close property assistant"
+        >
+          <X class="w-5 h-5" />
+        </button>
+      </div>
+    </header>
+
+    {/* Demo Disclosure Banner */}
+    <aside
+      class="px-3.5 py-1.5 bg-stone-100/90 border-b border-stone-200/60 text-[11px] text-stone-600 flex items-center justify-between shrink-0"
+      aria-label="Demo notice"
+    >
+      <span class="truncate">Simulated responses · Offline demo mode</span>
+      <span class="text-brand-gold font-semibold uppercase tracking-wider text-[10px] shrink-0 ml-2">Demo</span>
+    </aside>
+
+    {/* Message Stream */}
+    <div
+      id="assistant-messages"
+      role="log"
+      aria-live="polite"
+      aria-atomic="false"
+      class="flex-1 overflow-y-auto p-4 space-y-4 overscroll-contain bg-gradient-to-b from-stone-50/50 to-white"
+    >
+      {/* Welcome Message (Assistant) */}
+      <div class="assistant-msg-group flex flex-col items-start space-y-2">
+        <div class="max-w-[90%] sm:max-w-[85%] rounded-2xl rounded-tl-xs px-4 py-3 bg-stone-100 border border-stone-200/80 text-ink text-sm shadow-xs">
+          <p class="leading-relaxed">
+            Hello! Looking for a property? Tell me what you have in mind, and I'll help you explore our sample listings.
+          </p>
+          <p class="text-xs text-muted mt-1.5 font-light">
+            I'm a demo assistant using sample property data.
+          </p>
+        </div>
+
+        {/* Initial Quick Replies */}
+        <div class="w-full pt-1">
+          <p class="text-[11px] uppercase tracking-wider text-muted font-semibold mb-2">Quick discovery:</p>
+          <div class="flex flex-wrap gap-1.5" id="initial-quick-replies">
+            <button type="button" class="assistant-quick-reply px-3 py-1.5 rounded-full bg-white hover:bg-action-blue hover:text-white border border-stone-200 text-xs font-medium text-ink transition-all shadow-xs cursor-pointer active:scale-95">
+              Find a villa
+            </button>
+            <button type="button" class="assistant-quick-reply px-3 py-1.5 rounded-full bg-white hover:bg-action-blue hover:text-white border border-stone-200 text-xs font-medium text-ink transition-all shadow-xs cursor-pointer active:scale-95">
+              Properties for rent
+            </button>
+            <button type="button" class="assistant-quick-reply px-3 py-1.5 rounded-full bg-white hover:bg-action-blue hover:text-white border border-stone-200 text-xs font-medium text-ink transition-all shadow-xs cursor-pointer active:scale-95">
+              Residential properties
+            </button>
+            <button type="button" class="assistant-quick-reply px-3 py-1.5 rounded-full bg-white hover:bg-action-blue hover:text-white border border-stone-200 text-xs font-medium text-ink transition-all shadow-xs cursor-pointer active:scale-95">
+              Explore land and plots
+            </button>
+            <button type="button" class="assistant-quick-reply px-3 py-1.5 rounded-full bg-white hover:bg-action-blue hover:text-white border border-stone-200 text-xs font-medium text-ink transition-all shadow-xs cursor-pointer active:scale-95">
+              Help me choose
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {/* Message Input & Submit Form */}
+    <footer class="p-3 bg-stone-50/90 border-t border-stone-200 shrink-0">
+      <form id="assistant-form" class="flex items-center gap-2" autocomplete="off">
+        <label for="assistant-input" class="sr-only">Type a message to the property assistant</label>
+        <input
+          id="assistant-input"
+          type="text"
+          placeholder="e.g. Villas, rent a flat, under 70 lakh..."
+          class="flex-1 bg-white border border-stone-300 rounded-xl px-3.5 py-2 text-sm text-ink placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-action-blue focus:border-action-blue shadow-xs"
+          autocomplete="off"
+        />
+        <button
+          id="assistant-send"
+          type="submit"
+          class="w-10 h-10 rounded-xl bg-action-blue hover:bg-action-blue-hover disabled:opacity-40 disabled:hover:bg-action-blue text-white flex items-center justify-center transition-colors shadow-xs shrink-0 cursor-pointer disabled:cursor-not-allowed"
+          aria-label="Send message"
+        >
+          <Send class="w-4 h-4" />
+        </button>
+      </form>
+    </footer>
+  </section>
+</div>
+
+<script>
+  import { generateAssistantResponse, INITIAL_QUICK_REPLIES } from '@/lib/mock-property-assistant';
+  import type { Property } from '@/types/property';
+  import type { AssistantResponse } from '@/lib/mock-property-assistant';
+
+  function initPropertyAssistant() {
+    const launcher = document.getElementById('assistant-launcher');
+    const panel = document.getElementById('assistant-panel');
+    const closeBtn = document.getElementById('assistant-close');
+    const resetBtn = document.getElementById('assistant-reset');
+    const backdrop = document.getElementById('assistant-backdrop');
+    const tooltip = document.getElementById('assistant-tooltip');
+    const form = document.getElementById('assistant-form') as HTMLFormElement | null;
+    const input = document.getElementById('assistant-input') as HTMLInputElement | null;
+    const sendBtn = document.getElementById('assistant-send') as HTMLButtonElement | null;
+    const messagesContainer = document.getElementById('assistant-messages');
+    const dataScript = document.getElementById('property-assistant-dataset');
+
+    if (!launcher || !panel || !closeBtn || !form || !input || !messagesContainer) {
+      return;
+    }
+
+    const panelEl = panel;
+    const launcherEl = launcher;
+    const formEl = form;
+    const inputEl = input;
+    const messagesEl = messagesContainer;
+    const sendBtnEl = sendBtn;
+    const backdropEl = backdrop;
+    const tooltipEl = tooltip;
+
+    // Load serialized demo properties
+    let properties: Property[] = [];
+    try {
+      if (dataScript && dataScript.textContent) {
+        properties = JSON.parse(dataScript.textContent);
+      }
+    } catch (e) {
+      console.warn('Could not parse property dataset for assistant:', e);
+    }
+
+    let isOpen = false;
+    let isGenerating = false;
+    let previouslyFocusedElement: HTMLElement | null = null;
+
+    // Open Panel
+    function openPanel() {
+      if (isOpen) return;
+      isOpen = true;
+      previouslyFocusedElement = document.activeElement as HTMLElement | null;
+
+      panelEl.classList.remove('hidden');
+      // Trigger smooth transition
+      requestAnimationFrame(() => {
+        panelEl.classList.remove('opacity-0', 'translate-y-4');
+        panelEl.classList.add('opacity-100', 'translate-y-0');
+        if (backdropEl) {
+          backdropEl.classList.remove('hidden', 'pointer-events-none');
+          backdropEl.classList.remove('opacity-0');
+          backdropEl.classList.add('opacity-100');
+        }
+      });
+
+      launcherEl.setAttribute('aria-expanded', 'true');
+      launcherEl.classList.add('scale-0', 'opacity-0');
+      if (tooltipEl) tooltipEl.classList.add('hidden');
+
+      // Prevent background scrolling on small viewports
+      if (window.innerWidth < 640) {
+        document.body.style.overflow = 'hidden';
+      }
+
+      // Focus input
+      setTimeout(() => {
+        inputEl.focus();
+        scrollToBottom();
+      }, 150);
+    }
+
+    // Close Panel
+    function closePanel() {
+      if (!isOpen) return;
+      isOpen = false;
+
+      panelEl.classList.remove('opacity-100', 'translate-y-0');
+      panelEl.classList.add('opacity-0', 'translate-y-4');
+
+      if (backdropEl) {
+        backdropEl.classList.remove('opacity-100');
+        backdropEl.classList.add('opacity-0', 'pointer-events-none');
+      }
+
+      setTimeout(() => {
+        panelEl.classList.add('hidden');
+        if (backdropEl) backdropEl.classList.add('hidden');
+      }, 250);
+
+      launcherEl.setAttribute('aria-expanded', 'false');
+      launcherEl.classList.remove('scale-0', 'opacity-0');
+      if (tooltipEl) tooltipEl.classList.remove('hidden');
+
+      document.body.style.overflow = '';
+
+      // Restore focus
+      if (previouslyFocusedElement) {
+        previouslyFocusedElement.focus();
+      } else {
+        launcherEl.focus();
+      }
+    }
+
+    // Toggle
+    launcherEl.addEventListener('click', openPanel);
+    closeBtn.addEventListener('click', closePanel);
+    if (backdropEl) {
+      backdropEl.addEventListener('click', closePanel);
+    }
+
+    // Desktop launcher tooltip hover
+    launcherEl.addEventListener('mouseenter', () => {
+      if (!isOpen && tooltipEl) {
+        tooltipEl.classList.remove('opacity-0', 'translate-x-2');
+        tooltipEl.classList.add('opacity-100', 'translate-x-0');
+      }
+    });
+    launcherEl.addEventListener('mouseleave', () => {
+      if (tooltipEl) {
+        tooltipEl.classList.remove('opacity-100', 'translate-x-0');
+        tooltipEl.classList.add('opacity-0', 'translate-x-2');
+      }
+    });
+
+    // Escape key closes panel
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        closePanel();
+      }
+    });
+
+    // Auto-scroll
+    function scrollToBottom() {
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    // Add User Message bubble
+    function addUserMessage(text: string) {
+      const wrap = document.createElement('div');
+      wrap.className = 'flex justify-end';
+
+      const bubble = document.createElement('div');
+      bubble.className =
+        'max-w-[85%] rounded-2xl rounded-tr-xs px-3.5 py-2.5 bg-action-blue text-white text-sm shadow-xs leading-relaxed';
+      bubble.textContent = text;
+
+      wrap.appendChild(bubble);
+      messagesEl.appendChild(wrap);
+      scrollToBottom();
+    }
+
+    // Typing indicator
+    function showTypingIndicator(): HTMLElement {
+      const wrap = document.createElement('div');
+      wrap.className = 'assistant-typing flex items-start gap-2';
+      wrap.innerHTML = `
+        <div class="rounded-2xl rounded-tl-xs px-4 py-3 bg-stone-100 border border-stone-200/80 text-stone-500 text-xs shadow-xs flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-action-blue/70 animate-bounce"></span>
+          <span class="w-2 h-2 rounded-full bg-action-blue/70 animate-bounce [animation-delay:150ms]"></span>
+          <span class="w-2 h-2 rounded-full bg-action-blue/70 animate-bounce [animation-delay:300ms]"></span>
+          <span class="ml-1 text-[11px] text-muted font-medium">Finding listings...</span>
+        </div>
+      `;
+      messagesEl.appendChild(wrap);
+      scrollToBottom();
+      return wrap;
+    }
+
+    // Add Assistant Response
+    function addAssistantMessage(response: AssistantResponse) {
+      const group = document.createElement('div');
+      group.className = 'assistant-msg-group flex flex-col items-start space-y-2';
+
+      // Text Bubble
+      const textBubble = document.createElement('div');
+      textBubble.className =
+        'max-w-[90%] sm:max-w-[85%] rounded-2xl rounded-tl-xs px-4 py-3 bg-stone-100 border border-stone-200/80 text-ink text-sm shadow-xs leading-relaxed';
+      textBubble.textContent = response.text;
+      group.appendChild(textBubble);
+
+      // Properties Carousel / Cards (Max 3)
+      if (response.properties && response.properties.length > 0) {
+        const cardsContainer = document.createElement('div');
+        cardsContainer.className = 'w-full space-y-2 pt-1';
+
+        response.properties.forEach((p) => {
+          const card = document.createElement('article');
+          card.className =
+            'bg-white rounded-xl border border-stone-200 overflow-hidden shadow-xs hover:border-action-blue/50 transition-colors';
+
+          const imageHtml = p.imageUrl
+            ? `<img src="${p.imageUrl}" alt="${p.imageAlt || p.title}" class="w-20 h-20 rounded-lg object-cover shrink-0 bg-stone-100" loading="lazy" />`
+            : `<div class="w-20 h-20 rounded-lg bg-stone-100 flex items-center justify-center text-[10px] text-muted shrink-0">No image</div>`;
+
+          card.innerHTML = `
+            <div class="flex gap-3 p-2.5">
+              ${imageHtml}
+              <div class="flex-1 min-w-0 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center gap-1.5 mb-1">
+                    <span class="text-[10px] font-bold text-action-blue bg-action-blue/10 px-1.5 py-0.5 rounded leading-none">${p.propertyType}</span>
+                    <span class="text-[10px] font-medium text-stone-500">${p.listingType === 'Rent' ? 'For Rent' : 'For Sale'}</span>
+                  </div>
+                  <h4 class="text-xs font-bold text-ink truncate" title="${p.title}">${p.title}</h4>
+                  <div class="text-xs font-extrabold text-ink mt-0.5">${p.priceFormatted}</div>
+                </div>
+                <div class="text-[11px] text-muted truncate mt-1">
+                  <span>${p.location}</span>
+                </div>
+              </div>
+            </div>
+            <div class="px-2.5 py-1.5 bg-stone-50 border-t border-stone-100 flex items-center justify-between text-[11px]">
+              <span class="text-stone-600 truncate pr-2">${p.specs.join(' · ')}</span>
+              <a href="/properties/${p.slug}" class="font-bold text-action-blue hover:text-action-blue-hover underline decoration-action-blue/30 underline-offset-2 ml-auto shrink-0 flex items-center gap-0.5">
+                View Property →
+              </a>
+            </div>
+          `;
+          cardsContainer.appendChild(card);
+        });
+
+        group.appendChild(cardsContainer);
+      }
+
+      // Actions Buttons
+      if (response.actions && response.actions.length > 0) {
+        const actionsWrap = document.createElement('div');
+        actionsWrap.className = 'flex flex-wrap gap-1.5 pt-1';
+
+        response.actions.forEach((act) => {
+          const btn = document.createElement('a');
+          btn.href = act.href;
+          if (act.primary) {
+            btn.className =
+              'inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-action-blue text-white hover:bg-action-blue-hover transition-colors shadow-xs';
+          } else {
+            btn.className =
+              'inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium bg-white text-ink border border-stone-300 hover:border-action-blue hover:text-action-blue transition-colors shadow-xs';
+          }
+          btn.textContent = act.label;
+          actionsWrap.appendChild(btn);
+        });
+
+        group.appendChild(actionsWrap);
+      }
+
+      // Follow-up Quick Replies
+      if (response.quickReplies && response.quickReplies.length > 0) {
+        const qrWrap = document.createElement('div');
+        qrWrap.className = 'w-full pt-1.5';
+
+        const title = document.createElement('p');
+        title.className = 'text-[11px] uppercase tracking-wider text-muted font-semibold mb-1.5';
+        title.textContent = 'Suggestions:';
+        qrWrap.appendChild(title);
+
+        const pills = document.createElement('div');
+        pills.className = 'flex flex-wrap gap-1.5';
+
+        response.quickReplies.forEach((text) => {
+          const pill = document.createElement('button');
+          pill.type = 'button';
+          pill.className =
+            'assistant-quick-reply px-3 py-1 rounded-full bg-white hover:bg-action-blue hover:text-white border border-stone-200 text-xs font-medium text-ink transition-all shadow-xs cursor-pointer active:scale-95';
+          pill.textContent = text;
+          pill.addEventListener('click', () => {
+            handleUserQuery(text);
+          });
+          pills.appendChild(pill);
+        });
+
+        qrWrap.appendChild(pills);
+        group.appendChild(qrWrap);
+      }
+
+      messagesEl.appendChild(group);
+      scrollToBottom();
+    }
+
+    // Handle user query submission
+    function handleUserQuery(query: string) {
+      const clean = query.trim();
+      if (!clean || isGenerating) return;
+
+      isGenerating = true;
+      inputEl.value = '';
+      if (sendBtnEl) sendBtnEl.disabled = true;
+
+      addUserMessage(clean);
+      const typingEl = showTypingIndicator();
+
+      // Brief conversational delay (400-600ms)
+      const delay = Math.floor(Math.random() * 200) + 400;
+
+      setTimeout(() => {
+        typingEl.remove();
+        const response = generateAssistantResponse(clean, properties);
+        addAssistantMessage(response);
+
+        isGenerating = false;
+        if (sendBtnEl) sendBtnEl.disabled = false;
+        inputEl.focus();
+      }, delay);
+    }
+
+    // Form submit
+    formEl.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (inputEl.value) {
+        handleUserQuery(inputEl.value);
+      }
+    });
+
+    // Attach click handler to initial quick replies
+    const initialButtons = document.querySelectorAll('.assistant-quick-reply');
+    initialButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const text = btn.textContent?.trim();
+        if (text) {
+          handleUserQuery(text);
+        }
+      });
+    });
+
+    // Reset Conversation to Welcome State
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        messagesEl.innerHTML = `
+          <div class="assistant-msg-group flex flex-col items-start space-y-2">
+            <div class="max-w-[90%] sm:max-w-[85%] rounded-2xl rounded-tl-xs px-4 py-3 bg-stone-100 border border-stone-200/80 text-ink text-sm shadow-xs">
+              <p class="leading-relaxed">
+                Hello! Looking for a property? Tell me what you have in mind, and I'll help you explore our sample listings.
+              </p>
+              <p class="text-xs text-muted mt-1.5 font-light">
+                I'm a demo assistant using sample property data.
+              </p>
+            </div>
+
+            <div class="w-full pt-1">
+              <p class="text-[11px] uppercase tracking-wider text-muted font-semibold mb-2">Quick discovery:</p>
+              <div class="flex flex-wrap gap-1.5" id="initial-quick-replies">
+                ${INITIAL_QUICK_REPLIES.map(
+                  (reply) =>
+                    `<button type="button" class="assistant-quick-reply px-3 py-1.5 rounded-full bg-white hover:bg-action-blue hover:text-white border border-stone-200 text-xs font-medium text-ink transition-all shadow-xs cursor-pointer active:scale-95">${reply}</button>`,
+                ).join('')}
+              </div>
+            </div>
+          </div>
+        `;
+
+        // Re-attach listeners to reset buttons
+        const newButtons = messagesEl.querySelectorAll('.assistant-quick-reply');
+        newButtons.forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const text = btn.textContent?.trim();
+            if (text) handleUserQuery(text);
+          });
+        });
+
+        inputEl.value = '';
+        inputEl.focus();
+        scrollToBottom();
+      });
+    }
+  }
+
+  // Initialize on page load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPropertyAssistant);
+  } else {
+    initPropertyAssistant();
+  }
+</script>

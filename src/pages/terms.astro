@@ -1,0 +1,71 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { config } from '@/lib/config';
+import { ShieldCheck, ArrowLeft } from '@lucide/astro';
+---
+
+<BaseLayout
+  title="Terms of Service"
+  description={`Terms of service and property catalogue usage guidelines for ${config.siteName}.`}
+>
+  <div class="pt-28 sm:pt-32 pb-16 bg-canvas border-b border-stone-200/80">
+    <div class="container-site max-w-4xl">
+      <a href="/" class="inline-flex items-center gap-2 text-muted hover:text-action-blue text-xs font-semibold uppercase tracking-wider mb-6 transition-colors">
+        <ArrowLeft size={14} />
+        <span>Return to Home</span>
+      </a>
+
+      <div class="eyebrow-label mb-3">
+        <ShieldCheck size={14} class="text-brand-gold" />
+        <span>Legal Documentation</span>
+      </div>
+      <h1 class="heading-editorial text-4xl sm:text-5xl font-bold tracking-tight text-ink mb-4">
+        Terms <span class="font-normal italic text-stone-500">of Service</span>
+      </h1>
+      <p class="text-muted text-base font-light">
+        Demonstration terms, property catalogue disclaimers, and advisory scope for {config.siteName}.
+      </p>
+    </div>
+  </div>
+
+  <div class="section-padding bg-white">
+    <div class="container-site max-w-4xl prose prose-stone">
+      <div class="bg-amber-50/70 border border-amber-200/80 rounded-2xl p-6 mb-10 text-sm text-stone-800 not-prose">
+        <p class="font-bold text-amber-900 mb-1">Demonstration Scope</p>
+        <p class="font-light leading-relaxed">
+          {config.demoDisclosure} Property listings, prices, dimensions, and specifications presented herein serve as illustrative demonstration items for prospective agency clients.
+        </p>
+      </div>
+
+      <div class="space-y-8 text-stone-700 text-sm sm:text-base font-light leading-relaxed">
+        <section>
+          <h2 class="text-xl font-bold text-ink mb-3 font-sans">1. Property Listings & Verification</h2>
+          <p>
+            In live production instances, property descriptions, architectural floorplans, pricing, and availability are subject to contract verification and owner confirmation. While every listing is checked for baseline accuracy, prospective buyers are encouraged to conduct independent title and physical inspections before signing legal agreements.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-bold text-ink mb-3 font-sans">2. Advisory Consultation</h2>
+          <p>
+            Real estate consultations, initial briefings, and property shortlists provided by our team are intended for strategic discovery guidance. Final transactions require formal conveyance documentation in accordance with local property registration regulations.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-bold text-ink mb-3 font-sans">3. Intellectual Property & Brand Assets</h2>
+          <p>
+            Website architecture, design system tokens, typography, visual layouts, and content management components are proprietary property of the development agency and its licensing partners.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-bold text-ink mb-3 font-sans">4. Questions & Inquiries</h2>
+          <p>
+            For inquiries regarding terms, licensing, or customized real estate platform development, please contact our team via the <a href="/contact" class="text-action-blue font-semibold hover:underline">Contact Advisory page</a>.
+          </p>
+        </section>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

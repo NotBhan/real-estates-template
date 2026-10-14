@@ -61,13 +61,12 @@ const companyLinks = [
       <div class="lg:col-span-1">
         <a href="/" class="inline-flex items-center gap-3 no-underline mb-4 group">
           <span class="w-9 h-9 rounded-full bg-white text-ink font-black text-xs tracking-widest flex items-center justify-center shadow-xs">
-            ML
+            {config.brandInitials}
           </span>
-          <span class="font-bold text-xl text-white tracking-tight">{config.brand.name}</span>
+          <span class="font-bold text-xl text-white tracking-tight">{config.siteName}</span>
         </a>
         <p class="text-stone-400 text-sm mt-2 max-w-xs font-light leading-relaxed">
-          Your trusted property consultant for residential, commercial,
-          and land properties in Delhi NCR. Redefining architectural discovery with integrity.
+          A premium real-estate website template crafted for residential, commercial, and land portfolios. Demonstrating refined property discovery with architectural elegance.
         </p>
       </div>
 
@@ -118,8 +117,8 @@ const companyLinks = [
         <ul class="space-y-3" role="list">
           <li class="flex items-start gap-3 text-sm text-stone-400">
             <MapPin size={16} class="text-brand-gold mt-0.5 shrink-0" />
-            <span>
-              <span class="text-stone-500 italic">Address pending from client</span>
+            <span class="text-stone-300">
+              {config.address}
             </span>
           </li>
           <li class="flex items-center gap-3 text-sm text-stone-400">
@@ -129,7 +128,9 @@ const companyLinks = [
                 {config.contactPhone}
               </a>
             ) : (
-              <span class="text-stone-500 italic">Phone pending</span>
+              <a href="/contact" class="hover:text-white transition-colors no-underline text-stone-300">
+                Advisory Consultation Line
+              </a>
             )}
           </li>
           <li class="flex items-center gap-3 text-sm text-stone-400">
@@ -139,7 +140,9 @@ const companyLinks = [
                 {config.contactEmail}
               </a>
             ) : (
-              <span class="text-stone-500 italic">Email pending</span>
+              <a href="/contact" class="hover:text-white transition-colors no-underline text-stone-300">
+                Client Advisory Desk
+              </a>
             )}
           </li>
         </ul>
@@ -149,15 +152,20 @@ const companyLinks = [
 
   <!-- Bottom Bar -->
   <div class="border-t border-stone-800/80 relative z-10">
-    <div class="container-site py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <p class="text-stone-500 text-xs">
-        &copy; {currentYear} {config.brand.name}. All rights reserved. Pre-contract demonstration.
-      </p>
+    <div class="container-site py-6 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
+      <div class="space-y-1">
+        <p class="text-stone-500 text-xs">
+          &copy; {currentYear} {config.siteName}. All rights reserved.
+        </p>
+        <p class="text-stone-500/80 text-[11px] font-light">
+          {config.demoDisclosure}
+        </p>
+      </div>
       <div class="flex items-center gap-6">
-        <a href="#" class="text-stone-500 text-xs hover:text-stone-300 transition-colors no-underline">
+        <a href="/privacy" class="text-stone-400 text-xs hover:text-white transition-colors no-underline">
           Privacy Policy
         </a>
-        <a href="#" class="text-stone-500 text-xs hover:text-stone-300 transition-colors no-underline">
+        <a href="/terms" class="text-stone-400 text-xs hover:text-white transition-colors no-underline">
           Terms of Service
         </a>
       </div>

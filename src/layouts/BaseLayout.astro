@@ -2,6 +2,7 @@
 import '@/styles/global.css';
 import Navbar from '@components/layout/Navbar.astro';
 import Footer from '@components/layout/Footer.astro';
+import PropertyAssistant from '@components/assistant/PropertyAssistant.astro';
 import { config } from '@/lib/config';
 
 interface Props {
@@ -13,14 +14,18 @@ interface Props {
 
 const {
   title,
-  description = `${config.brand.name} — Your trusted property consultant for residential, commercial, land, and rental properties.`,
+  description = `${config.siteName} — ${config.tagline} ${config.siteDescription}`,
   ogImage,
 } = Astro.props;
 
 const canonicalUrl = new URL(Astro.url.pathname, config.siteUrl).href;
 const fullTitle = title === 'Home'
-  ? `${config.brand.name} — ${config.brand.tagline}`
-  : `${title} | ${config.brand.name}`;
+  ? `${config.siteName} — ${config.tagline}`
+  : title.includes(config.siteName)
+    ? title
+    : `${title} | ${config.siteName}`;
+
+const isPublicPage = !Astro.url.pathname.startsWith('/admin');
 ---
 
 <!DOCTYPE html>
@@ -64,5 +69,7 @@ const fullTitle = title === 'Home'
     </main>
 
     <Footer />
+
+    {isPublicPage && <PropertyAssistant />}
   </body>
 </html>

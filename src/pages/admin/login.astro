@@ -35,14 +35,14 @@ if (Astro.request.method === 'POST') {
 }
 ---
 
-<BaseLayout title="Admin Login" description="Secure Admin CMS Login for Maa Laxmi Property Consultant.">
+<BaseLayout title="Admin Login" description={`Secure Admin CMS Login for ${config.siteName}.`}>
   <div class="min-h-[80vh] flex items-center justify-center pt-28 pb-16 px-4 bg-canvas">
     <div class="w-full max-w-md bg-white border border-stone-200/80 rounded-3xl p-8 shadow-editorial relative">
       
       <!-- Brand Header -->
       <div class="text-center mb-8">
         <div class="w-12 h-12 rounded-2xl bg-surface-dark text-brand-gold flex items-center justify-center font-extrabold text-lg mx-auto mb-4 shadow-sm">
-          ML
+          {config.brandInitials}
         </div>
         <div class="eyebrow-label mb-2 justify-center">
           <ShieldCheck size={13} class="text-brand-gold" />
@@ -52,7 +52,7 @@ if (Astro.request.method === 'POST') {
           Admin CMS Login
         </h1>
         <p class="text-muted text-xs font-light mt-1">
-          {config.brand.name} Content Management System
+          {config.siteName} Content Management System
         </p>
       </div>
 

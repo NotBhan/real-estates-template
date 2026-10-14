@@ -8,6 +8,16 @@ interface Props {
 
 const { property } = Astro.props;
 const hasAmenities = 'amenities' in property && Array.isArray(property.amenities) && property.amenities.length > 0;
+let sectionHeading = 'About This Residence';
+if (property.propertyType === 'Commercial') {
+  sectionHeading = 'About This Commercial Space';
+} else if (property.propertyType === 'Land' || property.propertyType === 'Plot') {
+  sectionHeading = 'About This Land Parcel';
+} else if (property.propertyType === 'Flat') {
+  sectionHeading = 'About This Apartment';
+} else if (property.propertyType === 'Villa') {
+  sectionHeading = 'About This Villa';
+}
 ---
 
 <section class="section-padding border-t border-stone-200/80 bg-canvas relative overflow-hidden" aria-labelledby="overview-heading" id="property-overview">
@@ -17,7 +27,7 @@ const hasAmenities = 'amenities' in property && Array.isArray(property.amenities
         <span class="w-1.5 h-1.5 rounded-full bg-brand-gold"></span>
         <span>Property Overview</span>
       </div>
-      <h2 class="heading-section text-3xl font-bold tracking-tight mb-6 text-ink" id="overview-heading">About This Residence</h2>
+      <h2 class="heading-section text-3xl font-bold tracking-tight mb-6 text-ink" id="overview-heading">{sectionHeading}</h2>
       
       <div class="max-w-none">
         <p class="text-muted text-lg leading-relaxed font-light whitespace-pre-line">

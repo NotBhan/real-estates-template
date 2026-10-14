@@ -58,7 +58,7 @@ function getRemoveFilterUrl(keyToRemove: string) {
         Explore <span class="font-normal italic text-stone-500">Properties</span>
       </h1>
       <p class="text-muted text-base md:text-lg max-w-2xl font-light">
-        Discover handpicked residential homes, commercial complexes, and investment land holdings across Delhi NCR.
+        Discover handpicked residential homes, commercial complexes, and strategic land opportunities.
       </p>
     </div>
   </div>
@@ -141,14 +141,22 @@ function getRemoveFilterUrl(keyToRemove: string) {
           />
         </>
       ) : (
-        <div class="text-center py-24 border border-stone-300 border-dashed rounded-3xl bg-white p-8">
-          <p class="text-ink text-xl font-bold mb-2">No matching properties found</p>
-          <p class="text-muted mb-8 max-w-md mx-auto font-light">
-            We couldn't find any properties matching your current search criteria. Try adjusting your filters.
+        <div class="text-center py-20 sm:py-24 border border-stone-200 rounded-3xl bg-white p-8 max-w-2xl mx-auto shadow-sm">
+          <div class="w-14 h-14 rounded-2xl bg-stone-100 border border-stone-200 flex items-center justify-center text-action-blue mx-auto mb-5">
+            <SlidersHorizontal size={24} />
+          </div>
+          <h2 class="text-ink text-2xl font-bold mb-3 tracking-tight">No Matching Properties Found</h2>
+          <p class="text-muted text-base mb-8 max-w-md mx-auto font-light leading-relaxed">
+            No properties match your current filters. Try adjusting your search criteria, clearing selected categories, or broadening your budget.
           </p>
-          <a href="/properties" class="btn btn-action-blue px-7 py-3 text-sm rounded-xl">
-            Clear all filters
-          </a>
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <a href="/properties" class="btn btn-action-blue px-7 py-3 text-sm rounded-full w-full sm:w-auto font-semibold">
+              Clear All Filters
+            </a>
+            <a href="/contact" class="btn btn-stone-outline px-7 py-3 text-sm rounded-full w-full sm:w-auto font-semibold">
+              Request Specific Requirement
+            </a>
+          </div>
         </div>
       )}
     </div>

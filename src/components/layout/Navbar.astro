@@ -26,17 +26,17 @@ const currentPath = Astro.url.pathname;
     <a
       href="/"
       class="flex items-center gap-3 text-ink font-bold text-lg sm:text-xl tracking-tight no-underline group"
-      aria-label={`${config.brand.name} — Home`}
+      aria-label={`${config.siteName} — Home`}
     >
       {config.brand.logoUrl ? (
-        <img src={config.brand.logoUrl} alt={config.brand.name} class="h-9 w-auto max-w-[160px] object-contain rounded-lg" />
+        <img src={config.brand.logoUrl} alt={config.siteName} class="h-9 w-auto max-w-[160px] object-contain rounded-lg" />
       ) : (
-        <span class="w-9 h-9 rounded-full bg-ink text-canvas flex items-center justify-center font-black text-xs tracking-widest shadow-sm group-hover:bg-action-blue transition-colors duration-300">
-          ML
+        <span class="w-9 h-9 rounded-full bg-ink text-canvas flex items-center justify-center font-bold text-xs tracking-wider shadow-sm group-hover:bg-action-blue transition-colors duration-300">
+          {config.brandInitials}
         </span>
       )}
       <span class="font-sans font-semibold tracking-tight text-current group-hover:text-action-blue transition-colors duration-300">
-        {config.brand.name}
+        {config.siteName}
       </span>
     </a>
 
@@ -77,10 +77,12 @@ const currentPath = Astro.url.pathname;
           Call Now
         </a>
       ) : (
-        <span class="btn btn-action-blue hidden lg:inline-flex text-xs uppercase tracking-wider font-semibold rounded-full px-5 py-2.5 opacity-70 cursor-default" title="Phone number pending">
-          <Phone size={14} />
-          Call Now
-        </span>
+        <a
+          href="/contact"
+          class="btn btn-action-blue hidden lg:inline-flex text-xs uppercase tracking-wider font-semibold rounded-full px-5 py-2.5"
+        >
+          Book Consultation
+        </a>
       )}
 
       <!-- Mobile menu toggle -->
@@ -133,10 +135,12 @@ const currentPath = Astro.url.pathname;
             Call Now
           </a>
         ) : (
-          <span class="btn btn-action-blue w-full justify-center rounded-xl py-3 text-sm opacity-70 cursor-default" title="Phone number pending">
-            <Phone size={16} />
-            Call Now
-          </span>
+          <a
+            href="/contact"
+            class="btn btn-action-blue w-full justify-center rounded-xl py-3 text-sm"
+          >
+            Book Consultation
+          </a>
         )}
       </li>
     </ul>

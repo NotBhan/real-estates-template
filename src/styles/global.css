@@ -128,7 +128,7 @@
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--color-brand-gold);
+  color: #856427; /* Rich antique gold with 5.04:1 WCAG AA contrast against #F7F6F2 */
 }
 
 .eyebrow-label--blue {

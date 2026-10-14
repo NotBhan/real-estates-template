@@ -15,7 +15,7 @@ import {
   isCommercial,
   isLandLike,
 } from '@/types/property';
-import { formatPrice, formatArea } from '@/lib/format';
+import { formatPrice, formatArea, optimizeImageUrl, getResponsiveSrcset } from '@/lib/format';
 import { MapPin, BedDouble, Bath, Maximize, Building2, Compass, ArrowRight } from '@lucide/astro';
 
 interface Props {
@@ -27,6 +27,8 @@ const { property } = Astro.props;
 const displayPrice = formatPrice(property.price, property.priceInterval);
 const displayArea = formatArea(property.area.value, property.area.unit);
 const primaryImage = property.images[0];
+const cardImgSrc = primaryImage ? optimizeImageUrl(primaryImage.url, 800, 80) : '';
+const cardImgSrcset = primaryImage ? getResponsiveSrcset(primaryImage.url, [400, 800, 1200]) : '';
 const href = `/properties/${property.slug}`;
 
 const isSold = property.status === 'Sold' || property.status === 'Rented';
@@ -45,7 +47,9 @@ const isSold = property.status === 'Sold' || property.status === 'Rented';
   >
     {primaryImage ? (
       <img
-        src={primaryImage.url}
+        src={cardImgSrc}
+        srcset={cardImgSrcset || undefined}
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"
         alt={primaryImage.alt}
         class:list={[
           'h-full w-full object-cover transition-transform duration-700 ease-editorial group-hover:scale-105',

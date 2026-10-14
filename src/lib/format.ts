@@ -48,3 +48,32 @@ export function formatPrice(
 export function formatArea(value: number, unit: string): string {
   return `${value.toLocaleString('en-IN')} ${unit}`;
 }
+
+/**
+ * Optimize image URLs (specifically Unsplash) with width and quality parameters
+ */
+export function optimizeImageUrl(url: string, width: number, quality = 80): string {
+  if (!url) return '';
+  if (url.includes('images.unsplash.com')) {
+    try {
+      const parsed = new URL(url);
+      parsed.searchParams.set('w', String(width));
+      parsed.searchParams.set('q', String(quality));
+      parsed.searchParams.set('auto', 'format');
+      parsed.searchParams.set('fit', 'crop');
+      return parsed.toString();
+    } catch {
+      return url;
+    }
+  }
+  return url;
+}
+
+/**
+ * Generate responsive srcset for Unsplash images
+ */
+export function getResponsiveSrcset(url: string, widths = [400, 800, 1200]): string {
+  if (!url || !url.includes('images.unsplash.com')) return '';
+  return widths.map((w) => `${optimizeImageUrl(url, w)} ${w}w`).join(', ');
+}
+

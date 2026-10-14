@@ -26,12 +26,11 @@ const currentPath = Astro.url.pathname;
     <a
       href="/"
       class="flex items-center gap-3 text-ink font-bold text-lg sm:text-xl tracking-tight no-underline group"
-      aria-label={`${config.siteName} — Home`}
     >
       {config.brand.logoUrl ? (
         <img src={config.brand.logoUrl} alt={config.siteName} class="h-9 w-auto max-w-[160px] object-contain rounded-lg" />
       ) : (
-        <span class="w-9 h-9 rounded-full bg-ink text-canvas flex items-center justify-center font-bold text-xs tracking-wider shadow-sm group-hover:bg-action-blue transition-colors duration-300">
+        <span class="w-9 h-9 rounded-full bg-ink text-canvas flex items-center justify-center font-bold text-xs tracking-wider shadow-sm group-hover:bg-action-blue transition-colors duration-300" aria-hidden="true">
           {config.brandInitials}
         </span>
       )}
@@ -105,6 +104,7 @@ const currentPath = Astro.url.pathname;
     id="mobile-menu"
     class="lg:hidden fixed inset-x-4 top-20 bg-white/95 backdrop-blur-xl border border-stone-200 shadow-2xl rounded-2xl p-6 transform -translate-y-full opacity-0 pointer-events-none transition-all duration-300 ease-editorial"
     aria-hidden="true"
+    inert
     role="dialog"
     aria-label="Mobile navigation"
   >
@@ -157,16 +157,22 @@ const currentPath = Astro.url.pathname;
   if (toggle && menu && iconOpen && iconClose) {
     toggle.addEventListener('click', () => {
       const isOpen = toggle.getAttribute('aria-expanded') === 'true';
-      toggle.setAttribute('aria-expanded', String(!isOpen));
-      toggle.setAttribute('aria-label', isOpen ? 'Open menu' : 'Close menu');
-      menu.setAttribute('aria-hidden', String(isOpen));
-      menu.classList.toggle('-translate-y-full', isOpen);
-      menu.classList.toggle('translate-y-0', !isOpen);
-      menu.classList.toggle('opacity-0', isOpen);
-      menu.classList.toggle('opacity-100', !isOpen);
-      menu.classList.toggle('pointer-events-none', isOpen);
-      iconOpen.classList.toggle('hidden', !isOpen);
-      iconClose.classList.toggle('hidden', isOpen);
+      const willOpen = !isOpen;
+      toggle.setAttribute('aria-expanded', String(willOpen));
+      toggle.setAttribute('aria-label', willOpen ? 'Close menu' : 'Open menu');
+      menu.setAttribute('aria-hidden', String(!willOpen));
+      if (willOpen) {
+        menu.removeAttribute('inert');
+      } else {
+        menu.setAttribute('inert', '');
+      }
+      menu.classList.toggle('-translate-y-full', !willOpen);
+      menu.classList.toggle('translate-y-0', willOpen);
+      menu.classList.toggle('opacity-0', !willOpen);
+      menu.classList.toggle('opacity-100', willOpen);
+      menu.classList.toggle('pointer-events-none', !willOpen);
+      iconOpen.classList.toggle('hidden', willOpen);
+      iconClose.classList.toggle('hidden', !willOpen);
     });
   }
 

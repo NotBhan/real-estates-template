@@ -51,13 +51,27 @@ const isPublicPage = !Astro.url.pathname.startsWith('/admin');
     <!-- Favicon -->
     <link rel="icon" href={config.brand.faviconUrl || '/favicon.svg'} />
 
-    <!-- Fonts: Outfit & Inter from Google Fonts -->
+    <!-- Preconnect for fast asset & font resolution -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://images.unsplash.com" />
     <link
+      rel="preload"
+      as="style"
       href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
-      rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+      />
+    </noscript>
   </head>
   <body class="bg-canvas text-ink font-sans antialiased overflow-x-hidden w-full min-h-screen">
     <a href="#main-content" class="skip-link">Skip to main content</a>

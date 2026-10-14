@@ -97,6 +97,104 @@ export const config = {
     return envOptional('GOOGLE_MAPS_API_KEY');
   },
 
+  /**
+   * Indian Legal & Business Compliance Configuration
+   *
+   * Central typed configuration for regulatory disclosures, data protection,
+   * RERA agent registration, and grievance redressal under Indian law.
+   * If client legal details are missing, marked as Pending to prevent fabrication.
+   */
+  legal: {
+    /** Public trading name */
+    get publicTradingName(): string {
+      return getSiteSettings().brand.name || 'Estate Atelier';
+    },
+
+    /** Formal registered business entity name (undefined until confirmed by client) */
+    get legalBusinessName(): string | undefined {
+      return envOptional('LEGAL_BUSINESS_NAME');
+    },
+
+    /** Business entity structure */
+    get entityType(): string {
+      return (
+        envOptional('BUSINESS_ENTITY_TYPE') ||
+        'Real-Estate Demonstration Template (Legal Entity Pending Client Onboarding)'
+      );
+    },
+
+    /** Registered or principal place of business */
+    get registeredAddress(): string {
+      return (
+        envOptional('REGISTERED_ADDRESS') ||
+        'Atelier Studio Suite, Architecture Boulevard, Central Design District'
+      );
+    },
+
+    /** Operational state and jurisdiction */
+    get operatingState(): string {
+      return envOptional('OPERATING_STATE') || 'National Capital Region & Uttar Pradesh';
+    },
+
+    country: 'India' as const,
+
+    /** Privacy inquiry contact */
+    get privacyEmail(): string {
+      return envOptional('PRIVACY_EMAIL') || 'privacy@estateatelier.demo';
+    },
+
+    /** Grievance Redressal Officer under IT Rules 2021 & DPDP Act 2023 */
+    get grievance() {
+      return {
+        officerName: envOptional('GRIEVANCE_OFFICER_NAME') || 'Compliance & Grievance Desk',
+        designation: envOptional('GRIEVANCE_OFFICER_DESIGNATION') || 'Grievance Redressal Officer',
+        email: envOptional('GRIEVANCE_EMAIL') || 'grievance@estateatelier.demo',
+        phone: envOptional('GRIEVANCE_PHONE') || envOptional('CONTACT_PHONE'),
+        address:
+          envOptional('GRIEVANCE_ADDRESS') ||
+          'Atelier Studio Suite, Architecture Boulevard, Central Design District',
+        responseTimeDays: 15, // Standard statutory requirement under Indian IT Intermediary Rules
+      };
+    },
+
+    /** Real Estate (Regulation and Development) Act, 2016 (RERA) Disclosures */
+    get rera() {
+      const regNo = envOptional('RERA_AGENT_REG_NO');
+      return {
+        agentRegistrationNo: regNo,
+        stateAuthority: envOptional('RERA_STATE_AUTHORITY') || 'UP RERA / Respective State Authorities',
+        portalUrl: envOptional('RERA_PORTAL_URL') || 'https://www.up-rera.in',
+        registrationStatus: regNo
+          ? ('Registered' as const)
+          : ('Demonstration Template (RERA Agent Registration to be provided by operating agency)' as const),
+      };
+    },
+
+    /** Applicable operational role in real estate transactions */
+    get businessRole(): string {
+      return (
+        envOptional('BUSINESS_ROLE') ||
+        'Real Estate Advisory & Listing Showcase (Digital Demonstration Template)'
+      );
+    },
+
+    /** Legal Policies Effective & Revision Dates (ISO format) */
+    effectiveDates: {
+      privacyPolicy: '2026-03-01',
+      privacyPolicyLastUpdated: '2026-10-14',
+      termsAndConditions: '2026-03-01',
+      termsLastUpdated: '2026-10-14',
+      cookiePolicy: '2026-03-01',
+      cookiePolicyLastUpdated: '2026-10-14',
+      disclaimerLastUpdated: '2026-10-14',
+    },
+
+    /** Production domain */
+    get productionDomain(): string {
+      return env('PRODUCTION_DOMAIN', 'real-estates-ashen-chi.vercel.app');
+    },
+  },
+
   /** Brand object for components using config.brand */
   get brand() {
     const settings = getSiteSettings();

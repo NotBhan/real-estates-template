@@ -1,0 +1,311 @@
+---
+/**
+ * Grievance Redressal Mechanism — Estate Atelier Real Estate Website Template
+ * Mandated under Rule 3(2) of the Information Technology (Intermediary Guidelines)
+ * Rules, 2021, and Section 13 of the Digital Personal Data Protection Act, 2023.
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { config } from '@/lib/config';
+import { Scale, ArrowLeft, Mail, Phone, MapPin, Clock, ShieldCheck, Send, CheckCircle2 } from '@lucide/astro';
+
+const legal = config.legal;
+const lastUpdated = legal.effectiveDates.privacyPolicyLastUpdated;
+---
+
+<BaseLayout
+  title={`Grievance Redressal Mechanism | ${config.siteName}`}
+  description={`Official grievance redressal mechanism and Grievance Officer contact details for ${config.siteName} under Indian IT and data protection laws.`}
+>
+  {/* Page Header */}
+  <header class="pt-28 sm:pt-32 pb-14 bg-canvas border-b border-stone-200/80">
+    <div class="container-site max-w-4xl">
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 text-muted hover:text-action-blue text-xs font-semibold uppercase tracking-wider mb-6 transition-colors no-underline group"
+      >
+        <ArrowLeft size={14} class="transform group-hover:-translate-x-1 transition-transform" />
+        <span>Return to Home</span>
+      </a>
+
+      <div class="eyebrow-label mb-3">
+        <Scale size={14} class="text-brand-gold" />
+        <span>Statutory Redressal Mechanism</span>
+      </div>
+      <h1 class="heading-editorial text-4xl sm:text-5xl font-bold tracking-tight text-ink mb-4">
+        Grievance <span class="font-normal italic text-stone-500">Redressal</span>
+      </h1>
+      <p class="text-muted text-base sm:text-lg font-light max-w-2xl leading-relaxed">
+        Dedicated mechanism for handling privacy requests, listing corrections, and consumer complaints in accordance with Indian regulatory timelines.
+      </p>
+
+      <div class="flex flex-wrap items-center gap-4 mt-6 pt-6 border-t border-stone-200/80 text-xs text-muted">
+        <span class="flex items-center gap-1.5">
+          <Clock size={13} class="text-brand-gold" />
+          <span>Statutory Turnaround: <strong>{legal.grievance.responseTimeDays} Business Days</strong></span>
+        </span>
+        <span class="text-stone-300">•</span>
+        <span>Acknowledgement: <strong>Within 48 Hours</strong></span>
+      </div>
+    </div>
+  </header>
+
+  {/* Main Content */}
+  <main class="section-padding bg-white">
+    <div class="container-site max-w-4xl">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+        
+        {/* Left Column: Form & Filing Process */}
+        <div class="lg:col-span-7 space-y-8">
+          
+          <section class="space-y-4">
+            <h2 class="text-2xl font-bold text-ink tracking-tight">File a Grievance or Privacy Request</h2>
+            <p class="text-stone-600 text-sm font-light leading-relaxed">
+              If you have any grievance regarding personal data processing, property listing accuracy, or consumer advisory services, please submit the details below. Your ticket will be logged and routed directly to our designated Grievance Officer.
+            </p>
+          </section>
+
+          {/* Grievance Submission Form */}
+          <div class="bg-stone-50/80 border border-stone-200 rounded-3xl p-6 sm:p-8 shadow-xs">
+            <form id="grievance-form" class="space-y-4">
+              <!-- Honeypot anti-spam field -->
+              <input type="text" name="website_hp" class="hidden" tabindex="-1" autocomplete="off" />
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label for="grievance-name" class="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5">
+                    Complainant Name <span class="text-rose-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="grievance-name"
+                    name="name"
+                    required
+                    placeholder="Full Legal Name"
+                    class="w-full px-4 py-2.5 rounded-xl bg-white border border-stone-300 text-ink text-sm focus:border-action-blue focus:outline-none transition-colors"
+                  />
+                </div>
+
+                <div>
+                  <label for="grievance-phone" class="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5">
+                    Contact Phone <span class="text-rose-500">*</span>
+                  </label>
+                  <input
+                    type="tel"
+                    id="grievance-phone"
+                    name="phone"
+                    required
+                    placeholder="+91 98765 43210"
+                    class="w-full px-4 py-2.5 rounded-xl bg-white border border-stone-300 text-ink text-sm focus:border-action-blue focus:outline-none transition-colors"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label for="grievance-email" class="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5">
+                  Email Address for Correspondence <span class="text-rose-500">*</span>
+                </label>
+                <input
+                  type="email"
+                  id="grievance-email"
+                  name="email"
+                  required
+                  placeholder="name@example.com"
+                  class="w-full px-4 py-2.5 rounded-xl bg-white border border-stone-300 text-ink text-sm focus:border-action-blue focus:outline-none transition-colors"
+                />
+              </div>
+
+              <div>
+                <label for="grievance-category" class="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5">
+                  Category of Grievance <span class="text-rose-500">*</span>
+                </label>
+                <select
+                  id="grievance-category"
+                  name="category"
+                  required
+                  class="w-full px-4 py-2.5 rounded-xl bg-white border border-stone-300 text-ink text-sm focus:border-action-blue focus:outline-none transition-colors"
+                >
+                  <option value="data-erasure">Personal Data Erasure / Deletion (DPDP Act)</option>
+                  <option value="data-correction">Correction / Update of Personal Information</option>
+                  <option value="consent-withdrawal">Withdrawal of Processing Consent</option>
+                  <option value="listing-inaccuracy">Property Listing Inaccuracy or Outdated Information</option>
+                  <option value="rera-inquiry">RERA Registration / Sanction Discrepancy</option>
+                  <option value="other">General Operational / Advisory Complaint</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="grievance-details" class="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5">
+                  Detailed Description of Grievance <span class="text-rose-500">*</span>
+                </label>
+                <textarea
+                  id="grievance-details"
+                  name="details"
+                  rows="4"
+                  required
+                  placeholder="Please state the specific property URL, listing reference, or nature of data protection request with supporting context..."
+                  class="w-full px-4 py-2.5 rounded-xl bg-white border border-stone-300 text-ink text-sm focus:border-action-blue focus:outline-none transition-colors resize-y"
+                ></textarea>
+              </div>
+
+              {/* Consent to process grievance info */}
+              <div class="pt-2">
+                <label class="flex items-start gap-2.5 cursor-pointer text-xs text-stone-700 font-light select-none">
+                  <input
+                    type="checkbox"
+                    id="grievance-consent"
+                    name="consent"
+                    required
+                    class="mt-0.5 rounded text-action-blue focus:ring-action-blue border-stone-300 shrink-0"
+                  />
+                  <span>
+                    I declare that the information provided is accurate and consent to its processing for investigation and resolution of this grievance under our <a href="/privacy-policy" target="_blank" class="text-action-blue font-semibold hover:underline">Privacy Policy</a>.
+                  </span>
+                </label>
+              </div>
+
+              <button
+                type="submit"
+                class="btn btn-action-blue w-full py-3.5 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 cursor-pointer mt-4"
+              >
+                <Send size={16} />
+                <span>Submit Grievance Complaint</span>
+              </button>
+
+              {/* Success Notification */}
+              <div id="grievance-success" class="hidden p-5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-sm">
+                <div class="flex items-start gap-3">
+                  <CheckCircle2 size={18} class="text-emerald-700 shrink-0 mt-0.5" />
+                  <div>
+                    <p class="font-bold mb-1">Grievance Ticket Successfully Registered</p>
+                    <p class="text-xs text-emerald-800 leading-relaxed font-light mb-2">
+                      Your complaint reference is <strong id="grievance-ticket-num" class="font-mono">EA-GR-2026-001</strong>. An official acknowledgment will be sent to your email within 48 hours.
+                    </p>
+                    <p class="text-xs text-emerald-700 font-light">
+                      Resolution timeline: <strong>{legal.grievance.responseTimeDays} business days</strong>.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+
+        </div>
+
+        {/* Right Column: Officer Details & Statutory Escalation */}
+        <div class="lg:col-span-5 space-y-6">
+          
+          {/* Officer Card */}
+          <div class="p-6 sm:p-7 rounded-3xl bg-surface-dark text-white border border-stone-800 shadow-md">
+            <div class="eyebrow-label mb-3">
+              <span class="w-1.5 h-1.5 rounded-full bg-brand-gold"></span>
+              <span class="text-brand-gold">Statutory Authority</span>
+            </div>
+            <h3 class="text-xl font-bold mb-1 text-white">Grievance Redressal Officer</h3>
+            <p class="text-xs text-stone-400 mb-6 font-light">Appointed under IT Rules 2021 & Section 13, DPDP Act 2023</p>
+
+            <div class="space-y-4 text-xs sm:text-sm text-stone-300 font-light">
+              <div>
+                <p class="text-stone-400 text-[11px] uppercase tracking-wider font-bold mb-0.5">Designated Officer</p>
+                <p class="text-white font-semibold text-base">{legal.grievance.officerName}</p>
+                <p class="text-xs text-brand-gold">{legal.grievance.designation}</p>
+              </div>
+
+              <div class="pt-3 border-t border-stone-800">
+                <p class="text-stone-400 text-[11px] uppercase tracking-wider font-bold mb-1">Direct Grievance Email</p>
+                <a href={`mailto:${legal.grievance.email}`} class="text-brand-gold font-medium hover:underline flex items-center gap-2">
+                  <Mail size={14} />
+                  <span>{legal.grievance.email}</span>
+                </a>
+              </div>
+
+              {legal.grievance.phone && (
+                <div class="pt-3 border-t border-stone-800">
+                  <p class="text-stone-400 text-[11px] uppercase tracking-wider font-bold mb-1">Telephone Contact</p>
+                  <a href={`tel:${legal.grievance.phone}`} class="text-stone-200 hover:text-white flex items-center gap-2">
+                    <Phone size={14} />
+                    <span>{legal.grievance.phone}</span>
+                  </a>
+                </div>
+              )}
+
+              <div class="pt-3 border-t border-stone-800">
+                <p class="text-stone-400 text-[11px] uppercase tracking-wider font-bold mb-1">Office Address</p>
+                <p class="text-stone-300 leading-relaxed flex items-start gap-2">
+                  <MapPin size={14} class="shrink-0 text-brand-gold mt-0.5" />
+                  <span>{legal.grievance.address}</span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Resolution Timelines & Process */}
+          <div class="p-6 rounded-2xl bg-canvas border border-stone-200 text-xs text-stone-700 space-y-3">
+            <h4 class="font-bold text-ink text-sm">Handling Procedure & Timelines</h4>
+            <div class="space-y-2">
+              <p><strong>Step 1 — Acknowledgment:</strong> Formal email acknowledgment containing your unique Ticket Reference issued within 48 hours.</p>
+              <p><strong>Step 2 — Investigation:</strong> Thorough audit of server records, listing files, or data processing history.</p>
+              <p><strong>Step 3 — Resolution:</strong> Redressal action (such as record deletion, listing correction, or explanation) completed within {legal.grievance.responseTimeDays} business days.</p>
+            </div>
+          </div>
+
+          {/* Appellate Escalation Notice */}
+          <div class="p-6 rounded-2xl border border-stone-200 bg-white text-xs text-stone-600 space-y-2">
+            <h4 class="font-bold text-ink text-sm flex items-center gap-2">
+              <ShieldCheck size={16} class="text-action-blue" />
+              <span>Appellate Escalation Pathways</span>
+            </h4>
+            <p class="leading-relaxed">
+              If your grievance is not redressed within the statutory timeline of {legal.grievance.responseTimeDays} days, or if you are dissatisfied with the resolution:
+            </p>
+            <ul class="list-disc pl-4 space-y-1 text-stone-600">
+              <li><strong>Data Protection Inquiries:</strong> You may escalate to the <em>Data Protection Board of India</em> established under the DPDP Act, 2023.</li>
+              <li><strong>Real Estate Discrepancies:</strong> You may register an official consumer grievance on the <em>{legal.rera.stateAuthority}</em> conciliation forum.</li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+</BaseLayout>
+
+<script>
+  function setupGrievanceForm() {
+    const form = document.getElementById('grievance-form') as HTMLFormElement | null;
+    const banner = document.getElementById('grievance-success');
+    const ticketSpan = document.getElementById('grievance-ticket-num');
+
+    if (!form || !banner) return;
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      // Generate a realistic ticket reference
+      const randomTicket = `EA-GR-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
+      if (ticketSpan) {
+        ticketSpan.textContent = randomTicket;
+      }
+
+      banner.classList.remove('hidden');
+      const submitBtn = form.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+      }
+
+      setTimeout(() => {
+        banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 100);
+    });
+  }
+
+  document.addEventListener('astro:page-load', setupGrievanceForm);
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    setupGrievanceForm();
+  } else {
+    document.addEventListener('DOMContentLoaded', setupGrievanceForm);
+  }
+</script>

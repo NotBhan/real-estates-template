@@ -50,6 +50,47 @@ if (property.propertyType === 'Commercial') {
           </ul>
         </div>
       )}
+
+      {/* RERA Regulatory & Due Diligence Advisory Box */}
+      <div class="mt-12 pt-10 border-t border-stone-200" id="property-rera-advisory">
+        <div class="p-6 rounded-2xl bg-white border border-stone-200 shadow-xs">
+          <div class="flex items-center justify-between flex-wrap gap-3 mb-3">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-brand-gold"></span>
+              <h3 class="text-xs font-bold uppercase tracking-wider text-ink">
+                RERA Statutory & Conveyancing Advisory
+              </h3>
+            </div>
+            <a href="/property-disclaimer" class="text-xs text-action-blue font-semibold hover:underline">
+              Read Complete Disclaimer &rarr;
+            </a>
+          </div>
+
+          {property.reraId ? (
+            <div class="space-y-2 text-xs sm:text-sm text-stone-700">
+              <p>
+                <strong>RERA Project Registration ID:</strong> <span class="font-mono font-bold text-ink bg-stone-100 px-2.5 py-1 rounded-md">{property.reraId}</span>
+              </p>
+              <p class="text-xs text-muted leading-relaxed font-light">
+                Registered under the Real Estate (Regulation and Development) Act, 2016. Verify sanctioned building plans and escrow details on the official state portal:
+                {property.reraRegistrationUrl ? (
+                  <a href={property.reraRegistrationUrl} target="_blank" rel="noopener noreferrer" class="text-action-blue font-semibold hover:underline ml-1">
+                    Official RERA Verification Record &rarr;
+                  </a>
+                ) : (
+                  <span class="text-stone-600 ml-1">Refer to official State Authority portal.</span>
+                )}
+              </p>
+            </div>
+          ) : (
+            <div class="space-y-2 text-xs text-stone-600 font-light leading-relaxed">
+              <p>
+                <strong class="font-semibold text-ink">Independent Due Diligence Notice:</strong> All property particulars, floor plans, and dimensions presented are compiled for preliminary exploration. Under Section 10 & 11 of the Real Estate (Regulation and Development) Act, 2016, buyers and tenants must independently verify project RERA registration status, sanctioned layouts, title encumbrance certificates, and occupancy certificates prior to entering into any financial transaction or formal agreement.
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   </div>
 </section>

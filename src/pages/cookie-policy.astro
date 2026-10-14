@@ -1,0 +1,176 @@
+---
+/**
+ * Cookie Policy — Estate Atelier Real Estate Website Template
+ * Audited implementation disclosure of technical cookies and local storage.
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { config } from '@/lib/config';
+import { Cookie, ArrowLeft, Clock, ShieldCheck, CheckCircle2 } from '@lucide/astro';
+
+const legal = config.legal;
+const effectiveDate = legal.effectiveDates.cookiePolicy;
+const lastUpdated = legal.effectiveDates.cookiePolicyLastUpdated;
+---
+
+<BaseLayout
+  title={`Cookie Policy | ${config.siteName}`}
+  description={`Technical cookie and local storage disclosure for ${config.siteName}.`}
+>
+  {/* Page Header */}
+  <header class="pt-28 sm:pt-32 pb-14 bg-canvas border-b border-stone-200/80">
+    <div class="container-site max-w-4xl">
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 text-muted hover:text-action-blue text-xs font-semibold uppercase tracking-wider mb-6 transition-colors no-underline group"
+      >
+        <ArrowLeft size={14} class="transform group-hover:-translate-x-1 transition-transform" />
+        <span>Return to Home</span>
+      </a>
+
+      <div class="eyebrow-label mb-3">
+        <Cookie size={14} class="text-brand-gold" />
+        <span>Technical Storage Disclosures</span>
+      </div>
+      <h1 class="heading-editorial text-4xl sm:text-5xl font-bold tracking-tight text-ink mb-4">
+        Cookie <span class="font-normal italic text-stone-500">Policy</span>
+      </h1>
+      <p class="text-muted text-base sm:text-lg font-light max-w-2xl leading-relaxed">
+        Technical transparency regarding cookies, browser session storage, and client-side memory usage on {config.siteName}.
+      </p>
+
+      <div class="flex flex-wrap items-center gap-4 mt-6 pt-6 border-t border-stone-200/80 text-xs text-muted">
+        <span class="flex items-center gap-1.5">
+          <Clock size={13} class="text-brand-gold" />
+          <span>Effective: <strong>{effectiveDate}</strong></span>
+        </span>
+        <span class="text-stone-300">•</span>
+        <span>Last Revised: <strong>{lastUpdated}</strong></span>
+      </div>
+    </div>
+  </header>
+
+  {/* Main Content */}
+  <main class="section-padding bg-white">
+    <article class="container-site max-w-4xl">
+      
+      {/* Privacy-First Banner */}
+      <div class="bg-emerald-50/80 border border-emerald-200 rounded-2xl p-6 sm:p-7 mb-10 text-sm text-stone-800 shadow-2xs">
+        <div class="flex items-start gap-3">
+          <CheckCircle2 size={20} class="text-emerald-700 shrink-0 mt-0.5" />
+          <div>
+            <h2 class="font-bold text-emerald-950 mb-1 text-base">Privacy-First Architecture: Zero Third-Party Advertising Trackers</h2>
+            <p class="font-light leading-relaxed text-stone-700">
+              We respect your digital privacy. This website does <strong>not</strong> employ third-party advertising cookies, cross-site behavioral tracking beacons, or social media pixels. 
+              Only essential technical cookies necessary for core website functionality and administrative authentication are deployed.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-12 text-stone-700 text-sm sm:text-base font-light leading-relaxed">
+        
+        {/* 1. What Are Cookies */}
+        <section class="space-y-4">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight font-sans border-b border-stone-200 pb-3 flex items-center gap-2">
+            <span class="text-action-blue font-mono text-lg">01.</span>
+            <span>What Are Cookies & Local Storage</span>
+          </h2>
+          <p>
+            Cookies are small text files placed on your computer or mobile device when you browse websites. Local storage and session storage are browser mechanisms that allow web applications to store key-value data locally without transmitting it with every HTTP server request.
+          </p>
+        </section>
+
+        {/* 2. Audited Technical Inventory */}
+        <section class="space-y-4">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight font-sans border-b border-stone-200 pb-3 flex items-center gap-2">
+            <span class="text-action-blue font-mono text-lg">02.</span>
+            <span>Complete Inventory of Technologies Used</span>
+          </h2>
+          <p>
+            Our actual software implementation has been audited and deploys only the following technologies:
+          </p>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse border border-stone-200 rounded-xl overflow-hidden text-xs sm:text-sm">
+              <thead class="bg-stone-100 text-ink font-bold">
+                <tr>
+                  <th class="p-3.5 border-b border-stone-200">Identifier</th>
+                  <th class="p-3.5 border-b border-stone-200">Type</th>
+                  <th class="p-3.5 border-b border-stone-200">Purpose</th>
+                  <th class="p-3.5 border-b border-stone-200">Duration</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-stone-200">
+                <tr class="hover:bg-stone-50/50">
+                  <td class="p-3.5 font-mono font-bold text-ink">admin_session</td>
+                  <td class="p-3.5"><span class="px-2 py-0.5 rounded-full bg-stone-100 text-stone-700 text-xs font-semibold">Strictly Essential</span></td>
+                  <td class="p-3.5">HTTP-only cookie used to authenticate authorized staff accessing the administrative Content Management System (CMS). Not set for public visitors.</td>
+                  <td class="p-3.5">7 days / Session</td>
+                </tr>
+                <tr class="hover:bg-stone-50/50">
+                  <td class="p-3.5 font-mono font-bold text-ink">Browser Memory (In-Memory)</td>
+                  <td class="p-3.5"><span class="px-2 py-0.5 rounded-full bg-stone-100 text-stone-700 text-xs font-semibold">Functional</span></td>
+                  <td class="p-3.5">Stores the current active catalogue filter choices (e.g. price range, property type) and conversation history for the Mock AI Property Assistant while viewing the page.</td>
+                  <td class="p-3.5">Cleared on browser tab close</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* 3. Why We Do Not Display a Deceptive Banner */}
+        <section class="space-y-4">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight font-sans border-b border-stone-200 pb-3 flex items-center gap-2">
+            <span class="text-action-blue font-mono text-lg">03.</span>
+            <span>Why You Do Not See a Deceptive Cookie Banner</span>
+          </h2>
+          <p>
+            Under Indian data protection guidelines and international best practices, consent banners are required only when a website utilizes non-essential cookies, such as advertising trackers, analytics trackers, or social profiling scripts.
+          </p>
+          <p>
+            Because {config.siteName} utilizes <strong>only strictly essential technical session controls</strong>, deploying a consent banner would be misleading and superfluous. If we introduce optional analytics or performance measurement tools in future production releases, an affirmative, granular consent preference manager will be implemented.
+          </p>
+        </section>
+
+        {/* 4. Managing Cookies in Your Browser */}
+        <section class="space-y-4">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight font-sans border-b border-stone-200 pb-3 flex items-center gap-2">
+            <span class="text-action-blue font-mono text-lg">04.</span>
+            <span>Managing & Disabling Cookies</span>
+          </h2>
+          <p>
+            You can configure your web browser to block or alert you about cookies. Most modern browsers (Google Chrome, Mozilla Firefox, Apple Safari, Microsoft Edge) provide settings to clear stored cookies and local storage. 
+            Please note that disabling cookies will prevent administrative login to the CMS portal, but public browsing of property listings will remain unaffected.
+          </p>
+        </section>
+
+        {/* 5. Policy Updates */}
+        <section class="space-y-4">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight font-sans border-b border-stone-200 pb-3 flex items-center gap-2">
+            <span class="text-action-blue font-mono text-lg">05.</span>
+            <span>Updates to This Policy</span>
+          </h2>
+          <p>
+            We may update this Cookie Policy from time to time to reflect changes in our technical infrastructure. Any revisions will be reflected with an updated "Last Revised" date at the top of this page.
+          </p>
+          <p>
+            For privacy and cookie inquiries, reach our team at <a href={`mailto:${legal.privacyEmail}`} class="text-action-blue font-semibold hover:underline">{legal.privacyEmail}</a>.
+          </p>
+        </section>
+
+      </div>
+
+      {/* Cross-Link Navigation */}
+      <footer class="mt-14 pt-8 border-t border-stone-200 flex flex-wrap items-center justify-between gap-4 text-xs">
+        <div class="flex items-center gap-4">
+          <a href="/privacy-policy" class="text-action-blue font-semibold hover:underline">&larr; Privacy Policy</a>
+          <a href="/terms-and-conditions" class="text-action-blue font-semibold hover:underline">Terms & Conditions</a>
+          <a href="/property-disclaimer" class="text-action-blue font-semibold hover:underline">Property Disclaimer &rarr;</a>
+        </div>
+        <a href="/contact" class="btn btn-stone-outline px-4 py-2 rounded-full font-semibold">
+          Contact Advisory Desk
+        </a>
+      </footer>
+    </article>
+  </main>
+</BaseLayout>

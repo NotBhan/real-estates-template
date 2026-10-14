@@ -1,0 +1,332 @@
+---
+/**
+ * Privacy Policy — Estate Atelier Real Estate Website Template
+ * Compliant with Digital Personal Data Protection Act, 2023 (DPDP Act)
+ * and Information Technology Act, 2000 & associated Rules.
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { config } from '@/lib/config';
+import { ShieldCheck, ArrowLeft, Mail, Phone, MapPin, Clock, AlertTriangle } from '@lucide/astro';
+
+const legal = config.legal;
+const effectiveDate = legal.effectiveDates.privacyPolicy;
+const lastUpdated = legal.effectiveDates.privacyPolicyLastUpdated;
+---
+
+<BaseLayout
+  title={`Privacy Policy | ${config.siteName}`}
+  description={`Privacy policy and personal data protection disclosures for ${config.siteName} under Indian data protection laws.`}
+>
+  {/* Page Header */}
+  <header class="pt-28 sm:pt-32 pb-14 bg-canvas border-b border-stone-200/80">
+    <div class="container-site max-w-4xl">
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 text-muted hover:text-action-blue text-xs font-semibold uppercase tracking-wider mb-6 transition-colors no-underline group"
+      >
+        <ArrowLeft size={14} class="transform group-hover:-translate-x-1 transition-transform" />
+        <span>Return to Home</span>
+      </a>
+
+      <div class="eyebrow-label mb-3">
+        <ShieldCheck size={14} class="text-brand-gold" />
+        <span>Statutory Compliance & Data Governance</span>
+      </div>
+      <h1 class="heading-editorial text-4xl sm:text-5xl font-bold tracking-tight text-ink mb-4">
+        Privacy <span class="font-normal italic text-stone-500">Policy</span>
+      </h1>
+      <p class="text-muted text-base sm:text-lg font-light max-w-2xl leading-relaxed">
+        Personal data protection standards, collection purposes, data principal rights, and privacy grievance procedures for {config.siteName}.
+      </p>
+
+      <div class="flex flex-wrap items-center gap-4 mt-6 pt-6 border-t border-stone-200/80 text-xs text-muted">
+        <span class="flex items-center gap-1.5">
+          <Clock size={13} class="text-brand-gold" />
+          <span>Effective: <strong>{effectiveDate}</strong></span>
+        </span>
+        <span class="text-stone-300">•</span>
+        <span>Last Revised: <strong>{lastUpdated}</strong></span>
+        <span class="text-stone-300">•</span>
+        <span>Jurisdiction: <strong>{legal.operatingState}, {legal.country}</strong></span>
+      </div>
+    </div>
+  </header>
+
+  {/* Main Content */}
+  <main class="section-padding bg-white">
+    <article class="container-site max-w-4xl">
+      
+      {/* Template Mode Notice */}
+      {config.templateMode && (
+        <div class="bg-amber-50/80 border border-amber-200 rounded-2xl p-6 sm:p-7 mb-10 text-sm text-stone-800 shadow-2xs">
+          <div class="flex items-start gap-3">
+            <AlertTriangle size={18} class="text-amber-700 shrink-0 mt-0.5" />
+            <div>
+              <p class="font-bold text-amber-950 mb-1">Demonstration Template & Legal Notice</p>
+              <p class="font-light leading-relaxed text-stone-700">
+                This website is currently deployed as a <strong>real-estate demonstration template</strong> branded "{config.siteName}". 
+                In this demonstration environment, enquiry form submissions and property assistant queries are processed locally for demonstration purposes. 
+                Prior to commercial launch, the operating business entity must update the data fiduciary details below with its registered legal name, physical address, and designated Grievance Officer.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div class="space-y-12 text-stone-700 text-sm sm:text-base font-light leading-relaxed">
+        
+        {/* 1. Data Fiduciary Identity */}
+        <section class="space-y-4">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight font-sans border-b border-stone-200 pb-3 flex items-center gap-2">
+            <span class="text-action-blue font-mono text-lg">01.</span>
+            <span>Data Fiduciary Identity & Scope</span>
+          </h2>
+          <p>
+            This Privacy Policy governs the processing of personal data by <strong>{legal.legalBusinessName || legal.publicTradingName}</strong> ("the Business", "we", "our", or "us"), 
+            acting as a <em>Data Fiduciary</em> under the <strong>Digital Personal Data Protection Act, 2023 (DPDP Act)</strong> and the <strong>Information Technology Act, 2000</strong>.
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-5 rounded-xl bg-canvas border border-stone-200 text-xs text-ink font-normal">
+            <div>
+              <p class="text-muted uppercase tracking-wider font-semibold mb-1">Trading Name</p>
+              <p class="font-bold">{legal.publicTradingName}</p>
+            </div>
+            <div>
+              <p class="text-muted uppercase tracking-wider font-semibold mb-1">Entity Status</p>
+              <p class="font-bold">{legal.entityType}</p>
+            </div>
+            <div>
+              <p class="text-muted uppercase tracking-wider font-semibold mb-1">Registered Address</p>
+              <p class="font-bold">{legal.registeredAddress}</p>
+            </div>
+            <div>
+              <p class="text-muted uppercase tracking-wider font-semibold mb-1">Primary Operational Territory</p>
+              <p class="font-bold">{legal.operatingState}, {legal.country}</p>
+            </div>
+          </div>
+        </section>
+
+        {/* 2. Personal Data Collected */}
+        <section class="space-y-4">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight font-sans border-b border-stone-200 pb-3 flex items-center gap-2">
+            <span class="text-action-blue font-mono text-lg">02.</span>
+            <span>Categories of Personal Data Collected</span>
+          </h2>
+          <p>
+            We strictly limit personal data collection to information necessary to facilitate property discovery, site inspections, and direct client advisory.
+          </p>
+          
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse border border-stone-200 rounded-xl overflow-hidden text-xs sm:text-sm">
+              <thead class="bg-stone-100 text-ink font-bold">
+                <tr>
+                  <th class="p-3.5 border-b border-stone-200">Category</th>
+                  <th class="p-3.5 border-b border-stone-200">Specific Data Points</th>
+                  <th class="p-3.5 border-b border-stone-200">Collection Channel</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-stone-200">
+                <tr class="hover:bg-stone-50/50">
+                  <td class="p-3.5 font-semibold text-ink">Contact & Identity</td>
+                  <td class="p-3.5">Full Name, Mobile/Telephone Number, Email Address</td>
+                  <td class="p-3.5">Contact Form, Property Enquiry Form</td>
+                </tr>
+                <tr class="hover:bg-stone-50/50">
+                  <td class="p-3.5 font-semibold text-ink">Transaction Requirements</td>
+                  <td class="p-3.5">Property Interest (Residential, Commercial, Land, Villa, Flat), Budget Range, Preferred Location, Schedule Notes</td>
+                  <td class="p-3.5">Consultation Inquiry Form</td>
+                </tr>
+                <tr class="hover:bg-stone-50/50">
+                  <td class="p-3.5 font-semibold text-ink">Technical & Telemetry Data</td>
+                  <td class="p-3.5">IP Address, Browser Type & Version, Operating System, Access Timestamps, Referrer Headers</td>
+                  <td class="p-3.5">Automated Web Server Access Logs (Hosting Provider)</td>
+                </tr>
+                <tr class="hover:bg-stone-50/50">
+                  <td class="p-3.5 font-semibold text-ink">Conversational Assistant</td>
+                  <td class="p-3.5">Search queries and filter preferences entered into the Mock AI Assistant</td>
+                  <td class="p-3.5">Client-Side Browser Execution (Processed strictly offline in local browser memory; not transmitted to servers)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* 3. Specific Purposes of Processing */}
+        <section class="space-y-4">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight font-sans border-b border-stone-200 pb-3 flex items-center gap-2">
+            <span class="text-action-blue font-mono text-lg">03.</span>
+            <span>Purposes of Processing & Legal Basis</span>
+          </h2>
+          <p>
+            Under Section 6 of the DPDP Act, personal data is processed solely on the basis of <strong>specified, verifiable, and freely given consent</strong>, or for specified legitimate uses:
+          </p>
+          <ul class="list-disc pl-5 space-y-2 text-stone-700">
+            <li><strong>Facilitating Property Walkthroughs & Document Sharing:</strong> To coordinate private viewing appointments, share verified title deed copies, and discuss pricing directly with prospective buyers or tenants.</li>
+            <li><strong>Responding to Inquiries:</strong> To address written questions submitted via our advisory desk or telephone channels.</li>
+            <li><strong>Statutory Recordkeeping:</strong> Where applicable under the Real Estate (Regulation and Development) Act, 2016 (RERA) or Indian consumer protection guidelines, maintaining transaction correspondence for verified client records.</li>
+            <li><strong>Website Security & Denial-of-Service Defense:</strong> Technical server logs are retained strictly for detecting automated abuse, malicious intrusions, and ensuring operational availability.</li>
+          </ul>
+          <p class="text-xs text-muted italic">
+            * We do not sell, rent, or commercialize client telephone numbers or contact details to third-party telemarketers or external broker syndicates.
+          </p>
+        </section>
+
+        {/* 4. Consent Architecture & Unbundled Marketing */}
+        <section class="space-y-4">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight font-sans border-b border-stone-200 pb-3 flex items-center gap-2">
+            <span class="text-action-blue font-mono text-lg">04.</span>
+            <span>Consent Architecture & Unbundled Preferences</span>
+          </h2>
+          <p>
+            In compliance with Indian data protection principles:
+          </p>
+          <ul class="list-disc pl-5 space-y-2 text-stone-700">
+            <li><strong>No Pre-Checked Boxes:</strong> All consent mechanisms on enquiry forms require an active, conscious, affirmative action by the user.</li>
+            <li><strong>Unbundled Optional Marketing:</strong> Consent to receive future property portfolio updates is explicitly separated from the primary consent required to answer an immediate property enquiry. Marketing consent is strictly optional and never a prerequisite for receiving consultation.</li>
+            <li><strong>Right to Withdraw Consent:</strong> A Data Principal may withdraw consent at any time by contacting our Grievance Desk or emailing <a href={`mailto:${legal.privacyEmail}`} class="text-action-blue font-medium hover:underline">{legal.privacyEmail}</a>. Withdrawal takes effect within 7 business days.</li>
+          </ul>
+        </section>
+
+        {/* 5. Storage, Security & Retention */}
+        <section class="space-y-4">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight font-sans border-b border-stone-200 pb-3 flex items-center gap-2">
+            <span class="text-action-blue font-mono text-lg">05.</span>
+            <span>Storage, Retention & Safeguards</span>
+          </h2>
+          <p>
+            We enforce practical administrative and technical safeguards appropriate to the sensitivity of real estate inquiry records:
+          </p>
+          <div class="space-y-3">
+            <div class="p-4 rounded-xl bg-canvas border border-stone-200">
+              <h3 class="font-bold text-ink text-sm mb-1">Retention Duration</h3>
+              <p class="text-xs text-stone-600 leading-relaxed">
+                Client inquiry records are retained for the duration of the active real estate consultation (typically up to 180 days following transaction closing or inactive correspondence), after which records are purged from operational databases, unless longer retention is required under statutory RERA or tax accounting mandates.
+              </p>
+            </div>
+            <div class="p-4 rounded-xl bg-canvas border border-stone-200">
+              <h3 class="font-bold text-ink text-sm mb-1">Administrative Access Security</h3>
+              <p class="text-xs text-stone-600 leading-relaxed">
+                Administrative CMS access requires encrypted HTTP-only session authentication with secure cookie attributes. Public visitors have no access to internal client submission archives.
+              </p>
+            </div>
+            <div class="p-4 rounded-xl bg-canvas border border-stone-200">
+              <h3 class="font-bold text-ink text-sm mb-1">Demonstration Mode Storage Reality</h3>
+              <p class="text-xs text-stone-600 leading-relaxed">
+                In this pre-contract demonstration deployment, all form submissions are handled strictly in local browser memory and simulated demonstration state. No persistent remote relational database is connected until production provisioning.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* 6. Service Providers & Third Parties */}
+        <section class="space-y-4">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight font-sans border-b border-stone-200 pb-3 flex items-center gap-2">
+            <span class="text-action-blue font-mono text-lg">06.</span>
+            <span>Sub-Processors & Infrastructure Providers</span>
+          </h2>
+          <p>
+            We rely on reputable technical infrastructure partners to deliver this website. We do not integrate advertising trackers, behavioral re-targeting pixels, or third-party data broker SDKs:
+          </p>
+          <ul class="list-disc pl-5 space-y-2 text-stone-700">
+            <li><strong>Hosting & Serverless Execution:</strong> Vercel Inc. and Node.js standalone environments for edge server rendering and static asset distribution.</li>
+            <li><strong>Map Imagery:</strong> OpenStreetMap contributors & Leaflet for geospatial location rendering. If Google Maps API is configured via environment key, map requests are governed by Google's Privacy Policy.</li>
+            <li><strong>Image Content Delivery:</strong> Unsplash CDN for demonstration architectural photography.</li>
+          </ul>
+        </section>
+
+        {/* 7. Data Principal Rights */}
+        <section class="space-y-4">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight font-sans border-b border-stone-200 pb-3 flex items-center gap-2">
+            <span class="text-action-blue font-mono text-lg">07.</span>
+            <span>Your Rights as a Data Principal</span>
+          </h2>
+          <p>
+            Under Chapter III of the DPDP Act, 2023, you are entitled to the following statutory rights regarding your personal data:
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div class="p-3.5 rounded-xl border border-stone-200 bg-white">
+              <h4 class="font-bold text-ink text-sm mb-1">Right to Access</h4>
+              <p class="text-xs text-muted">Request a summary of personal data held about you and processing activities undertaken.</p>
+            </div>
+            <div class="p-3.5 rounded-xl border border-stone-200 bg-white">
+              <h4 class="font-bold text-ink text-sm mb-1">Right to Correction & Updating</h4>
+              <p class="text-xs text-muted">Request correction of inaccurate personal data or completion of incomplete records.</p>
+            </div>
+            <div class="p-3.5 rounded-xl border border-stone-200 bg-white">
+              <h4 class="font-bold text-ink text-sm mb-1">Right to Erasure</h4>
+              <p class="text-xs text-muted">Request deletion of personal data when the original consultation purpose has been fulfilled.</p>
+            </div>
+            <div class="p-3.5 rounded-xl border border-stone-200 bg-white">
+              <h4 class="font-bold text-ink text-sm mb-1">Right to Grievance Redressal</h4>
+              <p class="text-xs text-muted">Submit an operational grievance to our designated Grievance Officer, or escalate to the Data Protection Board of India.</p>
+            </div>
+          </div>
+        </section>
+
+        {/* 8. Children's Data Notice */}
+        <section class="space-y-4">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight font-sans border-b border-stone-200 pb-3 flex items-center gap-2">
+            <span class="text-action-blue font-mono text-lg">08.</span>
+            <span>Children's Privacy Protection</span>
+          </h2>
+          <p>
+            Under Section 9 of the DPDP Act, 2023, this real estate website is directed solely to individuals who have attained the age of majority (18 years) capable of entering into legally binding real estate conveyancing agreements under the Indian Contract Act, 1872. 
+            We do not knowingly collect personal data from minors. If you believe a minor has submitted personal information, contact our Grievance Officer immediately for prompt erasure.
+          </p>
+        </section>
+
+        {/* 9. Grievance Redressal Mechanism */}
+        <section class="space-y-4">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight font-sans border-b border-stone-200 pb-3 flex items-center gap-2">
+            <span class="text-action-blue font-mono text-lg">09.</span>
+            <span>Grievance Redressal Mechanism</span>
+          </h2>
+          <p>
+            In compliance with Rule 3(2) of the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021 and Section 13 of the DPDP Act, 2023, 
+            details of the designated contact for privacy concerns and grievances are set out below:
+          </p>
+
+          <div class="bg-canvas border border-stone-200 rounded-2xl p-6 space-y-3 text-xs sm:text-sm">
+            <div class="flex items-center gap-2 font-bold text-ink text-base">
+              <span>{legal.grievance.officerName}</span>
+              <span class="text-xs px-2.5 py-0.5 rounded-full bg-stone-200 text-stone-700 font-medium">{legal.grievance.designation}</span>
+            </div>
+            <div class="space-y-2 text-stone-600">
+              <p class="flex items-center gap-2">
+                <Mail size={15} class="text-action-blue shrink-0" />
+                <span>Grievance Email: <a href={`mailto:${legal.grievance.email}`} class="text-action-blue font-semibold hover:underline">{legal.grievance.email}</a></span>
+              </p>
+              {legal.grievance.phone && (
+                <p class="flex items-center gap-2">
+                  <Phone size={15} class="text-action-blue shrink-0" />
+                  <span>Telephone: <a href={`tel:${legal.grievance.phone}`} class="text-ink font-semibold hover:underline">{legal.grievance.phone}</a></span>
+                </p>
+              )}
+              <p class="flex items-start gap-2">
+                <MapPin size={15} class="text-action-blue shrink-0 mt-0.5" />
+                <span>Physical Address: {legal.grievance.address}</span>
+              </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-stone-200 text-xs text-muted">
+              <p>
+                <strong>Statutory Response Timeline:</strong> All privacy complaints and data principal requests will be acknowledged within <strong>48 hours</strong> and redressed within <strong>{legal.grievance.responseTimeDays} business days</strong>.
+              </p>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      {/* Cross-Link Navigation */}
+      <footer class="mt-14 pt-8 border-t border-stone-200 flex flex-wrap items-center justify-between gap-4 text-xs">
+        <div class="flex items-center gap-4">
+          <a href="/terms-and-conditions" class="text-action-blue font-semibold hover:underline">Terms & Conditions &rarr;</a>
+          <a href="/property-disclaimer" class="text-action-blue font-semibold hover:underline">Property Disclaimer &rarr;</a>
+          <a href="/cookie-policy" class="text-action-blue font-semibold hover:underline">Cookie Policy &rarr;</a>
+        </div>
+        <a href="/grievance-redressal" class="btn btn-stone-outline px-4 py-2 rounded-full font-semibold">
+          Submit Grievance Redressal Request
+        </a>
+      </footer>
+    </article>
+  </main>
+</BaseLayout>

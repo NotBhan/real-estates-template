@@ -109,10 +109,10 @@ const companyLinks = [
         </ul>
       </div>
 
-      <!-- Contact column -->
+      <!-- Contact & Compliance column -->
       <div>
         <h3 class="text-white font-bold text-xs uppercase tracking-[0.18em] mb-4">
-          Contact
+          Contact & Advisory
         </h3>
         <ul class="space-y-3" role="list">
           <li class="flex items-start gap-3 text-sm text-stone-400">
@@ -150,25 +150,40 @@ const companyLinks = [
     </div>
   </div>
 
-  <!-- Bottom Bar -->
-  <div class="border-t border-stone-800/80 relative z-10">
-    <div class="container-site py-6 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
-      <div class="space-y-1">
-        <p class="text-stone-400 text-xs">
+  <!-- Bottom Bar: Legal Disclosures & Compliance Links -->
+  <div class="border-t border-stone-800/80 relative z-10 bg-black/20">
+    <div class="container-site py-8 flex flex-col lg:flex-row items-center justify-between gap-6 text-center lg:text-left">
+      <div class="space-y-1.5 max-w-xl">
+        <p class="text-stone-400 text-xs font-normal">
           &copy; {currentYear} {config.siteName}. All rights reserved.
         </p>
-        <p class="text-stone-400 text-[11px] font-light">
-          {config.demoDisclosure}
+        <p class="text-stone-400 text-[11px] font-light leading-relaxed">
+          {config.demoDisclosure} Real estate listings, prices, and project details are subject to RERA Act, 2016 verification and title diligence prior to transaction.
         </p>
       </div>
-      <div class="flex items-center gap-6">
-        <a href="/privacy" class="text-stone-400 text-xs hover:text-white transition-colors no-underline">
+
+      <!-- Legal Navigation Links -->
+      <nav aria-label="Legal and Compliance Links" class="flex flex-wrap items-center justify-center lg:justify-end gap-x-5 gap-y-2 text-xs">
+        <a href="/privacy-policy" class="text-stone-400 hover:text-white transition-colors no-underline">
           Privacy Policy
         </a>
-        <a href="/terms" class="text-stone-400 text-xs hover:text-white transition-colors no-underline">
-          Terms of Service
+        <span class="text-stone-600 hidden sm:inline" aria-hidden="true">•</span>
+        <a href="/terms-and-conditions" class="text-stone-400 hover:text-white transition-colors no-underline">
+          Terms & Conditions
         </a>
-      </div>
+        <span class="text-stone-600 hidden sm:inline" aria-hidden="true">•</span>
+        <a href="/property-disclaimer" class="text-stone-400 hover:text-white transition-colors no-underline">
+          Property Disclaimer
+        </a>
+        <span class="text-stone-600 hidden sm:inline" aria-hidden="true">•</span>
+        <a href="/cookie-policy" class="text-stone-400 hover:text-white transition-colors no-underline">
+          Cookie Policy
+        </a>
+        <span class="text-stone-600 hidden sm:inline" aria-hidden="true">•</span>
+        <a href="/grievance-redressal" class="text-brand-gold hover:text-white transition-colors no-underline font-medium">
+          Grievance Redressal
+        </a>
+      </nav>
     </div>
   </div>
 </footer>

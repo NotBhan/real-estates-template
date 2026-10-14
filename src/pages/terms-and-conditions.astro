@@ -1,0 +1,220 @@
+---
+/**
+ * Terms and Conditions — Estate Atelier Real Estate Website Template
+ * Governed by the Laws of India, including the Indian Contract Act, 1872,
+ * Information Technology Act, 2000, and RERA Act, 2016.
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { config } from '@/lib/config';
+import { FileText, ArrowLeft, Clock, AlertTriangle } from '@lucide/astro';
+
+const legal = config.legal;
+const effectiveDate = legal.effectiveDates.termsAndConditions;
+const lastUpdated = legal.effectiveDates.termsLastUpdated;
+---
+
+<BaseLayout
+  title={`Terms and Conditions | ${config.siteName}`}
+  description={`Terms of use and property catalogue consultation agreement for ${config.siteName}.`}
+>
+  {/* Page Header */}
+  <header class="pt-28 sm:pt-32 pb-14 bg-canvas border-b border-stone-200/80">
+    <div class="container-site max-w-4xl">
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 text-muted hover:text-action-blue text-xs font-semibold uppercase tracking-wider mb-6 transition-colors no-underline group"
+      >
+        <ArrowLeft size={14} class="transform group-hover:-translate-x-1 transition-transform" />
+        <span>Return to Home</span>
+      </a>
+
+      <div class="eyebrow-label mb-3">
+        <FileText size={14} class="text-brand-gold" />
+        <span>User Agreement & Catalogue Terms</span>
+      </div>
+      <h1 class="heading-editorial text-4xl sm:text-5xl font-bold tracking-tight text-ink mb-4">
+        Terms <span class="font-normal italic text-stone-500">& Conditions</span>
+      </h1>
+      <p class="text-muted text-base sm:text-lg font-light max-w-2xl leading-relaxed">
+        Governing conditions, website acceptable use, property listing nature, and mutual advisory commitments for {config.siteName}.
+      </p>
+
+      <div class="flex flex-wrap items-center gap-4 mt-6 pt-6 border-t border-stone-200/80 text-xs text-muted">
+        <span class="flex items-center gap-1.5">
+          <Clock size={13} class="text-brand-gold" />
+          <span>Effective: <strong>{effectiveDate}</strong></span>
+        </span>
+        <span class="text-stone-300">•</span>
+        <span>Last Revised: <strong>{lastUpdated}</strong></span>
+        <span class="text-stone-300">•</span>
+        <span>Governing Law: <strong>India ({legal.operatingState})</strong></span>
+      </div>
+    </div>
+  </header>
+
+  {/* Main Content */}
+  <main class="section-padding bg-white">
+    <article class="container-site max-w-4xl">
+      
+      {/* Template Mode Notice */}
+      {config.templateMode && (
+        <div class="bg-amber-50/80 border border-amber-200 rounded-2xl p-6 sm:p-7 mb-10 text-sm text-stone-800 shadow-2xs">
+          <div class="flex items-start gap-3">
+            <AlertTriangle size={18} class="text-amber-700 shrink-0 mt-0.5" />
+            <div>
+              <p class="font-bold text-amber-950 mb-1">Demonstration Template Scope</p>
+              <p class="font-light leading-relaxed text-stone-700">
+                This website is presented as a demonstration real estate platform concept. Property listings, floor plans, and pricing displayed are illustrative sample items. 
+                Prior to commercial transacting, the operating agency must finalize its formal entity registration and legal representation details.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div class="space-y-12 text-stone-700 text-sm sm:text-base font-light leading-relaxed">
+        
+        {/* 1. Purpose & Acceptance of Terms */}
+        <section class="space-y-4">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight font-sans border-b border-stone-200 pb-3 flex items-center gap-2">
+            <span class="text-action-blue font-mono text-lg">01.</span>
+            <span>Purpose & Acceptance of Terms</span>
+          </h2>
+          <p>
+            These Terms and Conditions ("Terms") constitute an electronic record within the meaning of the <strong>Information Technology Act, 2000</strong> and rules thereunder. 
+            By accessing, browsing, or utilizing <strong>{legal.publicTradingName}</strong> ("Website") or submitting an enquiry through our forms or assistant, 
+            you ("User", "you", or "your") agree to be bound by these Terms and our companion <a href="/privacy-policy" class="text-action-blue font-semibold hover:underline">Privacy Policy</a>.
+          </p>
+          <p>
+            The Website serves as an informational digital portal to showcase residential, commercial, and land properties and to facilitate initial real-estate consultation. 
+            The Website does not itself execute property conveyance deeds, financial escrow deposits, or binding sale agreements online.
+          </p>
+        </section>
+
+        {/* 2. Nature of Property Listings */}
+        <section class="space-y-4">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight font-sans border-b border-stone-200 pb-3 flex items-center gap-2">
+            <span class="text-action-blue font-mono text-lg">02.</span>
+            <span>Nature of Property Listings & Price Fluctuations</span>
+          </h2>
+          <p>
+            All property listings, specifications, architectural descriptions, dimensions, photographs, and pricing published on the Website are provided for general guidance:
+          </p>
+          <ul class="list-disc pl-5 space-y-2 text-stone-700">
+            <li><strong>Subject to Contract & Owner Confirmation:</strong> Listings are based on information supplied by property owners, developers, authorized representatives, or our surveying staff. All listings are strictly subject to contract and availability.</li>
+            <li><strong>Price & Availability Volatility:</strong> Listed prices and availability are subject to change without prior notice based on market conditions, owner negotiations, and prior disposal.</li>
+            <li><strong>Photographs & Visual Renderings:</strong> Property photographs may feature staged furnishings, digital retouching, or artistic impressions that do not form part of a final sale contract unless explicitly written into conveyance schedules.</li>
+          </ul>
+        </section>
+
+        {/* 3. Independent Due Diligence */}
+        <section class="space-y-4">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight font-sans border-b border-stone-200 pb-3 flex items-center gap-2">
+            <span class="text-action-blue font-mono text-lg">03.</span>
+            <span>Mandatory Independent Due Diligence by Buyers & Tenants</span>
+          </h2>
+          <div class="p-5 rounded-2xl bg-canvas border border-stone-200 space-y-3">
+            <p class="font-bold text-ink text-sm sm:text-base">
+              Information on this website does NOT constitute legal title clearance, structural certification, or formal financial appraisal.
+            </p>
+            <p class="text-xs sm:text-sm text-stone-600 leading-relaxed">
+              Every prospective buyer, investor, or tenant is legally obligated and strongly advised to engage independent legal counsel, chartered surveyors, and revenue search agents to verify:
+            </p>
+            <ul class="list-disc pl-5 space-y-1.5 text-xs sm:text-sm text-stone-600">
+              <li>Original title deeds, chain of title, and revenue mutation records (Jamabandi / Khasra / Khatauni) at the relevant Sub-Registrar's office.</li>
+              <li>Encumbrance certificates (typically for 30 years) confirming freedom from undisclosed mortgages or litigation.</li>
+              <li>Valid RERA registration of the project and developer approvals on the respective State RERA portal.</li>
+              <li>Local municipal master plan compliance, zoning, building sanctions, layout approvals, and Occupancy Certificate (OC) / Completion Certificate (CC).</li>
+            </ul>
+          </div>
+        </section>
+
+        {/* 4. Acceptable Website Use & Prohibited Conduct */}
+        <section class="space-y-4">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight font-sans border-b border-stone-200 pb-3 flex items-center gap-2">
+            <span class="text-action-blue font-mono text-lg">04.</span>
+            <span>Acceptable Use & Prohibited Conduct</span>
+          </h2>
+          <p>You agree to use this Website only for lawful purposes. You shall not:</p>
+          <ul class="list-disc pl-5 space-y-2 text-stone-700">
+            <li>Submit fictitious inquiries, spoof contact credentials, or submit third-party telephone numbers without valid authorization.</li>
+            <li>Use automated scrapers, data miners, crawlers, or extraction scripts to harvest property listings or telephone numbers without prior written consent.</li>
+            <li>Attempt to probe, breach, or bypass authentication mechanisms protecting the Administrative Content Management System (CMS).</li>
+            <li>Transmit unsolicited commercial solicitations, malware, viruses, or spam through the consultation forms.</li>
+          </ul>
+        </section>
+
+        {/* 5. Intellectual Property Rights */}
+        <section class="space-y-4">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight font-sans border-b border-stone-200 pb-3 flex items-center gap-2">
+            <span class="text-action-blue font-mono text-lg">05.</span>
+            <span>Intellectual Property Rights</span>
+          </h2>
+          <p>
+            The software architecture, layout design, typography, proprietary styling tokens, brand insignia, and source code of {config.siteName} are protected under the 
+            <strong>Copyright Act, 1957</strong> and applicable intellectual property conventions. 
+            Users are granted a limited, revocable, non-exclusive license to view and print property brochures for personal, non-commercial evaluation.
+          </p>
+        </section>
+
+        {/* 6. Limitation of Liability */}
+        <section class="space-y-4">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight font-sans border-b border-stone-200 pb-3 flex items-center gap-2">
+            <span class="text-action-blue font-mono text-lg">06.</span>
+            <span>Limitation of Liability & Statutory Exclusions</span>
+          </h2>
+          <p>
+            Under Section 73 of the <strong>Indian Contract Act, 1872</strong> and applicable principles of law:
+          </p>
+          <ul class="list-disc pl-5 space-y-2 text-stone-700">
+            <li>We do not warrant that the Website will be uninterrupted, error-free, or devoid of minor technical delays.</li>
+            <li>To the maximum extent permitted by Indian law, {legal.publicTradingName} and its consultants shall not be liable for any indirect, incidental, special, or consequential damages, or loss of prospective property profit, arising from reliance on preliminary website listings.</li>
+            <li>Nothing in these Terms excludes or limits liability for fraud, fraudulent misrepresentation, gross negligence, or any other liability that cannot lawfully be excluded under the Consumer Protection Act, 2019 or the RERA Act, 2016.</li>
+          </ul>
+        </section>
+
+        {/* 7. Governing Law & Dispute Resolution */}
+        <section class="space-y-4">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight font-sans border-b border-stone-200 pb-3 flex items-center gap-2">
+            <span class="text-action-blue font-mono text-lg">07.</span>
+            <span>Governing Law, Jurisdiction & Dispute Resolution</span>
+          </h2>
+          <p>
+            These Terms are governed by and construed in accordance with the <strong>laws of the Republic of India</strong>.
+          </p>
+          <p>
+            Any dispute, controversy, or claim arising out of or relating to these Terms or property advisory consultations shall first be submitted to good-faith mediation through our Grievance Desk. 
+            If unresolved within 30 days, disputes shall be subject to the exclusive jurisdiction of the competent civil courts situated in <strong>{legal.operatingState}</strong>, India.
+          </p>
+        </section>
+
+        {/* 8. Modifications to Terms */}
+        <section class="space-y-4">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight font-sans border-b border-stone-200 pb-3 flex items-center gap-2">
+            <span class="text-action-blue font-mono text-lg">08.</span>
+            <span>Modifications & Inquiries</span>
+          </h2>
+          <p>
+            We reserve the right to revise these Terms periodically to reflect evolving legal, statutory RERA, or technical requirements. Continued use of the Website after revised Terms are posted signifies acceptance.
+          </p>
+          <p>
+            Questions regarding these Terms should be directed to our Legal & Advisory Desk at <a href={`mailto:${config.contactEmail || legal.privacyEmail}`} class="text-action-blue font-semibold hover:underline">{config.contactEmail || legal.privacyEmail}</a>.
+          </p>
+        </section>
+
+      </div>
+
+      {/* Cross-Link Navigation */}
+      <footer class="mt-14 pt-8 border-t border-stone-200 flex flex-wrap items-center justify-between gap-4 text-xs">
+        <div class="flex items-center gap-4">
+          <a href="/privacy-policy" class="text-action-blue font-semibold hover:underline">&larr; Privacy Policy</a>
+          <a href="/property-disclaimer" class="text-action-blue font-semibold hover:underline">Property Disclaimer &rarr;</a>
+          <a href="/cookie-policy" class="text-action-blue font-semibold hover:underline">Cookie Policy &rarr;</a>
+        </div>
+        <a href="/contact" class="btn btn-stone-outline px-4 py-2 rounded-full font-semibold">
+          Contact Advisory Desk
+        </a>
+      </footer>
+    </article>
+  </main>
+</BaseLayout>

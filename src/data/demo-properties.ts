@@ -94,6 +94,8 @@ export const demoProperties: Property[] = [
     floor: 6,
     totalFloors: 10,
     parking: 1,
+    reraId: 'UPRERAPRJ12345/DEMO',
+    reraRegistrationUrl: 'https://www.up-rera.in',
     createdAt: now,
     updatedAt: now,
   } satisfies FlatProperty,

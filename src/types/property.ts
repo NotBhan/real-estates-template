@@ -77,6 +77,11 @@ interface PropertyBase {
   featured: boolean;
   images: PropertyImage[];
 
+  /** Optional RERA project / listing registration number under RERA Act 2016 */
+  reraId?: string;
+  /** Optional link to the state RERA portal registration record */
+  reraRegistrationUrl?: string;
+
   /** ISO 8601 date strings */
   createdAt: string;
   updatedAt: string;

@@ -1,0 +1,204 @@
+---
+/**
+ * Property Listing Disclaimer & RERA Advisory — Estate Atelier
+ * Grounded in Real Estate (Regulation and Development) Act, 2016 (RERA),
+ * Consumer Protection Act, 2019, and Indian Conveyancing Practice.
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { config } from '@/lib/config';
+import { AlertCircle, ArrowLeft, Clock, ExternalLink, ShieldCheck, Scale } from '@lucide/astro';
+
+const legal = config.legal;
+const lastUpdated = legal.effectiveDates.disclaimerLastUpdated;
+---
+
+<BaseLayout
+  title={`Property Listing Disclaimer & RERA Notice | ${config.siteName}`}
+  description={`RERA statutory disclosures, listing due diligence requirements, and property advisory disclaimers for ${config.siteName}.`}
+>
+  {/* Page Header */}
+  <header class="pt-28 sm:pt-32 pb-14 bg-canvas border-b border-stone-200/80">
+    <div class="container-site max-w-4xl">
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 text-muted hover:text-action-blue text-xs font-semibold uppercase tracking-wider mb-6 transition-colors no-underline group"
+      >
+        <ArrowLeft size={14} class="transform group-hover:-translate-x-1 transition-transform" />
+        <span>Return to Home</span>
+      </a>
+
+      <div class="eyebrow-label mb-3">
+        <Scale size={14} class="text-brand-gold" />
+        <span>RERA & Conveyancing Disclosures</span>
+      </div>
+      <h1 class="heading-editorial text-4xl sm:text-5xl font-bold tracking-tight text-ink mb-4">
+        Property Listing <span class="font-normal italic text-stone-500">Disclaimer</span>
+      </h1>
+      <p class="text-muted text-base sm:text-lg font-light max-w-2xl leading-relaxed">
+        Important legal guidelines on property data sources, RERA statutory verifications, title due diligence, and platform advisory role.
+      </p>
+
+      <div class="flex flex-wrap items-center gap-4 mt-6 pt-6 border-t border-stone-200/80 text-xs text-muted">
+        <span class="flex items-center gap-1.5">
+          <Clock size={13} class="text-brand-gold" />
+          <span>Last Revised: <strong>{lastUpdated}</strong></span>
+        </span>
+        <span class="text-stone-300">•</span>
+        <span>Framework: <strong>RERA Act, 2016 & CPA, 2019</strong></span>
+      </div>
+    </div>
+  </header>
+
+  {/* Main Content */}
+  <main class="section-padding bg-white">
+    <article class="container-site max-w-4xl">
+      
+      {/* Primary Highlight Alert */}
+      <div class="bg-amber-50/80 border border-amber-200 rounded-2xl p-6 sm:p-7 mb-10 text-sm text-stone-800 shadow-2xs">
+        <div class="flex items-start gap-3">
+          <AlertCircle size={20} class="text-amber-700 shrink-0 mt-0.5" />
+          <div>
+            <h2 class="font-bold text-amber-950 mb-1 text-base">Statutory Notice Under Section 10 & 11 of the RERA Act, 2016</h2>
+            <p class="font-light leading-relaxed text-stone-700">
+              The details, photographs, layout drawings, floor plans, dimensions, prices, and amenities published on this website are compiled for 
+              <strong>informational and exploratory purposes only</strong>. They do not constitute an offer, warranty, or contractual commitment. 
+              Prospective buyers and tenants must verify all particulars directly with the respective owner, developer, and the official State RERA authority portal prior to executing any financial transaction or agreement.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-12 text-stone-700 text-sm sm:text-base font-light leading-relaxed">
+        
+        {/* 1. Operational Role of the Website */}
+        <section class="space-y-4">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight font-sans border-b border-stone-200 pb-3 flex items-center gap-2">
+            <span class="text-action-blue font-mono text-lg">01.</span>
+            <span>Platform Role & Regulatory Positioning</span>
+          </h2>
+          <p>
+            The role of <strong>{legal.publicTradingName}</strong> is:
+          </p>
+          <div class="p-5 rounded-2xl bg-canvas border border-stone-200 text-ink text-sm">
+            <p class="font-bold mb-1">{legal.businessRole}</p>
+            <p class="text-xs text-muted leading-relaxed font-light">
+              We act as an architectural showcase and advisory intermediary facilitating property exploration between owners, developers, and prospective clients. 
+              We do not act as the principal title owner of developer projects, nor do we construct real estate developments unless explicitly identified as the promoter.
+            </p>
+          </div>
+        </section>
+
+        {/* 2. RERA Registration & Verification Status */}
+        <section class="space-y-4">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight font-sans border-b border-stone-200 pb-3 flex items-center gap-2">
+            <span class="text-action-blue font-mono text-lg">02.</span>
+            <span>RERA Registration Compliance & State Portals</span>
+          </h2>
+          <p>
+            Under the <strong>Real Estate (Regulation and Development) Act, 2016</strong>, every commercial or residential real estate project exceeding 500 square meters or having more than eight apartments must be registered with the respective State Real Estate Regulatory Authority before advertising or marketing.
+          </p>
+          
+          <div class="p-5 rounded-2xl border border-stone-200 bg-white space-y-3">
+            <h3 class="font-bold text-ink text-sm flex items-center gap-2">
+              <ShieldCheck size={16} class="text-brand-gold" />
+              <span>Real Estate Agent Registration Status</span>
+            </h3>
+            <p class="text-xs sm:text-sm text-stone-600 leading-relaxed">
+              <strong>Registration Status:</strong> {legal.rera.registrationStatus}
+            </p>
+            {legal.rera.agentRegistrationNo ? (
+              <p class="text-xs text-stone-600">
+                <strong>RERA Agent Registration Number:</strong> <span class="font-mono font-bold text-ink">{legal.rera.agentRegistrationNo}</span> ({legal.rera.stateAuthority})
+              </p>
+            ) : (
+              <p class="text-xs text-muted italic">
+                * Note: In this demonstration deployment, agent registration numbers must be supplied and confirmed by the operating client prior to commercial brokerage operations.
+              </p>
+            )}
+            <div class="pt-2">
+              <a
+                href={legal.rera.portalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-1.5 text-xs font-bold text-action-blue hover:underline"
+              >
+                <span>Access Official {legal.rera.stateAuthority} Public Portal</span>
+                <ExternalLink size={12} />
+              </a>
+            </div>
+          </div>
+        </section>
+
+        {/* 3. Verification Claims Policy */}
+        <section class="space-y-4">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight font-sans border-b border-stone-200 pb-3 flex items-center gap-2">
+            <span class="text-action-blue font-mono text-lg">03.</span>
+            <span>Policy on "Verified" Listings & Badges</span>
+          </h2>
+          <p>
+            In strict adherence to the <strong>Consumer Protection (E-Commerce) Rules, 2020</strong> and the <strong>Consumer Protection Act, 2019</strong> prohibiting misleading advertisements:
+          </p>
+          <ul class="list-disc pl-5 space-y-2 text-stone-700">
+            <li>We do NOT apply a "Verified", "Guaranteed", or "Government Approved" seal to any property listing unless a comprehensive physical site inspection, sanctioned map verification, and Sub-Registrar title check have been formally recorded by our team.</li>
+            <li>Where a listing displays a RERA Registration ID, users are advised to cross-reference that ID against the official state registry to inspect sanctioned building plans, promoter history, completion timelines, and bank escrow accounts.</li>
+          </ul>
+        </section>
+
+        {/* 4. Mandatory Buyer Due Diligence */}
+        <section class="space-y-4">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight font-sans border-b border-stone-200 pb-3 flex items-center gap-2">
+            <span class="text-action-blue font-mono text-lg">04.</span>
+            <span>Checklist for Prospective Buyers & Tenants</span>
+          </h2>
+          <p>
+            Prior to paying any token amount, earnest money deposit, or signing conveyance documents, you are advised to independently satisfy yourself regarding:
+          </p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs sm:text-sm">
+            <div class="p-4 rounded-xl border border-stone-200 bg-canvas">
+              <p class="font-bold text-ink mb-1">1. Ownership & Title Flow</p>
+              <p class="text-xs text-muted">Verify original sale deeds, gift deeds, inheritance orders, and non-encumbrance status.</p>
+            </div>
+            <div class="p-4 rounded-xl border border-stone-200 bg-canvas">
+              <p class="font-bold text-ink mb-1">2. Municipal Sanctions</p>
+              <p class="text-xs text-muted">Confirm layout sanction, building plan approval, floor-area ratio (FAR), and fire safety NOCs.</p>
+            </div>
+            <div class="p-4 rounded-xl border border-stone-200 bg-canvas">
+              <p class="font-bold text-ink mb-1">3. Completion & Possession</p>
+              <p class="text-xs text-muted">Ensure an Occupancy Certificate (OC) or Completion Certificate (CC) has been issued for built premises.</p>
+            </div>
+            <div class="p-4 rounded-xl border border-stone-200 bg-canvas">
+              <p class="font-bold text-ink mb-1">4. Physical Demarcation</p>
+              <p class="text-xs text-muted">Conduct an on-ground physical measurement and boundary survey for land and plot parcels.</p>
+            </div>
+          </div>
+        </section>
+
+        {/* 5. Limitation on False Advertising */}
+        <section class="space-y-4">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight font-sans border-b border-stone-200 pb-3 flex items-center gap-2">
+            <span class="text-action-blue font-mono text-lg">05.</span>
+            <span>Integrity & Error Rectification Commitment</span>
+          </h2>
+          <p>
+            This disclaimer is not designed to excuse deliberate misrepresentation. If you identify any inaccuracy, outdated price, or unauthorized listing on this website, please immediately notify our compliance desk at <a href={`mailto:${legal.privacyEmail}`} class="text-action-blue font-semibold hover:underline">{legal.privacyEmail}</a>. 
+            We commit to reviewing and updating or unpublishing erroneous listings within <strong>48 hours</strong> of verified notice.
+          </p>
+        </section>
+
+      </div>
+
+      {/* Cross-Link Navigation */}
+      <footer class="mt-14 pt-8 border-t border-stone-200 flex flex-wrap items-center justify-between gap-4 text-xs">
+        <div class="flex items-center gap-4">
+          <a href="/privacy-policy" class="text-action-blue font-semibold hover:underline">&larr; Privacy Policy</a>
+          <a href="/terms-and-conditions" class="text-action-blue font-semibold hover:underline">Terms & Conditions</a>
+          <a href="/cookie-policy" class="text-action-blue font-semibold hover:underline">Cookie Policy &rarr;</a>
+        </div>
+        <a href="/grievance-redressal" class="btn btn-stone-outline px-4 py-2 rounded-full font-semibold">
+          Report Inaccuracy / Grievance
+        </a>
+      </footer>
+    </article>
+  </main>
+</BaseLayout>

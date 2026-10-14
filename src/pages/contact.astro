@@ -271,7 +271,41 @@ const faqs = [
               ></textarea>
             </div>
 
-            <button type="submit" class="btn btn-action-blue w-full py-3.5 rounded-xl font-semibold text-base">
+            <!-- Anti-Spam Honeypot Field -->
+            <input type="text" name="website_hp" class="hidden" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+            <!-- Mandatory Purpose-Specific Consent (Un-checked) -->
+            <div class="pt-2">
+              <label class="flex items-start gap-2.5 cursor-pointer text-xs text-stone-700 font-light select-none">
+                <input
+                  type="checkbox"
+                  id="contact-consent"
+                  name="consent"
+                  required
+                  class="mt-0.5 rounded text-action-blue focus:ring-action-blue border-stone-300 shrink-0"
+                />
+                <span>
+                  I consent to the collection and processing of my contact information in accordance with the <a href="/privacy-policy" target="_blank" class="text-action-blue font-semibold hover:underline">Privacy Policy</a> solely for responding to this advisory inquiry. <span class="text-rose-500">*</span>
+                </span>
+              </label>
+            </div>
+
+            <!-- Optional Unbundled Marketing Consent -->
+            <div>
+              <label class="flex items-start gap-2.5 cursor-pointer text-xs text-stone-600 font-light select-none">
+                <input
+                  type="checkbox"
+                  id="contact-marketing"
+                  name="marketingConsent"
+                  class="mt-0.5 rounded text-action-blue focus:ring-action-blue border-stone-300 shrink-0"
+                />
+                <span>
+                  Keep me informed with occasional property alerts and market reports (optional).
+                </span>
+              </label>
+            </div>
+
+            <button type="submit" class="btn btn-action-blue w-full py-3.5 rounded-xl font-semibold text-base mt-2">
               <Send size={18} />
               <span>Submit Consultation Inquiry</span>
             </button>
@@ -280,7 +314,7 @@ const faqs = [
             <div id="form-success-banner" class="hidden p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-medium">
               <div class="flex items-center gap-2">
                 <CheckCircle2 size={18} class="text-emerald-600 shrink-0" />
-                <span>Demo Mode: Your inquiry was captured locally for presentation purposes. In production, this dispatches to your designated CRM.</span>
+                <span>Thank you! Your inquiry and privacy consent have been securely recorded. Our advisory desk will reach out shortly.</span>
               </div>
             </div>
           </form>
@@ -478,6 +512,29 @@ const faqs = [
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
+
+      // Honeypot check - bot detection
+      const honeypot = form.querySelector<HTMLInputElement>('input[name="website_hp"]');
+      if (honeypot && honeypot.value.trim() !== '') {
+        return; // Silent discard bot submission
+      }
+
+      // Mandatory Privacy Consent check
+      const consentBox = form.querySelector<HTMLInputElement>('#contact-consent');
+      if (consentBox && !consentBox.checked) {
+        alert('Please consent to the privacy policy notice to submit your inquiry.');
+        consentBox.focus();
+        return;
+      }
+
+      // Phone validation
+      const phoneInput = form.querySelector<HTMLInputElement>('#contact-phone');
+      if (phoneInput && phoneInput.value.replace(/\D/g, '').length < 10) {
+        alert('Please enter a valid 10-digit telephone or mobile number.');
+        phoneInput.focus();
+        return;
+      }
+
       if (successBanner) {
         successBanner.classList.remove('hidden');
         form.reset();

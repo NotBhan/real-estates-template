@@ -27,6 +27,7 @@ const paginatedProperties = filteredProperties.slice(startIndex, endIndex);
 // Compute active filters for the summary
 const activeFilters = [];
 if (filters.q) activeFilters.push({ label: `"${filters.q}"`, key: 'q' });
+if (filters.type) activeFilters.push({ label: filters.type, key: 'type' });
 if (filters.listing) activeFilters.push({ label: `For ${filters.listing}`, key: 'listing' });
 if (filters.minPrice && !filters.maxPrice) activeFilters.push({ label: `₹${filters.minPrice.toLocaleString('en-IN')}+`, key: 'minPrice' });
 if (!filters.minPrice && filters.maxPrice) activeFilters.push({ label: `Up to ₹${filters.maxPrice.toLocaleString('en-IN')}`, key: 'maxPrice' });
@@ -65,100 +66,115 @@ function getRemoveFilterUrl(keyToRemove: string) {
 
   <div class="bg-canvas pt-8 pb-24 min-h-[60vh]">
     <div class="container-site">
-      {/* Categories / Tabs */}
-      <PropertyCategories variant="filter" />
+      <!-- AJAX Interactive Catalogue Wrapper -->
+      <div id="catalogue-wrapper" class="relative">
+        <!-- Subtle Top Progress Indicator -->
+        <div
+          id="catalogue-loader"
+          class="absolute -top-4 left-0 right-0 h-1 bg-stone-200/50 rounded-full overflow-hidden opacity-0 pointer-events-none transition-opacity duration-300 z-30"
+          role="status"
+          aria-live="polite"
+        >
+          <div class="w-full h-full bg-gradient-to-r from-action-blue via-brand-gold to-action-blue animate-pulse"></div>
+        </div>
 
-      {/* Filter & Meta Bar */}
-      <div class="mb-10 space-y-4">
-        {/* Advanced Search Toggle */}
-        <details class="group bg-white rounded-2xl border border-stone-200 overflow-hidden shadow-xs" id="filter-details">
-          <summary class="flex justify-between items-center p-5 cursor-pointer list-none focus-visible:outline-action-blue select-none" id="filter-summary">
-            <div class="flex items-center gap-3">
-              <div class="w-8 h-8 rounded-lg bg-stone-100 border border-stone-200 flex items-center justify-center text-action-blue">
-                <SlidersHorizontal size={17} />
+        {/* Categories / Tabs */}
+        <PropertyCategories variant="filter" />
+
+        {/* Filter & Meta Bar */}
+        <div class="mb-10 space-y-4">
+          {/* Advanced Search Toggle */}
+          <details class="group bg-white rounded-2xl border border-stone-200 overflow-hidden shadow-xs" id="filter-details">
+            <summary class="flex justify-between items-center p-5 cursor-pointer list-none focus-visible:outline-action-blue select-none" id="filter-summary">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-stone-100 border border-stone-200 flex items-center justify-center text-action-blue">
+                  <SlidersHorizontal size={17} />
+                </div>
+                <span class="font-bold text-ink text-base">Filter & Refine Catalogue</span>
               </div>
-              <span class="font-bold text-ink text-base">Filter & Refine Catalogue</span>
-            </div>
-            <span class="text-muted transition-transform duration-300 group-open:rotate-180 text-xs" id="filter-chevron">
-              ▼
-            </span>
-          </summary>
-          <div class="filter-panel" id="filter-panel">
-            <div class="overflow-hidden min-h-0">
-              <div class="p-6 border-t border-stone-200 bg-stone-50">
-                <PropertySearchForm variant="default" />
+              <span class="text-muted transition-transform duration-300 group-open:rotate-180 text-xs" id="filter-chevron">
+                ▼
+              </span>
+            </summary>
+            <div class="filter-panel" id="filter-panel">
+              <div class="overflow-hidden min-h-0">
+                <div class="p-6 border-t border-stone-200 bg-stone-50">
+                  <PropertySearchForm variant="default" />
+                </div>
               </div>
             </div>
-          </div>
-        </details>
+          </details>
 
-        {/* Active Filters & Count */}
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
-          <p class="text-muted text-sm font-medium whitespace-nowrap">
-            Showing <span class="text-ink font-bold">{count === 0 ? 0 : `${startIndex + 1}–${endIndex}`}</span> of <span class="text-ink font-bold">{count}</span> {count === 1 ? 'property' : 'properties'}
-          </p>
+          {/* Active Filters & Count */}
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1" id="active-filters-bar">
+            <p class="text-muted text-sm font-medium whitespace-nowrap">
+              Showing <span class="text-ink font-bold">{count === 0 ? 0 : `${startIndex + 1}–${endIndex}`}</span> of <span class="text-ink font-bold">{count}</span> {count === 1 ? 'property' : 'properties'}
+            </p>
 
-          {activeFilters.length > 0 && (
-            <div class="flex flex-wrap items-center gap-2">
-              <span class="text-xs text-muted uppercase tracking-wider font-bold mr-1">Active Filters:</span>
-              {activeFilters.map((filter) => (
+            {activeFilters.length > 0 && (
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="text-xs text-muted uppercase tracking-wider font-bold mr-1">Active Filters:</span>
+                {activeFilters.map((filter) => (
+                  <a
+                    href={getRemoveFilterUrl(filter.key)}
+                    class="flex items-center gap-2 px-3.5 py-1.5 bg-white border border-stone-300 rounded-full text-xs font-semibold text-action-blue hover:bg-stone-100 transition-colors no-underline shadow-2xs"
+                  >
+                    {filter.label}
+                    <X size={13} class="text-muted hover:text-ink" />
+                  </a>
+                ))}
                 <a
-                  href={getRemoveFilterUrl(filter.key)}
-                  class="flex items-center gap-2 px-3.5 py-1.5 bg-white border border-stone-300 rounded-full text-xs font-semibold text-action-blue hover:bg-stone-100 transition-colors no-underline shadow-2xs"
+                  href="/properties"
+                  class="text-xs font-bold text-action-blue hover:text-action-blue-hover underline-offset-4 hover:underline ml-2 transition-colors"
                 >
-                  {filter.label}
-                  <X size={13} class="text-muted hover:text-ink" />
+                  Clear all
                 </a>
-              ))}
-              <a
-                href="/properties"
-                class="text-xs font-bold text-action-blue hover:text-action-blue-hover underline-offset-4 hover:underline ml-2 transition-colors"
-              >
-                Clear all
-              </a>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Results Area (Grid + Pagination OR Empty State) */}
+        <div id="catalogue-results" class="transition-opacity duration-200">
+          {count > 0 ? (
+            <>
+              <div id="catalogue-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                {paginatedProperties.map((property) => (
+                  <div class="catalogue-card-wrapper h-full flex flex-col">
+                    <PropertyCard property={property} />
+                  </div>
+                ))}
+              </div>
+
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalItems={count}
+                itemsPerPage={ITEMS_PER_PAGE}
+                currentUrl={Astro.url}
+              />
+            </>
+          ) : (
+            <div class="text-center py-20 sm:py-24 border border-stone-200 rounded-3xl bg-white p-8 max-w-2xl mx-auto shadow-sm" id="catalogue-empty">
+              <div class="w-14 h-14 rounded-2xl bg-stone-100 border border-stone-200 flex items-center justify-center text-action-blue mx-auto mb-5">
+                <SlidersHorizontal size={24} />
+              </div>
+              <h2 class="text-ink text-2xl font-bold mb-3 tracking-tight">No Matching Properties Found</h2>
+              <p class="text-muted text-base mb-8 max-w-md mx-auto font-light leading-relaxed">
+                No properties match your current filters. Try adjusting your search criteria, clearing selected categories, or broadening your budget.
+              </p>
+              <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+                <a href="/properties" class="btn btn-action-blue px-7 py-3 text-sm rounded-full w-full sm:w-auto font-semibold">
+                  Clear All Filters
+                </a>
+                <a href="/contact" class="btn btn-stone-outline px-7 py-3 text-sm rounded-full w-full sm:w-auto font-semibold">
+                  Request Specific Requirement
+                </a>
+              </div>
             </div>
           )}
         </div>
       </div>
-
-      {/* Grid */}
-      {count > 0 ? (
-        <>
-          <div id="catalogue-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-            {paginatedProperties.map((property) => (
-              <div class="catalogue-card-wrapper h-full flex flex-col">
-                <PropertyCard property={property} />
-              </div>
-            ))}
-          </div>
-
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            totalItems={count}
-            itemsPerPage={ITEMS_PER_PAGE}
-            currentUrl={Astro.url}
-          />
-        </>
-      ) : (
-        <div class="text-center py-20 sm:py-24 border border-stone-200 rounded-3xl bg-white p-8 max-w-2xl mx-auto shadow-sm">
-          <div class="w-14 h-14 rounded-2xl bg-stone-100 border border-stone-200 flex items-center justify-center text-action-blue mx-auto mb-5">
-            <SlidersHorizontal size={24} />
-          </div>
-          <h2 class="text-ink text-2xl font-bold mb-3 tracking-tight">No Matching Properties Found</h2>
-          <p class="text-muted text-base mb-8 max-w-md mx-auto font-light leading-relaxed">
-            No properties match your current filters. Try adjusting your search criteria, clearing selected categories, or broadening your budget.
-          </p>
-          <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <a href="/properties" class="btn btn-action-blue px-7 py-3 text-sm rounded-full w-full sm:w-auto font-semibold">
-              Clear All Filters
-            </a>
-            <a href="/contact" class="btn btn-stone-outline px-7 py-3 text-sm rounded-full w-full sm:w-auto font-semibold">
-              Request Specific Requirement
-            </a>
-          </div>
-        </div>
-      )}
     </div>
   </div>
 </BaseLayout>
@@ -178,17 +194,17 @@ function getRemoveFilterUrl(keyToRemove: string) {
     let mm = gsap.matchMedia();
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
-      gsap.from(cards, {
-        scrollTrigger: {
-          trigger: grid,
-          start: 'top 85%',
-        },
-        opacity: 0,
-        y: 40,
-        duration: 0.7,
-        stagger: 0.1,
-        ease: 'power3.out',
-      });
+      gsap.fromTo(
+        cards,
+        { opacity: 0, y: 24 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+          stagger: 0.06,
+          ease: 'power2.out',
+        }
+      );
     });
   };
 
@@ -256,15 +272,200 @@ function getRemoveFilterUrl(keyToRemove: string) {
     });
   };
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initCatalogueAnimation);
-    document.addEventListener('DOMContentLoaded', initFilterToggle);
-  } else {
+  // --- AJAX Filter Engine (No page refresh on filters, search, tabs, pagination) ---
+  let filterAbortController: AbortController | null = null;
+  let searchDebounceTimer: ReturnType<typeof setTimeout> | null = null;
+
+  const showLoading = (loading: boolean) => {
+    const loader = document.getElementById('catalogue-loader');
+    const results = document.getElementById('catalogue-results');
+    if (loader) {
+      loader.classList.toggle('opacity-0', !loading);
+      loader.classList.toggle('opacity-100', loading);
+    }
+    if (results) {
+      results.classList.toggle('opacity-40', loading);
+      results.classList.toggle('pointer-events-none', loading);
+    }
+  };
+
+  const syncFormValues = (urlStr: string) => {
+    const url = new URL(urlStr, window.location.origin);
+    const form = document.querySelector<HTMLFormElement>('#filter-details form');
+    if (!form) return;
+
+    const qInput = form.querySelector<HTMLInputElement>('input[name="q"]');
+    const typeSelect = form.querySelector<HTMLSelectElement>('select[name="type"]');
+    const listingSelect = form.querySelector<HTMLSelectElement>('select[name="listing"]');
+    const minPriceInput = form.querySelector<HTMLInputElement>('input[name="minPrice"]');
+    const maxPriceInput = form.querySelector<HTMLInputElement>('input[name="maxPrice"]');
+
+    if (qInput && document.activeElement !== qInput) qInput.value = url.searchParams.get('q') || '';
+    if (typeSelect && document.activeElement !== typeSelect) typeSelect.value = url.searchParams.get('type') || '';
+    if (listingSelect && document.activeElement !== listingSelect) listingSelect.value = url.searchParams.get('listing') || '';
+    if (minPriceInput && document.activeElement !== minPriceInput) minPriceInput.value = url.searchParams.get('minPrice') || '';
+    if (maxPriceInput && document.activeElement !== maxPriceInput) maxPriceInput.value = url.searchParams.get('maxPrice') || '';
+  };
+
+  const loadFilteredCatalogue = async (targetUrl: string, pushHistory = true) => {
+    if (filterAbortController) {
+      filterAbortController.abort();
+    }
+    filterAbortController = new AbortController();
+
+    showLoading(true);
+
+    try {
+      const response = await fetch(targetUrl, {
+        signal: filterAbortController.signal,
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error ${response.status}`);
+      }
+
+      const htmlText = await response.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlText, 'text/html');
+
+      // 1. Update Category Tabs Navigation
+      const newTabs = doc.getElementById('category-tabs-nav');
+      const currentTabs = document.getElementById('category-tabs-nav');
+      if (newTabs && currentTabs) {
+        currentTabs.innerHTML = newTabs.innerHTML;
+      }
+
+      // 2. Update Active Filters Bar & Count
+      const newActiveFilters = doc.getElementById('active-filters-bar');
+      const currentActiveFilters = document.getElementById('active-filters-bar');
+      if (newActiveFilters && currentActiveFilters) {
+        currentActiveFilters.innerHTML = newActiveFilters.innerHTML;
+      }
+
+      // 3. Update Results (Grid & Pagination or Empty State)
+      const newResults = doc.getElementById('catalogue-results');
+      const currentResults = document.getElementById('catalogue-results');
+      if (newResults && currentResults) {
+        currentResults.innerHTML = newResults.innerHTML;
+      }
+
+      // 4. Update browser URL history without reloading
+      if (pushHistory && window.location.href !== targetUrl) {
+        window.history.pushState(null, '', targetUrl);
+      }
+
+      // 5. Synchronize form inputs in details panel
+      syncFormValues(targetUrl);
+
+      // 6. Animate newly rendered cards
+      initCatalogueAnimation();
+
+      // 7. If switching pages via pagination, gently scroll to catalogue header
+      const urlObj = new URL(targetUrl, window.location.origin);
+      if (urlObj.searchParams.has('page')) {
+        const wrapper = document.getElementById('catalogue-wrapper');
+        if (wrapper) {
+          const top = wrapper.getBoundingClientRect().top + window.scrollY - 110;
+          window.scrollTo({ top, behavior: 'smooth' });
+        }
+      }
+    } catch (err: any) {
+      if (err.name !== 'AbortError') {
+        console.error('Filter update error:', err);
+        // Fallback to standard navigation if network error occurs
+        window.location.href = targetUrl;
+      }
+    } finally {
+      showLoading(false);
+    }
+  };
+
+  const initAjaxFilterInteractions = () => {
+    const wrapper = document.getElementById('catalogue-wrapper');
+    if (!wrapper || wrapper.dataset.ajaxInit) return;
+    wrapper.dataset.ajaxInit = 'true';
+
+    // Intercept clicks on links inside the catalogue:
+    // - Category pills (#category-tabs-nav a)
+    // - Active filter removal badges (#active-filters-bar a)
+    // - Pagination buttons (#catalogue-results a)
+    // - Empty state reset buttons (#catalogue-empty a[href*="/properties"])
+    wrapper.addEventListener('click', (e) => {
+      const target = (e.target as HTMLElement).closest('a');
+      if (!target || !wrapper.contains(target)) return;
+
+      const href = target.getAttribute('href');
+      if (!href) return;
+
+      // Only intercept internal /properties or query parameter links
+      if (href.startsWith('/properties') || href.startsWith('?')) {
+        const fullUrl = new URL(href, window.location.href).href;
+        e.preventDefault();
+        loadFilteredCatalogue(fullUrl, true);
+      }
+    });
+
+    // Form interactions inside #filter-details
+    const form = wrapper.querySelector<HTMLFormElement>('#filter-details form');
+    if (form) {
+      // Manual submit (clicking Search button or pressing Enter)
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        const params = new URLSearchParams();
+
+        for (const [key, val] of formData.entries()) {
+          const str = val.toString().trim();
+          if (str) params.set(key, str);
+        }
+
+        const targetUrl = `/properties${params.toString() ? '?' + params.toString() : ''}`;
+        loadFilteredCatalogue(targetUrl, true);
+      });
+
+      // Instant auto-filter when changing select dropdowns (Type, Status)
+      const selects = form.querySelectorAll('select');
+      selects.forEach((select) => {
+        select.addEventListener('change', () => {
+          form.requestSubmit();
+        });
+      });
+
+      // Real-time debounced search on input (Keyword, Min Price, Max Price)
+      const inputs = form.querySelectorAll('input');
+      inputs.forEach((input) => {
+        input.addEventListener('input', () => {
+          if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
+          searchDebounceTimer = setTimeout(() => {
+            form.requestSubmit();
+          }, 350);
+        });
+      });
+    }
+
+    // Handle browser Back / Forward buttons without reloading
+    window.addEventListener('popstate', () => {
+      if (window.location.pathname.startsWith('/properties')) {
+        loadFilteredCatalogue(window.location.href, false);
+      }
+    });
+  };
+
+  const initAll = () => {
     initCatalogueAnimation();
     initFilterToggle();
+    initAjaxFilterInteractions();
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAll);
+  } else {
+    initAll();
   }
-  document.addEventListener('astro:page-load', initCatalogueAnimation);
-  document.addEventListener('astro:page-load', initFilterToggle);
+  document.addEventListener('astro:page-load', initAll);
 </script>
 
 <style>
